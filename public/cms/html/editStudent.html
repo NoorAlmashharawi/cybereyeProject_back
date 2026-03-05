@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تعديل بيانات الطالب</title>
+    <link rel="stylesheet" href="../css/editStudent.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  
+</head>
+
+<body>
+
+    <header>
+        <h1><i class="fas fa-user-edit"></i> تعديل بيانات الطالب</h1>
+        <p>تحديث بيانات طالب مسجّل في النظام الأكاديمي</p>
+    </header>
+
+    <div class="container">
+
+        <div class="alert alert-success" id="successAlert">
+            ✔️ تم تحديث بيانات الطالب بنجاح
+        </div>
+
+        <div class="alert alert-error" id="errorAlert">
+            ❌ <span id="errorMsg"></span>
+        </div>
+
+        <form id="editStudentForm">
+
+            <div class="form-container">
+                <h2 class="form-title"><i class="fas fa-id-card"></i> المعلومات الشخصية</h2>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>الاسم الكامل *</label>
+                        <input type="text" id="fullName">
+                    </div>
+
+                    <div class="form-group">
+                        <label>البريد الإلكتروني *</label>
+                        <input type="email" id="email">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>رقم الهاتف</label>
+                        <input type="tel" id="phone">
+                    </div>
+
+                    <div class="form-group">
+                        <label>تاريخ الميلاد *</label>
+                        <input type="date" id="birthDate">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>رقم الهوية *</label>
+                        <input type="text" id="nationalId">
+                    </div>
+
+                    <div class="form-group">
+                        <label>العنوان</label>
+                        <input type="text" id="address">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>ملاحظات</label>
+                    <textarea id="bio"></textarea>
+                </div>
+            </div>
+
+            <div class="form-container">
+                <h2 class="form-title"><i class="fas fa-lock"></i> معلومات النظام</h2>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>اسم المستخدم *</label>
+                        <input type="text" id="username">
+                    </div>
+
+                    <div class="form-group">
+                        <label>الحالة *</label>
+                        <select id="status">
+                            <option value="">اختر الحالة</option>
+                            <option value="active">نشط</option>
+                            <option value="inactive">غير نشط</option>
+                            <option value="graduated">متخرج</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>كلمة المرور (اختياري)</label>
+                        <input type="password" id="password" placeholder="اتركه فارغاً لعدم التغيير">
+                    </div>
+
+                    <div class="form-group">
+                        <label>تأكيد كلمة المرور</label>
+                        <input type="password" id="confirmPassword">
+                    </div>
+                </div>
+            </div>
+
+            <div class="preview">
+                <h3><i class="fas fa-eye"></i> معاينة</h3>
+                <div class="preview-item"><strong>الاسم:</strong> <span id="pName"></span></div>
+                <div class="preview-item"><strong>البريد:</strong> <span id="pEmail"></span></div>
+                <div class="preview-item"><strong>الحالة:</strong> <span id="pStatus"></span></div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="updatePreview()">
+                    <i class="fas fa-eye"></i> تحديث المعاينة
+                </button>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> حفظ التعديلات
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+  <script src="../js/editStudent.js"></script>
+
+</body>
+
+</html>

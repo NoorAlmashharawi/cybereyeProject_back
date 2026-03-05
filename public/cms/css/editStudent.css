@@ -1,0 +1,189 @@
+/* cms/css/editStudent.css */
+
+:root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --shadow-light: 0 10px 20px rgba(0, 0, 0, 0.05);
+    --shadow-strong: 0 20px 40px rgba(0, 0, 0, 0.1);
+    --border-color: #e0e0e0;
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.form-container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: var(--primary-gradient);
+    border-radius: 24px;
+    padding: 4px; /* كإطار متدرج خارجي */
+    box-shadow: var(--shadow-strong);
+    animation: slideIn 0.6s ease-out;
+}
+
+.form-title {
+    background: white;
+    border-radius: 20px 20px 0 0;
+    padding: 30px;
+    margin: 0;
+    font-size: 1.6rem;
+    color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-bottom: 2px solid #f8f9fa;
+}
+
+.form-title i {
+    background: var(--primary-gradient);
+    color: white;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.form-container > form {
+    background: white;
+    padding: 35px;
+    border-radius: 0 0 20px 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-group label {
+    font-weight: 700;
+    color: #444;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 15px 18px;
+    border: 2px solid var(--border-color);
+    border-radius: 14px;
+    font-size: 1rem;
+    color: #333;
+    transition: var(--transition);
+    background-color: #fdfdfd;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #667eea;
+    background-color: white;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(118, 75, 162, 0.1);
+    transform: translateY(-2px);
+}
+
+.form-group input:disabled {
+    background: #f1f3f5;
+    border-color: #dee2e6;
+    color: #adb5bd;
+    cursor: not-allowed;
+}
+
+/* تحسين شكل القائمة المنسدلة */
+select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23764ba2' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left 15px center; /* للغة العربية */
+    padding-left: 45px !important;
+}
+
+.form-help {
+    font-size: 0.82rem;
+    color: #777;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f1f4ff;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border-right: 4px solid #764ba2;
+}
+
+.form-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: flex-end;
+    margin-top: 40px;
+    padding-top: 25px;
+    border-top: 2px solid #f8f9fa;
+}
+
+.btn {
+    padding: 14px 35px;
+    border-radius: 15px;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    border: none;
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    color: white;
+    box-shadow: 0 8px 20px rgba(118, 75, 162, 0.25);
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(118, 75, 162, 0.35);
+}
+
+.btn-secondary {
+    background: #ffffff;
+    color: #555;
+    border: 2px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: #f8f9fa;
+    color: #111;
+    border-color: #adb5bd;
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-light);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .form-container { margin: 20px; }
+    .form-title { font-size: 1.3rem; padding: 20px; }
+    .form-container > form { padding: 25px; }
+    .form-actions { flex-direction: column-reverse; }
+    .btn { width: 100%; justify-content: center; }
+}
+
+/* Animations */
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}

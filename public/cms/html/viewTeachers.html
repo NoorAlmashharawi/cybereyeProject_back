@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دليل المدرسين - CyberEye</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/viewTeachers.css">
+ 
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <h1><i class="fas fa-chalkboard-teacher"></i>  All Instructors</h1>
+
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="ابحث عن مدرس بالاسم أو التخصص...">
+                <i class="fas fa-search"></i>
+            </div>
+
+            <div class="filters">
+                <select id="subjectFilter">
+                    <option value="all">جميع التخصصات</option>
+                    <option value="ethical-hacking">الاختراق الأخلاقي</option>
+                    <option value="programming">البرمجة</option>
+                    <option value="os-security">أمن أنظمة التشغيل</option>
+                    <option value="forensics">الطب الشرعي الرقمي</option>
+                    <option value="web-security">أمن الويب</option>
+                    <option value="database-security">أمن قواعد البيانات</option>
+                    <option value="cybersecurity">أمن المعلومات</option>
+                    <option value="network-security">أمن الشبكات</option>
+                </select>
+
+                <select id="experienceFilter">
+                    <option value="all">جميع المستويات</option>
+                    <option value="senior">خبرة عالية (5+ سنوات)</option>
+                    <option value="mid">متوسط الخبرة (2-5 سنوات)</option>
+                    <option value="junior">مبتدئ (أقل من سنتين)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-box">
+                <i class="fas fa-users"></i>
+                <h3 id="totalTeachers">12</h3>
+                <p>إجمالي المدرسين</p>
+            </div>
+            <div class="stat-box">
+                <i class="fas fa-user-check"></i>
+                <h3 id="availableTeachers">10</h3>
+                <p>المدرسين المتاحين</p>
+            </div>
+            <div class="stat-box">
+                <i class="fas fa-star"></i>
+                <h3 id="avgRating">4.7</h3>
+                <p>متوسط التقييم</p>
+            </div>
+        </div>
+
+        <div class="teachers-container" id="teachersContainer">
+            <!-- سيتم ملئ هذا القسم بواسطة JavaScript -->
+        </div>
+    </div>
+
+    <script src="../js/viewTeachers.js"></script>
+</body>
+
+</html>

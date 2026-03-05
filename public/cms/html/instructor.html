@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة المدرب | CYBEReye</title>
+    <link rel="stylesheet" href="../css/instructor.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+</head>
+<body>
+    <div class="instructor-container">
+        <!-- الهيدر -->
+        <div class="instructor-header">
+            <div class="header-left">
+                <h1>لوحة تحكم المدرب</h1>
+                <p>إدارة الكورسات والطلاب</p>
+            </div>
+            
+            <div class="header-right">
+                <div class="instructor-info">
+                    <div class="instructor-avatar" id="instructorAvatar">م</div>
+                    <div>
+                        <h3 id="instructorName">مدرب</h3>
+                        <p id="instructorEmail">instructor@example.com</p>
+                    </div>
+                </div>
+                
+                <div class="header-actions">
+                    <button class="header-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        تسجيل الخروج
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- الإحصائيات -->
+        <div class="instructor-stats">
+            <div class="instructor-stat-card">
+                <div class="instructor-stat-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="instructor-stat-number">5</div>
+                <div class="instructor-stat-label">كورسات نشطة</div>
+            </div>
+            
+            <div class="instructor-stat-card">
+                <div class="instructor-stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="instructor-stat-number">250</div>
+                <div class="instructor-stat-label">طالب مسجل</div>
+            </div>
+            
+            <div class="instructor-stat-card">
+                <div class="instructor-stat-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="instructor-stat-number">4.8</div>
+                <div class="instructor-stat-label">متوسط التقييم</div>
+            </div>
+            
+            <div class="instructor-stat-card">
+                <div class="instructor-stat-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="instructor-stat-number">85%</div>
+                <div class="instructor-stat-label">معدل الإكمال</div>
+            </div>
+        </div>
+        
+        <!-- المحتوى -->
+        <div class="instructor-content">
+            <!-- الكورسات -->
+            <div class="courses-section">
+                <div class="section-title">
+                    <span>كورساتي</span>
+                    <button class="add-course-btn" onclick="addNewCourse()">
+                        <i class="fas fa-plus"></i>
+                        إضافة كورس جديد
+                    </button>
+                </div>
+                
+                <table class="instructor-table">
+                    <thead>
+                        <tr>
+                            <th>اسم الكورس</th>
+                            <th>الطلاب</th>
+                            <th>التقييم</th>
+                            <th>الإيرادات</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="coursesTable">
+                        <!-- الكورسات تظهر هنا -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- الطلاب النشطين -->
+            <div class="students-section">
+                <div class="section-title">
+                    <span>الطلاب النشطين</span>
+                    <span class="stats-circle high-stats">15</span>
+                </div>
+                
+                <div class="students-list" id="studentsList">
+                    <!-- الطلاب يظهرون هنا -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+</body>
+</html>

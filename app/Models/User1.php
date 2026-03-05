@@ -9,4 +9,21 @@ class User1 extends Model
 {
     /** @use HasFactory<\Database\Factories\User1Factory> */
     use HasFactory;
+
+
+    protected $fillable = [
+        'username',
+        'email',
+        'password',
+        'role',
+    ];
+
+
+    protected $hidden = [
+        'password',
+
+    ];
+
+    
+
 }

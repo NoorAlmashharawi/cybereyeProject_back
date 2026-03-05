@@ -4,6 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use Illuminate\Http\Request;
+use IlluminateHttpResponse;
+use IlluminateHttpFacadesDB;
+use App\http\Controllers\StudentController;
+use App\Models\Student;
+
+
 
 class AdminController extends Controller
 {
@@ -12,7 +18,9 @@ class AdminController extends Controller
      */
     public function index()
     {
-        //
+ 
+
+     
     }
 
     /**
@@ -20,7 +28,8 @@ class AdminController extends Controller
      */
     public function create()
     {
-        //
+        
+
     }
 
     /**
