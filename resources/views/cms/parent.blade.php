@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> @yield('title') | CYBEReye</title>
     <link rel="stylesheet" href="{{ asset('cms/css/admin.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
     {{-- <link rel="stylesheet" --}}
     {{-- href="{{ asset('cms/https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css') }}">
     <link href="{{ asset('cms/https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.css') }}" rel="stylesheet">
@@ -136,6 +138,7 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('cms/js/crud.js') }}"></script>
+    
     @yield('scripts')
 
 

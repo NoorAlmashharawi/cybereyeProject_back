@@ -17,6 +17,7 @@ Route::view('temp', 'cms.temp');
 
 Route::put('students_update/{id}', [StudentController::class, 'update'])->name('students_update');
 Route::resource('students', StudentController::class);
+Route::resource('users', User1sController::class);
 
 
 

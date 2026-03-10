@@ -585,6 +585,14 @@ td {
     color: #ff6b6b !important;
 }
 
+.btn-info{
+    background-color:blue !important;
+    color: white !important;
+}
+
+
+
+
 .btn-delete-custom:hover {
     background-color: #ff6b6b !important;
     color: white !important;

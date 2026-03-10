@@ -10,14 +10,14 @@
 @section('content')
 <div class="form-container">
     <h2 class="form-title">
-        <i class="fas fa-user-edit"></i> معلومات النظام: '{{ $students->username }}'
+        <i class="fas fa-user-edit"></i> معلومات النظام: '{{ $student->user1->username }}'
     </h2>
 
     <form id="edit-student-form">
         <div class="form-row">
             <div class="form-group">
                 <label for="id">المعرف *</label>
-                <input type="text" id="id_display" value="{{ $students->id }}" disabled>
+                <input type="text" id="id_display" value="{{ $student->id }}" disabled>
                 <div class="form-help">
                     <i class="fas fa-info-circle"></i> الرقم التعريفي الخاص بالطالب
                 </div>
@@ -25,7 +25,7 @@
 
             <div class="form-group">
                 <label for="username">اسم المستخدم *</label>
-                <input type="text" id="username" name="username" required placeholder="أدخل اسم المستخدم" value="{{ $students->username }}">
+                <input type="text" id="username" name="username" required placeholder="أدخل اسم المستخدم" value="{{ $student->user1->username }}">
                 <div class="form-help">
                     <i class="fas fa-info-circle"></i> اسم الدخول للنظام
                 </div>
@@ -35,35 +35,54 @@
         <div class="form-row">
             <div class="form-group">
                 <label for="email">البريد الإلكتروني *</label>
-                <input type="email" id="email" name="email" required placeholder="example@mail.com" value="{{ $students->email }}">
+                <input type="email" id="email" name="email" required placeholder="example@mail.com" value="{{ $student->user1->email }}">
             </div>
 
             <div class="form-group">
                 <label for="level">المستوى *</label>
                 <select id="level" name="level" required>
                     <option value="">اختر المستوى</option>
-                    <option value="beginner" {{ $students->level == 'beginner' ? 'selected' : '' }}>مبتدئ</option>
-                    <option value="midium" {{ $students->level == 'midium' ? 'selected' : '' }}>متوسط</option>
-                    <option value="advanced" {{ $students->level == 'advanced' ? 'selected' : '' }}>متقدم</option>
-                    <option value="expert" {{ $students->level == 'expert' ? 'selected' : '' }}>خبير</option>
+                    <option value="beginner" {{ $student->level == 'beginner' ? 'selected' : '' }}>مبتدئ</option>
+                    <option value="midium" {{ $student->level == 'midium' ? 'selected' : '' }}>متوسط</option>
+                    <option value="advanced" {{ $student->level == 'advanced' ? 'selected' : '' }}>متقدم</option>
+                    <option value="expert" {{ $student->level == 'expert' ? 'selected' : '' }}>خبير</option>
                 </select>
             </div>
         </div>
 
-        <div class="form-group">
-            <label for="status">حالة الطالب *</label>
-            <select id="status" name="status" required>
-                <option value="">اختر الحالة</option>
-                <option value="active" {{ $students->status == 'active' ? 'selected' : '' }}>نشط</option>
-                <option value="inactive" {{ $students->status == 'inactive' ? 'selected' : '' }}>غير نشط</option>
-                <option value="suspended" {{ $students->status == 'suspended' ? 'selected' : '' }}>موقوف مؤقتاً</option>
-                <option value="graduated" {{ $students->status == 'graduated' ? 'selected' : '' }}>متخرج</option>
-            </select>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="specialization">التخصص</label>
+                <input type="text" id="specialization" name="specialization" placeholder="مثال: أمن شبكات" value="{{ $student->specialization }}">
+            </div>
+
+            <div class="form-group">
+                <label for="progress">نسبة التقدم</label>
+                <input type="number" id="progress" name="progress" min="0" max="100" value="{{ $student->progress }}">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="status">حالة الطالب *</label>
+                <select id="status" name="status" required>
+                    <option value="">اختر الحالة</option>
+                    <option value="active" {{ $student->status == 'active' ? 'selected' : '' }}>نشط</option>
+                    <option value="inactive" {{ $student->status == 'inactive' ? 'selected' : '' }}>غير نشط</option>
+                    <option value="suspended" {{ $student->status == 'suspended' ? 'selected' : '' }}>موقوف مؤقتاً</option>
+                    <option value="graduated" {{ $student->status == 'graduated' ? 'selected' : '' }}>متخرج</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="enrollment_date">تاريخ التسجيل</label>
+                <input type="date" id="enrollment_date" name="enrollment_date" value="{{ $student->enrollment_date->format('Y-m-d') }}">
+            </div>
         </div>
 
         <div class="form-actions">
             <a href="{{ route('students.index') }}" class="btn btn-secondary">رجوع</a>
-            <button type="button" onclick="performUpdate({{ $students->id }})" class="btn btn-primary">
+            <button type="button" onclick="performUpdate({{ $student->id }})" class="btn btn-primary">
                 <i class="fas fa-save"></i> حفظ التعديلات
             </button>
         </div>
