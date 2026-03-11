@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberEye - Courses</title>
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/cou.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+
+<body>
+    <!-- شريط التنقل -->
+    <nav>
+        <div class="logo">
+            <h1>CYBER<span>eye</span></h1>
+        </div>
+
+        <ul>
+            <li><a href="../html/index.html" class="active">Home</a></li>
+            <li><a href="../html/index.html#dictionary">Dictionary</a></li>
+            <li><a href="../html/index.html#roadmap">Roadmap</a></li>
+            <li><a href="../html/courses.html">Courses</a></li>
+            <li><a href="../html/index.html#resources">Resources</a></li>
+            <li><a href="../html/index.html#about">About</a></li>
+            <li><a href="../html/index.html#Review">Review</a></li>
+            <li><a href="../html/contact.html">Contact</a></li>
+        </ul>
+
+        <div class="icons">
+            <a href="#"><i class="fa-solid fa-heart"></i></a>
+            <a href="../html/cyber.html"><i class="fa-solid fa-user"></i></a>
+        </div>
+    </nav>
+
+    <!-- الدورات -->
+   <!---->
+    <div class="courses-container">
+        <h1>Our Courses</h1>
+        <p class="subtitle">Choose from our wide range of cybersecurity courses</p>
+
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">All Courses</button>
+            <button class="filter-btn" data-filter="beginner">Beginner</button>
+            <button class="filter-btn" data-filter="intermediate">Intermediate</button>
+            <button class="filter-btn" data-filter="advanced">Advanced</button>
+        </div>
+
+        <div class="courses-grid">
+            <!-- Java Course -->
+            <div class="course-card" data-level="beginner" id="java">
+                <div class="course-header">
+                    <span class="category">Programming</span>
+                    <div class="course-actions">
+                        <i class="fa-regular fa-heart"></i>
+                        <i class="fa-solid fa-share"></i>
+                    </div>
+                </div>
+
+                <div class="course-image">
+                    <img src="../img/java.jpg" alt="Java Course">
+                </div>
+
+                <div class="course-content">
+                    <h3>Java Programming</h3>
+                    <p>Learn Java from basics to advanced concepts for cybersecurity applications.</p>
+
+                    <div class="course-rating">
+                        <div class="stars">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <span>4.9</span>
+                        </div>
+                        <span class="students">1,245 students</span>
+                    </div>
+
+                    <div class="course-details">
+                        <span><i class="fa-regular fa-clock"></i> 40 hours</span>
+                        <span><i class="fa-solid fa-chart-line"></i> Beginner</span>
+                    </div>
+
+                    <a href="../html/course-details.html" class="enroll-btn">Enroll Now</a>
+                </div>
+            </div>
+
+            <!-- Front End Course -->
+            <div class="course-card" data-level="beginner" id="front">
+                <div class="course-header">
+                    <span class="category">Web Development</span>
+                    <div class="course-actions">
+                        <i class="fa-regular fa-heart"></i>
+                        <i class="fa-solid fa-share"></i>
+                    </div>
+                </div>
+
+                <div class="course-image">
+                    <img src="../img/front.jpg" alt="Front End Course">
+                </div>
+
+                <div class="course-content">
+                    <h3>Front End Development</h3>
+                    <p>Master HTML, CSS, and JavaScript for building secure web applications.</p>
+
+                    <div class="course-rating">
+                        <div class="stars">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star-half-stroke"></i>
+                            <span>4.7</span>
+                        </div>
+                        <span class="students">2,100 students</span>
+                    </div>
+
+                    <div class="course-details">
+                        <span><i class="fa-regular fa-clock"></i> 50 hours</span>
+                        <span><i class="fa-solid fa-chart-line"></i> Beginner</span>
+                    </div>
+
+                    <a href="#" class="enroll-btn">Enroll Now</a>
+                </div>
+            </div>
+
+            <!-- Back End Course -->
+            <div class="course-card" data-level="intermediate" id="back">
+                <div class="course-header">
+                    <span class="category">Web Development</span>
+                    <div class="course-actions">
+                        <i class="fa-regular fa-heart"></i>
+                        <i class="fa-solid fa-share"></i>
+                    </div>
+                </div>
+
+                <div class="course-image">
+                    <img src="../img/back.jpg" alt="Back End Course">
+                </div>
+
+                <div class="course-content">
+                    <h3>Back End Development</h3>
+                    <p>Learn server-side programming, databases, and API security.</p>
+
+                    <div class="course-rating">
+                        <div class="stars">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star-half-stroke"></i>
+                            <span>4.6</span>
+                        </div>
+                        <span class="students">1,800 students</span>
+                    </div>
+
+                    <div class="course-details">
+                        <span><i class="fa-regular fa-clock"></i> 60 hours</span>
+                        <span><i class="fa-solid fa-chart-line"></i> Intermediate</span>
+                    </div>
+
+                    <a href="#" class="enroll-btn">Enroll Now</a>
+                </div>
+            </div>
+
+            <!-- Linux Course -->
+            <div class="course-card" data-level="beginner" id="linux">
+                <div class="course-header">
+                    <span class="category">Operating Systems</span>
+                    <div class="course-actions">
+                        <i class="fa-regular fa-heart"></i>
+                        <i class="fa-solid fa-share"></i>
+                    </div>
+                </div>
+
+                <div class="course-image">
+                    <img src="../img/linux.jpg" alt="Linux Course">
+                </div>
+
+                <div class="course-content">
+                    <h3>Linux Fundamentals</h3>
+                    <p>Master Linux command line, system administration, and security.</p>
+
+                    <div class="course-rating">
+                        <div class="stars">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <span>4.9</span>
+                        </div>
+                        <span class="students">3,200 students</span>
+                    </div>
+
+                    <div class="course-details">
+                        <span><i class="fa-regular fa-clock"></i> 35 hours</span>
+                        <span><i class="fa-solid fa-chart-line"></i> Beginner</span>
+                    </div>
+
+                    <a href="#" class="enroll-btn">Enroll Now</a>
+                </div>
+            </div>
+
+            <!-- Windows Security Course -->
+            <div class="course-card" data-level="intermediate" id="windows">
+                <div class="course-header">
+                    <span class="category">Operating Systems</span>
+                    <div class="course-actions">
+                        <i class="fa-regular fa-heart"></i>
+                        <i class="fa-solid fa-share"></i>
+                    </div>
+                </div>
+
+                <div class="course-image">
+                    <img src="../img/windows.jpg" alt="Windows Course">
+                </div>
+
+                <div class="course-content">
+                    <h3>Windows Security</h3>
+                    <p>Learn Windows security features, Active Directory, and defense techniques.</p>
+
+                    <div class="course-rating">
+                        <div class="stars">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <span>4.8</span>
+                        </div>
+                        <span class="students">2,500 students</span>
+                    </div>
+
+                    <div class="course-details">
+                        <span><i class="fa-regular fa-clock"></i> 45 hours</span>
+                        <span><i class="fa-solid fa-chart-line"></i> Intermediate</span>
+                    </div>
+
+                    <a href="#" class="enroll-btn">Enroll Now</a>
+                </div>
+            </div>
+
+            <!-- Network Course -->
+            <div class="course-card" data-level="beginner" id="network">
+                <div class="course-header">
+                    <span class="category">Networking</span>
+                    <div class="course-actions">
+                        <i class="fa-regular fa-heart"></i>
+                        <i class="fa-solid fa-share"></i>
+                    </div>
+                </div>
+
+                <div class="course-image">
+                    <img src="../img/network.jpg" alt="Networking Course">
+                </div>
+
+                <div class="course-content">
+                    <h3>Network Fundamentals</h3>
+                    <p>Understand networking concepts, protocols, and security basics.</p>
+
+                    <div class="course-rating">
+                        <div class="stars">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <span>4.9</span>
+                        </div>
+                        <span class="students">4,000 students</span>
+                    </div>
+
+                    <div class="course-details">
+                        <span><i class="fa-regular fa-clock"></i> 55 hours</span>
+                        <span><i class="fa-solid fa-chart-line"></i> Beginner</span>
+                    </div>
+
+                    <a href="#" class="enroll-btn">Enroll Now</a>
+                </div>
+            </div>
+
+            <!-- Database Course -->
+            <div class="course-card" data-level="intermediate" id="db">
+                <div class="course-header">
+                    <span class="category">Database</span>
+                    <div class="course-actions">
+                        <i class="fa-regular fa-heart"></i>
+                        <i class="fa-solid fa-share"></i>
+                    </div>
+                </div>
+
+                <div class="course-image">
+                    <img src="../img/DB1.jpg" alt="Database Course">
+                </div>
+
+                <div class="course-content">
+                    <h3>Database Security</h3>
+                    <p>Learn SQL, database administration, and security best practices.</p>
+
+                    <div class="course-rating">
+                        <div class="stars">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <span>4.7</span>
+                        </div>
+                        <span class="students">1,600 students</span>
+                    </div>
+
+                    <div class="course-details">
+                        <span><i class="fa-regular fa-clock"></i> 40 hours</span>
+                        <span><i class="fa-solid fa-chart-line"></i> Intermediate</span>
+                    </div>
+
+                    <a href="#" class="enroll-btn">Enroll Now</a>
+                </div>
+            </div>
+
+            <!-- Web Security Course -->
+            <div class="course-card" data-level="advanced" id="websec">
+                <div class="course-header">
+                    <span class="category">Security</span>
+                    <div class="course-actions">
+                        <i class="fa-regular fa-heart"></i>
+                        <i class="fa-solid fa-share"></i>
+                    </div>
+                </div>
+
+                <div class="course-image">
+                    <img src="../img/NetSec.jpg" alt="Web Security Course">
+                </div>
+
+                <div class="course-content">
+                    <h3>Web Application Security</h3>
+                    <p>Advanced web security, OWASP Top 10, penetration testing techniques.</p>
+
+                    <div class="course-rating">
+                        <div class="stars">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <span>4.9</span>
+                        </div>
+                        <span class="students">1,200 students</span>
+                    </div>
+
+                    <div class="course-details">
+                        <span><i class="fa-regular fa-clock"></i> 65 hours</span>
+                        <span><i class="fa-solid fa-chart-line"></i> Advanced</span>
+                    </div>
+
+                    <a href="#" class="enroll-btn">Enroll Now</a>
+                </div>
+            </div>
+
+            <!-- Ethical Hacking Course -->
+            <div class="course-card" data-level="advanced" id="ethical">
+                <div class="course-header">
+                    <span class="category">Security</span>
+                    <div class="course-actions">
+                        <i class="fa-regular fa-heart"></i>
+                        <i class="fa-solid fa-share"></i>
+                    </div>
+                </div>
+
+                <div class="course-image">
+                    <img src="../img/NetSec.jpg" alt="Ethical Hacking Course">
+                </div>
+
+                <div class="course-content">
+                    <h3>Ethical Hacking</h3>
+                    <p>Comprehensive ethical hacking course with hands-on labs and real-world scenarios.</p>
+
+                    <div class="course-rating">
+                        <div class="stars">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <span>5.0</span>
+                        </div>
+                        <span class="students">900 students</span>
+                    </div>
+
+                    <div class="course-details">
+                        <span><i class="fa-regular fa-clock"></i> 80 hours</span>
+                        <span><i class="fa-solid fa-chart-line"></i> Advanced</span>
+                    </div>
+
+                    <a href="#" class="enroll-btn">Enroll Now</a>
+                </div>
+            </div>
+
+            <!-- Network Security Course -->
+            <div class="course-card" data-level="advanced" id="netsec">
+                <div class="course-header">
+                    <span class="category">Security</span>
+                    <div class="course-actions">
+                        <i class="fa-regular fa-heart"></i>
+                        <i class="fa-solid fa-share"></i>
+                    </div>
+                </div>
+
+                <div class="course-image">
+                    <img src="../img/NetSec.jpg" alt="Network Security Course">
+                </div>
+
+                <div class="course-content">
+                    <h3>Network Security</h3>
+                    <p>Advanced network defense, firewall configuration, intrusion detection systems.</p>
+
+                    <div class="course-rating">
+                        <div class="stars">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <span>4.8</span>
+                        </div>
+                        <span class="students">1,100 students</span>
+                    </div>
+
+                    <div class="course-details">
+                        <span><i class="fa-regular fa-clock"></i> 70 hours</span>
+                        <span><i class="fa-solid fa-chart-line"></i> Advanced</span>
+                    </div>
+
+                    <a href="#" class="enroll-btn">Enroll Now</a>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Course Benefits -->
+        <div class="benefits">
+            <h2>Why Choose Our Courses?</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <i class="fa-solid fa-certificate"></i>
+                    <h3>Certificates</h3>
+                    <p>Get industry-recognized certificates upon completion</p>
+                </div>
+
+               
+
+            </body>
+        </html>

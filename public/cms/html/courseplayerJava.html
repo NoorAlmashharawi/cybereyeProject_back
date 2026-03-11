@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دورة جافا - الدرس 1 | CYBEReye</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/courseplayerJava.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+
+<body>
+    <!-- الهيدر -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div>
+                    <a href="../html/index.html" class="logo">
+                        <i class="fas fa-shield-alt"></i>
+                        CYBEReye
+                    </a>
+                    <div class="course-title-header">
+                        دورة جافا للأمن السيبراني
+                    </div>
+                </div>
+
+                <div class="user-menu">
+                    <a href="../html/mycourse.html" style="color: white; text-decoration: none;">
+                        <i class="fas fa-user-graduate"></i> كورساتي
+                    </a>
+                    <a href="../html/course-details.html" style="color: white; text-decoration: none;">
+                        <i class="fas fa-info-circle"></i> تفاصيل الكورس
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- محتوى الكورس -->
+    <div class="container course-player-container">
+        <!-- الشريط الجانبي -->
+        <aside class="sidebar">
+            <div class="course-sidebar-header">
+                <h3 style="margin-bottom: 0.5rem;">دورة جافا للأمن السيبراني</h3>
+                <div class="course-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span id="progressPercentage">25%</span> مكتمل
+                    </div>
+                </div>
+            </div>
+
+            <div class="modules-list">
+                <div class="module">
+                    <div class="module-header" onclick="toggleModule(1)">
+                        <span>الوحدة 1: مقدمة في جافا</span>
+                        <i class="fas fa-chevron-down" id="moduleIcon1"></i>
+                    </div>
+                    <div class="lessons-list" id="moduleLessons1">
+                        <div class="lesson-item active" onclick="loadLesson(1)">
+                            <div>
+                                <div class="lesson-title">مقدمة في لغة جافا</div>
+                                <div class="lesson-duration">15:30</div>
+                            </div>
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                        <div class="lesson-item" onclick="loadLesson(2)">
+                            <div>
+                                <div class="lesson-title">تثبيت JDK وبيئة التطوير</div>
+                                <div class="lesson-duration">20:15</div>
+                            </div>
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                        <div class="lesson-item" onclick="loadLesson(3)">
+                            <div>
+                                <div class="lesson-title">كتابة أول برنامج في جافا</div>
+                                <div class="lesson-duration">18:45</div>
+                            </div>
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="module">
+                    <div class="module-header" onclick="toggleModule(2)">
+                        <span>الوحدة 2: الأساسيات</span>
+                        <i class="fas fa-chevron-down" id="moduleIcon2"></i>
+                    </div>
+                    <div class="lessons-list" id="moduleLessons2">
+                        <div class="lesson-item" onclick="loadLesson(4)">
+                            <div>
+                                <div class="lesson-title">المتغيرات وأنواع البيانات</div>
+                                <div class="lesson-duration">22:10</div>
+                            </div>
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                        <div class="lesson-item" onclick="loadLesson(5)">
+                            <div>
+                                <div class="lesson-title">الجمل الشرطية</div>
+                                <div class="lesson-duration">25:30</div>
+                            </div>
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="module">
+                    <div class="module-header" onclick="toggleModule(3)">
+                        <span>الوحدة 3: البرمجة الكائنية</span>
+                        <i class="fas fa-chevron-down" id="moduleIcon3"></i>
+                    </div>
+                    <div class="lessons-list" id="moduleLessons3">
+                        <div class="lesson-item" onclick="loadLesson(6)">
+                            <div>
+                                <div class="lesson-title">مقدمة في OOP</div>
+                                <div class="lesson-duration">30:15</div>
+                            </div>
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- المحتوى الرئيسي -->
+        <main class="main-content">
+            <div class="lesson-content">
+                <!-- فيديو الدرس -->
+                <div class="video-container">
+                    <div class="video-placeholder" id="videoPlaceholder">
+                        <i class="fas fa-play-circle"></i>
+                        <h3 style="margin-bottom: 0.5rem;">مقدمة في لغة جافا</h3>
+                        <p>انقر على زر التشغيل لمشاهدة الدرس</p>
+                        <button class="action-btn primary" style="margin-top: 1rem;" onclick="playVideo()">
+                            <i class="fas fa-play"></i> تشغيل الدرس
+                        </button>
+                    </div>
+                    <video id="lessonVideo" controls style="display: none;">
+                        <source src="https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4"
+                            type="video/mp4">
+                        متصفحك لا يدعم تشغيل الفيديو
+                    </video>
+                </div>
+
+                <!-- معلومات الدرس -->
+                <div class="lesson-info">
+                    <div class="lesson-header">
+                        <h1 class="lesson-title-main" id="currentLessonTitle">مقدمة في لغة جافا</h1>
+                        <div class="lesson-actions">
+                            <button class="action-btn" onclick="markAsCompleted()">
+                                <i class="far fa-check-circle"></i>标记为已完成
+                            </button>
+                            <button class="action-btn" onclick="downloadMaterials()">
+                                <i class="fas fa-download"></i> تحميل المواد
+                            </button>
+                            <button class="action-btn" onclick="takeNotes()">
+                                <i class="fas fa-edit"></i> كتابة ملاحظات
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="lesson-description">
+                        <h3 style="margin-bottom: 1rem; color: #1a1a2e;">وصف الدرس</h3>
+                        <p id="lessonDescription">
+                            في هذا الدرس سنتعرف على أساسيات لغة جافا، تاريخها، واستخداماتها في مجال الأمن السيبراني.
+                            سنناقش أهمية جافا في تطوير التطبيقات الآمنة وكيفية استخدامها لبناء أنظمة قوية.
+                        </p>
+                    </div>
+
+                    <!-- المواد المساندة -->
+                    <div class="lesson-materials">
+                        <h3 style="margin-bottom: 1rem; color: #1a1a2e;">المواد التعليمية</h3>
+                        <div class="materials-list">
+                            <div class="material-item" onclick="openMaterial('pdf')">
+                                <div class="material-icon">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div>
+                                    <strong>ملخص الدرس PDF</strong>
+                                    <p style="color: #666; font-size: 0.9rem; margin-top: 0.3rem;">
+                                        5 صفحات - يحتوي على النقاط الرئيسية
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="material-item" onclick="openMaterial('code')">
+                                <div class="material-icon">
+                                    <i class="fas fa-code"></i>
+                                </div>
+                                <div>
+                                    <strong>أمثلة الشيفرة</strong>
+                                    <p style="color: #666; font-size: 0.9rem; margin-top: 0.3rem;">
+                                        ملفات جافا تحتوي على أمثلة عملية
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="material-item" onclick="openMaterial('quiz')">
+                                <div class="material-icon">
+                                    <i class="fas fa-question-circle"></i>
+                                </div>
+                                <div>
+                                    <strong>اختبار الدرس</strong>
+                                    <p style="color: #666; font-size: 0.9rem; margin-top: 0.3rem;">
+                                        10 أسئلة لاختبار فهمك
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- أزرار التنقل -->
+                    <div class="navigation-buttons">
+                        <button class="nav-btn prev" onclick="previousLesson()">
+                            <i class="fas fa-arrow-right"></i> الدرس السابق
+                        </button>
+                        <button class="nav-btn next" onclick="nextLesson()">
+                            الدرس التالي <i class="fas fa-arrow-left"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>cybereye@gmail.com | © 2024 CyberEye. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="../html/index.html">Home</a> |
+            <a href="../html/courses.html">Courses</a> |
+            <a href="../html/contact.html">Contact</a> |
+            <a href="../html/cyber.html">Login</a>
+        </div>
+    </div>
+
+    <!-- نافذة الملاحظات -->
+    <div class="modal" id="notesModal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeNotesModal()">&times;</span>
+            <h2 style="margin-bottom: 1.5rem; color: #1a1a2e;">ملاحظاتي</h2>
+            <textarea id="notesText" class="form-control" style="height: 300px; margin-bottom: 1rem;"
+                placeholder="اكتب ملاحظاتك هنا..."></textarea>
+            <button class="btn btn-primary" onclick="saveNotes()" style="width: 100%;">
+                <i class="fas fa-save"></i> حفظ الملاحظات
+            </button>
+        </div>
+    </div>
+
+ <script src="../js/courseplayerJava.js"></script>
+</body>
+
+</html>

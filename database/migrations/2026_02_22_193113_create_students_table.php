@@ -1,5 +1,6 @@
 <?php
 
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,9 +14,21 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->string('progress');
-            $table->date('enrollment_date');
+
+            $table->string('progress')->default('0'); 
+            $table->string('level');
+            $table->string('specialization')->default('General'); 
+            $table->string('role')->default('student'); 
+            $table->string('status');
+            $table->foreignId('user1_id');
+            $table->foreign('user1_id')->on('user1s')->references('id')->cascadeOnDelete();
+
+            $table->timestamp('enrollment_date')->nullable(); 
             $table->timestamps();
+
+
+
+        
         });
     }
 

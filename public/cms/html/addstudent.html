@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إضافة طالب جديد</title>
+    <link rel="stylesheet" href="../css/addStudent.css" >
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ 
+</head>
+<body>
+    <!-- خلفية تعليمية -->
+    <div class="student-animation" id="studentAnimation"></div>
+    
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-user-graduate"></i> إضافة طالب جديد</h1>
+            <p>أضف طالب جديد إلى النظام الأكاديمي </p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="navigation">
+            <div class="nav-links">
+
+                <a href="viewStudents.html" class="nav-link">
+                    <i class="fas fa-users"></i> عرض الطلاب
+                </a>
+
+            </div>
+            
+
+        </div>
+        
+        <!-- رسالة النجاح -->
+        <div class="alert alert-success" id="successAlert">
+            <i class="fas fa-check-circle"></i>
+            <div class="alert-content">
+                <div class="alert-title">تمت العملية بنجاح!</div>
+                <p>تم إضافة الطالب الجديد إلى قاعدة البيانات بنجاح.</p>
+            </div>
+        </div>
+        
+        <!-- رسالة الخطأ -->
+        <div class="alert alert-error" id="errorAlert">
+            <i class="fas fa-exclamation-circle"></i>
+            <div class="alert-content">
+                <div class="alert-title">حدث خطأ!</div>
+                <p id="errorMessage">يرجى ملء جميع الحقول المطلوبة بشكل صحيح.</p>
+            </div>
+        </div>
+        
+        <form id="addStudentForm">
+            <div class="form-container">
+                <h2 class="form-title">
+                    <i class="fas fa-id-card"></i> المعلومات الشخصية
+                </h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fullName">الاسم الكامل *</label>
+                        <input type="text" id="fullName" name="fullName" required placeholder="أدخل الاسم الكامل للطالب">
+                        <div class="form-help">
+                            <i class="fas fa-info-circle"></i> الاسم الكامل كما سيظهر في السجلات الأكاديمية
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">البريد الإلكتروني  *</label>
+                        <input type="email" id="email" name="email" required placeholder="student@university.edu">
+                        <div class="form-help">
+                            <i class="fas fa-info-circle"></i> البريد الإلكتروني  الرسمي
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">رقم الهاتف</label>
+                        <input type="tel" id="phone" name="phone" placeholder="+970xxxxxxxxx">
+                        <div class="form-help">
+                            <i class="fas fa-info-circle"></i> رقم الهاتف للتواصل مع الطالب
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="birthDate">تاريخ الميلاد *</label>
+                        <input type="date" id="birthDate" name="birthDate" required>
+                        <div class="form-help">
+                            <i class="fas fa-info-circle"></i> تاريخ ميلاد الطالب
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nationalId">رقم الهوية / الإقامة *</label>
+                        <input type="text" id="nationalId" name="nationalId" required placeholder="10 أو 14 رقم">
+                        <div class="form-help">
+                            <i class="fas fa-info-circle"></i> رقم الهوية الوطنية أو الإقامة
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address">العنوان</label>
+                        <input type="text" id="address" name="address" placeholder="مدينة، حي، شارع">
+                        <div class="form-help">
+                            <i class="fas fa-info-circle"></i> عنوان سكن الطالب
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="bio">ملاحظات إضافية</label>
+                    <textarea id="bio" name="bio" placeholder="ملاحظات إضافية عن الطالب..."></textarea>
+                    <div class="form-help">
+                        <i class="fas fa-info-circle"></i> معلومات إضافية عن الطالب (اختياري)
+                    </div>
+                </div>
+            </div>
+            
+
+            
+            <div class="form-container">
+                <h2 class="form-title">
+                    <i class="fas fa-lock"></i> معلومات النظام
+                </h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="username">اسم المستخدم *</label>
+                        <input type="text" id="username" name="username" required placeholder="أدخل اسم المستخدم للنظام">
+                        <div class="form-help">
+                            <i class="fas fa-info-circle"></i> اسم المستخدم الذي سيستخدمه للدخول إلى النظام
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">كلمة المرور *</label>
+                        <input type="password" id="password" name="password" required placeholder="كلمة مرور قوية">
+                        <div class="form-help">
+                            <i class="fas fa-info-circle"></i> يجب أن تحتوي على 8 أحرف على الأقل
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">تأكيد كلمة المرور *</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="أعد إدخال كلمة المرور">
+                    <div class="form-help">
+                        <i class="fas fa-info-circle"></i> تأكد من تطابق كلمة المرور مع الحقل السابق
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="status">حالة الطالب *</label>
+                    <select id="status" name="status" required>
+                        <option value="">اختر الحالة</option>
+                        <option value="active">نشط</option>
+                        <option value="inactive">غير نشط</option>
+                        <option value="suspended">موقوف مؤقتاً</option>
+                        <option value="graduated">متخرج</option>
+                        <option value="transferred">منقول</option>
+                    </select>
+                    <div class="form-help">
+                        <i class="fas fa-info-circle"></i> الحالة الحالية للطالب في النظام
+                    </div>
+                </div>
+            </div>
+    
+            <div class="form-actions">
+                <button type="reset" class="btn btn-secondary">
+                    <i class="fas fa-redo"></i> إعادة تعيين
+                </button>
+                
+        
+                
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> حفظ الطالب
+                </button>
+            </div>
+        </form>
+        
+
+    </div>
+
+    <script src="../js/addStudent.js">
+
+    </script>
+</body>
+</html>

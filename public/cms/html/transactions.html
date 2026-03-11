@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> المعاملات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/transactions.css">
+ 
+</head>
+<body>
+    <!-- خلفية الأمن السيبراني -->
+    <div class="cyber-background" id="cyberBackground"></div>
+    
+    <!-- القائمة الجانبية -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="admin-info">
+                <div class="admin-avatar">
+                    <i class="fas fa-user-secret"></i>
+                </div>
+                <div class="admin-details">
+                    <h3> Admin</h3>
+                    <p>صلاحية: مدير النظام - Level 5</p>
+                </div>
+            </div>
+        </div>
+        
+      
+    </aside>
+    
+    <!-- المحتوى الرئيسي -->
+    <main class="main-content">
+        <!-- الهيدر -->
+        <div class="header">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1><i class="fas fa-shield-alt"></i> إدارة معاملات الأمن السيبراني</h1>
+            </div>
+            
+            <div class="header-actions">
+
+                <button class="btn btn-secondary" id="scanBtn">
+                    <i class="fas fa-radar"></i> مسح أمني
+                </button>
+                <button class="btn btn-secondary" id="refreshBtn">
+                    <i class="fas fa-sync-alt"></i> تحديث
+                </button>
+            </div>
+        </div>
+        
+        <!-- بطاقات الإحصائيات -->
+        <div class="stats-cards">
+            <div class="stat-card total">
+                <div class="stat-card-header">
+                    <div>
+                        <h3>إجمالي المعاملات الأمنية</h3>
+                        <div class="stat-card-value" id="totalTransactions">87</div>
+                    </div>
+                    <div class="stat-card-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stat-card pending">
+                <div class="stat-card-header">
+                    <div>
+                        <h3>قيد المراجعة الأمنية</h3>
+                        <div class="stat-card-value" id="pendingTransactions">14</div>
+                    </div>
+                    <div class="stat-card-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stat-card approved">
+                <div class="stat-card-header">
+                    <div>
+                        <h3>معتمدة أمنياً</h3>
+                        <div class="stat-card-value" id="approvedTransactions">65</div>
+                    </div>
+                    <div class="stat-card-icon">
+                        <i class="fas fa-check-shield"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stat-card rejected">
+                <div class="stat-card-header">
+                    <div>
+                        <h3>مرفوضة أمنياً</h3>
+                        <div class="stat-card-value" id="rejectedTransactions">8</div>
+                    </div>
+                    <div class="stat-card-icon">
+                        <i class="fas fa-ban"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- قسم التصفية -->
+        <div class="filters-section">
+            <h2 class="filters-title">
+                <i class="fas fa-filter"></i> تصفية المعاملات الأمنية
+            </h2>
+            
+            <div class="filters-row">
+                <div class="filter-group">
+                    <label>نوع المعاملة الأمنية</label>
+                    <select id="typeFilter">
+                        <option value="all">جميع الأنواع</option>
+                        <option value="certification">طلب شهادة أمنية</option>
+                        <option value="lab">طلب مختبر افتراضي</option>
+                        <option value="exam">طلب اختبار أمني</option>
+                        <option value="access">طلب صلاحيات وصول</option>
+                        <option value="resource">طلب موارد أمنية</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>حالة المعاملة</label>
+                    <select id="statusFilter">
+                        <option value="all">جميع الحالات</option>
+                        <option value="pending">قيد المراجعة الأمنية</option>
+                        <option value="approved">معتمدة أمنياً</option>
+                        <option value="rejected">مرفوضة أمنياً</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>مستوى الخطورة</label>
+                    <select id="severityFilter">
+                        <option value="all">جميع المستويات</option>
+                        <option value="low">منخفض</option>
+                        <option value="medium">متوسط</option>
+                        <option value="high">مرتفع</option>
+                        <option value="critical">حرج</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>البحث الأمني</label>
+                    <input type="text" id="searchInput" placeholder="ابحث بالمعرف أو الاسم...">
+                </div>
+                
+                <div class="filter-actions">
+                    <button class="btn btn-primary" id="applyFilters">
+                        <i class="fas fa-search"></i> تطبيق التصفية
+                    </button>
+                    <button class="btn btn-secondary" id="resetFilters">
+                        <i class="fas fa-redo"></i> إعادة تعيين
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- جدول المعاملات الأمنية -->
+        <div class="transactions-table-container">
+            <div class="table-header">
+                <h2 class="table-title">
+                    <i class="fas fa-list"></i> سجل المعاملات الأمنية
+                </h2>
+                
+                <div class="table-actions">
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-print"></i> طباعة السجل
+                    </button>
+                    <button class="btn btn-secondary" id="auditBtn">
+                        <i class="fas fa-clipboard-check"></i> تدقيق أمني
+                    </button>
+                    <button class="btn btn-secondary" id="bulkActionBtn">
+                        <i class="fas fa-tasks"></i> إجراء جماعي
+                    </button>
+                </div>
+            </div>
+            
+            <table id="transactionsTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>نوع المعاملة</th>
+                        <th>التفاصيل الأمنية</th>
+                        <th>المستخدم / المتخصص</th>
+                        <th>الحالة</th>
+                        <th>مستوى الخطورة</th>
+                        <th>التاريخ</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionsTableBody">
+                    <!-- سيتم ملئ هذا القسم بواسطة JavaScript -->
+                </tbody>
+            </table>
+            
+            <div id="noResultsMessage" class="no-results" style="display: none;">
+                <i class="fas fa-search"></i>
+                <h3>لا توجد نتائج</h3>
+                <p>لم يتم العثور على معاملات أمنية تنطبق على معايير البحث</p>
+            </div>
+            
+            <div class="pagination" id="pagination">
+                <!-- سيتم إنشاء أزرار الترقيم بواسطة JavaScript -->
+            </div>
+        </div>
+    </main>
+    
+    <!-- نافذة عرض تفاصيل المعاملة الأمنية -->
+    <div class="modal" id="transactionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle"><i class="fas fa-shield-alt"></i> تفاصيل المعاملة الأمنية</h3>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="transaction-details-grid" id="transactionDetailsGrid">
+                    <!-- سيتم ملئ هذا القسم بواسطة JavaScript -->
+                </div>
+                
+                <div class="transaction-description">
+                    <h4><i class="fas fa-file-alt"></i> وصف المعاملة الأمنية</h4>
+                    <p id="transactionDescription">...</p>
+                </div>
+                
+                <div class="security-audit-log" id="securityAuditLog">
+                    <h4><i class="fas fa-history"></i> سجل التدقيق الأمني</h4>
+                    <div id="auditLogContent">
+                        <!-- سيتم ملئ هذا القسم بواسطة JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer" id="modalFooter">
+                <!-- سيتم ملئ هذا القسم بواسطة JavaScript -->
+            </div>
+        </div>
+    </div>
+
+   <script src="../js/transactions.js"></script>
+</body>
+</html>

@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - المشرف | CYBEReye</title>
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.css" rel="stylesheet">
+  
+</head>
+
+<body>
+    <!-- زر القائمة الجانبية (للجوال) -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- الشريط الجانبي -->
+    <aside class="admin-sidebar">
+        <!-- رأس الشريط -->
+        <div class="admin-header">
+            <div class="admin-logo">
+                <i class="fas fa-shield-alt"></i>
+                CYBEReye
+            </div>
+        </div>
+
+        <!-- القائمة -->
+        <nav class="admin-menu">
+            <!-- القسم الرئيسي -->
+            <div class="admin-menu-section">
+                <div class="menu-title">الرئيسية</div>
+                <a href="#dashboard" class="admin-menu-item active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>لوحة التحكم</span>
+                </a>
+            </div>
+
+            <!-- إدارة المحتوى -->
+            <div class="admin-menu-section">
+                <div class="menu-title">إدارة المحتوى</div>
+                <a href="courses.html" class="admin-menu-item">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>الكورسات</span>
+                    <span class="menu-badge">15</span>
+
+                <a href="categories.html" class="admin-menu-item">
+                    <i class="fas fa-tags"></i>
+                    <span>التصنيفات</span>
+                </a>
+                <a href="materials.html" class="admin-menu-item">
+                    <i class="fas fa-file-download"></i>
+                    <span>المواد التعليمية</span>
+                </a>
+            </div>
+
+            <!-- إدارة المستخدمين -->
+            <div class="admin-menu-section">
+                <div class="menu-title">إدارة المستخدمين</div>
+                <a href="viewStudents.html" class="admin-menu-item">
+                    <i class="fas fa-users"></i>
+                    <span>الطلاب</span>
+                    <span class="menu-badge">1,250</span>
+                </a>
+                <a href="viewTeachers.html" class="admin-menu-item">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span>المدربون</span>
+                    <span class="menu-badge">25</span>
+                </a>
+           
+            </div>
+
+            <!-- المبيعات والمالية -->
+            <div class="admin-menu-section">
+                <div class="menu-title">المبيعات والمالية</div>
+                <a href="order.html" class="admin-menu-item">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>الطلبات</span>
+                    <span class="menu-badge">42</span>
+                </a>
+                <a href="transactions.html" class="admin-menu-item">
+                    <i class="fas fa-credit-card"></i>
+                    <span>المعاملات</span>
+                </a>
+
+            </div>
+
+            <!-- الإعدادات -->
+            <div class="admin-menu-section">
+                <div class="menu-title">الإعدادات</div>
+
+                <a href="./notifications.html" class="admin-menu-item">
+                    <i class="fas fa-bell"></i>
+                    <span>الإشعارات</span>
+                </a>
+                <a href="#backup" class="admin-menu-item">
+                    <i class="fas fa-database"></i>
+                    <span>النسخ الاحتياطي</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- تذييل الشريط -->
+        <div class="admin-footer">
+            <div class="admin-profile">
+                <div class="admin-avatar">
+                    م
+                </div>
+                <div class="admin-info">
+                    <h4>مشرف النظام</h4>
+                    <p>admin@cybereye.com</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="admin-main">
+        <!-- شريط الأدوات العلوي -->
+        <div class="admin-toolbar">
+            <div class="toolbar-title">
+                <h1>لوحة تحكم المشرف</h1>
+                <p>مرحباً بعودتك، يمكنك إدارة جميع جوانب المنصة من هنا</p>
+            </div>
+
+
+                <div class="admin-notifications">
+                    <button class="notification-btn" id="notificationButton" onclick="goToNotificatios()">
+                        <i class="far fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                </div>
+
+  
+            </div>
+        </div>
+
+        <!-- إحصائيات سريعة -->
+        <div class="quick-stats">
+            <div class="stat-card users">
+                <div class="stat-content">
+                    <div class="stat-icon users">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>1,254</h3>
+                        <p>إجمالي المستخدمين</p>
+                        <div class="stat-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>12% عن الشهر الماضي</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card courses">
+                <div class="stat-content">
+                    <div class="stat-icon courses">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>47</h3>
+                        <p>الكورسات النشطة</p>
+                        <div class="stat-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>5 كورسات جديدة</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card revenue">
+                <div class="stat-content">
+                    <div class="stat-icon revenue">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>$12,540</h3>
+                        <p>الإيرادات الشهرية</p>
+                        <div class="stat-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>18% زيادة</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card active">
+                <div class="stat-content">
+                    <div class="stat-icon active">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>87%</h3>
+                        <p>نسبة الإشغال</p>
+                        <div class="stat-trend trend-down">
+                            <i class="fas fa-arrow-down"></i>
+                            <span>3% عن الأسبوع الماضي</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- المخططات والرسوم البيانية -->
+        <div class="charts-section">
+            <!-- مخطط الإيرادات -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>الإيرادات الشهرية</h3>
+                    <div class="chart-period">
+                        <button class="period-btn active">شهري</button>
+                        <button class="period-btn">سنوي</button>
+                        <button class="period-btn">إجمالي</button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+
+            <!-- مخطط التسجيلات -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>تسجيلات المستخدمين</h3>
+                    <div class="chart-period">
+                        <button class="period-btn active">أسبوعي</button>
+                        <button class="period-btn">شهري</button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="registrationsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- الجداول -->
+        <div class="tables-section">
+            <!-- جدول الطلاب الجدد -->
+            <div class="table-card">
+                <div class="table-header">
+                    <h3>الطلاب الجدد</h3>
+                    <div class="table-actions">
+                        <button class="table-action-btn" title="تحديث">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <button class="table-action-btn" title="تصدير">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>الطالب</th>
+                                <th>البريد</th>
+                                <th>تاريخ التسجيل</th>
+                                <th>الحالة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <div class="user-avatar-small">م</div>
+                                        <span>محمد أحمد</span>
+                                    </div>
+                                </td>
+                                <td>mohamed@example.com</td>
+                                <td>2024-01-15</td>
+                                <td><span class="status-badge status-active">نشط</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn view" title="عرض">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn edit" title="تعديل">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <div class="user-avatar-small">س</div>
+                                        <span>سارة محمد</span>
+                                    </div>
+                                </td>
+                                <td>sara@example.com</td>
+                                <td>2024-01-14</td>
+                                <td><span class="status-badge status-active">نشط</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn view" title="عرض">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn edit" title="تعديل">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <div class="user-avatar-small">أ</div>
+                                        <span>أحمد خالد</span>
+                                    </div>
+                                </td>
+                                <td>ahmed@example.com</td>
+                                <td>2024-01-13</td>
+                                <td><span class="status-badge status-pending">قيد المراجعة</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn view" title="عرض">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn edit" title="تعديل">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <div class="user-avatar-small">ف</div>
+                                        <span>فاطمة علي</span>
+                                    </div>
+                                </td>
+                                <td>fatema@example.com</td>
+                                <td>2024-01-12</td>
+                                <td><span class="status-badge status-inactive">غير نشط</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn view" title="عرض">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn edit" title="تعديل">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- جدول الكورسات الأكثر شعبية -->
+            <div class="table-card">
+                <div class="table-header">
+                    <h3>الكورسات الأكثر شعبية</h3>
+                    <div class="table-actions">
+                        <button class="table-action-btn" title="تحديث">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>اسم الكورس</th>
+                                <th>المدرب</th>
+                                <th>المشتركين</th>
+                                <th>التقييم</th>
+                                <th>الإيرادات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>أساسيات الأمن السيبراني</td>
+                                <td>د. أحمد محمد</td>
+                                <td>450</td>
+                                <td>★★★★★ (4.9)</td>
+                                <td>$8,500</td>
+                            </tr>
+                            <tr>
+                                <td>برمجة جافا للأمن</td>
+                                <td>م. سامي علي</td>
+                                <td>320</td>
+                                <td>★★★★☆ (4.7)</td>
+                                <td>$6,200</td>
+                            </tr>
+                            <tr>
+                                <td>أمن تطبيقات الويب</td>
+                                <td>أ. نورا سعيد</td>
+                                <td>280</td>
+                                <td>★★★★★ (4.8)</td>
+                                <td>$5,800</td>
+                            </tr>
+                            <tr>
+                                <td>تحليل الثغرات الأمنية</td>
+                                <td>د. خالد حسن</td>
+                                <td>190</td>
+                                <td>★★★★☆ (4.6)</td>
+                                <td>$4,500</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- النشاطات الأخيرة -->
+        <div class="activity-section">
+            <h3 style="margin-bottom: 1rem;">النشاطات الأخيرة</h3>
+            <ul class="activity-list">
+                <li class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">تسجيل مستخدم جديد</div>
+                        <div class="activity-desc">محمد أحمد سجل في المنصة</div>
+                    </div>
+                    <div class="activity-time">منذ 5 دقائق</div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">شراء كورس جديد</div>
+                        <div class="activity-desc">سارة محمد اشترت كورس الأمن السيبراني المتقدم</div>
+                    </div>
+                    <div class="activity-time">منذ ساعة</div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">إكمال كورس</div>
+                        <div class="activity-desc">أحمد خالد أكمل كورس أساسيات جافا</div>
+                    </div>
+                    <div class="activity-time">منذ 3 ساعات</div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-comment-alt"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">تقييم جديد</div>
+                        <div class="activity-desc">فاطمة علي قيمت كورس أمن الشبكات بـ 5 نجوم</div>
+                    </div>
+                    <div class="activity-time">منذ 5 ساعات</div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">بلاغ عن مشكلة</div>
+                        <div class="activity-desc">تم الإبلاغ عن مشكلة في فيديو الدرس 3</div>
+                    </div>
+                    <div class="activity-time">منذ يوم</div>
+                </li>
+            </ul>
+        </div>
+    </main>
+
+    <!-- مكتبة Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="../js/admin.js"></script>
+ 
+
+
+
+
+</body>
+
+</html>

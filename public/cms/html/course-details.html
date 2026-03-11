@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دورة جافا للأمن السيبراني | CYBEReye</title>
+
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/course-details.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ 
+</head>
+
+<body>
+    <!-- الهيدر -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../html/index.html" class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    CYBEReye
+                </a>
+
+                <!-- شريط التنقل -->
+                <nav>
+                    <div class="logo">
+                        <h1>CYBER<span>eye</span></h1>
+                    </div>
+
+                    <ul>
+                        <li><a href="../html/index.html" class="active">Home</a></li>
+                        <li><a href="../html/index.html#dictionary">Dictionary</a></li>
+                        <li><a href="../html/index.html#roadmap">Roadmap</a></li>
+                        <li><a href="../html/courses.html">Courses</a></li>
+                        <li><a href="../html/index.html#resources">Resources</a></li>
+                        <li><a href="../html/index.html#about">About</a></li>
+                        <li><a href="../html/index.html#Review">Review</a></li>
+                        <li><a href="../html/contact.html">Contact</a></li>
+                        <li class="search">
+                            <label for="searchInput">Search</label>
+                            <input type="search" id="searchInput" name="search" placeholder="Search...">
+                        </li>
+                    </ul>
+
+                    <div class="icons">
+                        <a href="#"><i class="fa-solid fa-heart"></i></a>
+                        <a href="cyber.html"><i class="fa-solid fa-user"></i></a>
+                    </div>
+                </nav>
+
+
+                <div class="user-menu">
+                    <a href="../html/mycourse.html" id="userCoursesLink" style="display: none;">
+                        <i class="fas fa-user-graduate"></i> كورساتي
+                    </a>
+                    <a href="../html/login.html" class="login-btn" id="loginBtn">
+                        <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- قسم الكورس الرئيسي -->
+    <section class="course-hero">
+        <div class="container">
+            <h1 class="course-title">دورة جافا للأمن السيبراني</h1>
+            <div class="course-meta">
+                <div class="meta-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>المستوى: مبتدئ</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-clock"></i>
+                    <span>40 ساعة</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-star"></i>
+                    <span>التقييم: 4.9/5</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-users"></i>
+                    <span>1,250 طالب مسجل</span>
+                </div>
+            </div>
+
+            <p style="font-size: 1.2rem; margin-bottom: 1.5rem; opacity: 0.9;">
+                تعلم لغة جافا من الصفر وحتى الاحتراف مع تطبيقات عملية في مجال الأمن السيبراني
+            </p>
+
+            <div class="course-actions">
+                <button class="btn btn-primary" id="enrollBtn">
+                    <i class="fas fa-play-circle"></i> ابدأ الكورس الآن
+                </button>
+                <button class="btn btn-secondary" id="previewBtn">
+                    <i class="fas fa-eye"></i> معاينة مجانية
+                </button>
+                <button class="btn btn-outline" onclick="addToFavorites()">
+                    <i class="far fa-heart"></i> إضافة إلى المفضلة
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- محتوى الصفحة -->
+    <div class="container">
+        <div class="course-content">
+            <!-- الوصف الرئيسي -->
+            <div class="course-description">
+                <h2><i class="fas fa-info-circle"></i> وصف الكورس</h2>
+                <p style="margin-bottom: 1rem;">
+                    هذه الدورة الشاملة تغطي جميع أساسيات لغة جافا مع التركيز على تطبيقاتها في مجال الأمن السيبراني.
+                    ستبدأ رحلتك من الصفر حتى تصبح قادراً على كتابة برامج أمنية متقدمة.
+                </p>
+
+                <h3 style="margin: 1.5rem 0 1rem; color: #4361ee;">ما ستتعلمه:</h3>
+                <ul style="list-style: none; padding-right: 1rem;">
+                    <li style="margin-bottom: 0.8rem; padding-right: 1.5rem; position: relative;">
+                        <i class="fas fa-check-circle" style="color: #28a745; position: absolute; right: 0;"></i>
+                        أساسيات لغة جافا وجافا سكريبت
+                    </li>
+                    <li style="margin-bottom: 0.8rem; padding-right: 1.5rem; position: relative;">
+                        <i class="fas fa-check-circle" style="color: #28a745; position: absolute; right: 0;"></i>
+                        البرمجة الكائنية (OOP) وتطبيقاتها في الأمن
+                    </li>
+                    <li style="margin-bottom: 0.8rem; padding-right: 1.5rem; position: relative;">
+                        <i class="fas fa-check-circle" style="color: #28a745; position: absolute; right: 0;"></i>
+                        بناء تطبيقات ويب آمنة
+                    </li>
+                    <li style="margin-bottom: 0.8rem; padding-right: 1.5rem; position: relative;">
+                        <i class="fas fa-check-circle" style="color: #28a745; position: absolute; right: 0;"></i>
+                        التعامل مع قواعد البيانات بشكل آمن
+                    </li>
+                    <li style="margin-bottom: 0.8rem; padding-right: 1.5rem; position: relative;">
+                        <i class="fas fa-check-circle" style="color: #28a745; position: absolute; right: 0;"></i>
+                        تحليل الثغرات الأمنية في الشيفرات
+                    </li>
+                </ul>
+
+                <h3 style="margin: 2rem 0 1rem; color: #4361ee;">المتطلبات:</h3>
+                <ul style="list-style: none; padding-right: 1rem;">
+                    <li style="margin-bottom: 0.8rem; padding-right: 1.5rem; position: relative;">
+                        <i class="fas fa-laptop" style="color: #4361ee; position: absolute; right: 0;"></i>
+                        جهاز كمبيوتر
+                    </li>
+                    <li style="margin-bottom: 0.8rem; padding-right: 1.5rem; position: relative;">
+                        <i class="fas fa-download" style="color: #4361ee; position: absolute; right: 0;"></i>
+                        JDK 11 أو أحدث
+                    </li>
+                    <li style="margin-bottom: 0.8rem; padding-right: 1.5rem; position: relative;">
+                        <i class="fas fa-heart" style="color: #4361ee; position: absolute; right: 0;"></i>
+                        رغبة في التعلم
+                    </li>
+                </ul>
+            </div>
+
+            <!-- الشريط الجانبي -->
+            <div class="course-sidebar">
+                <div class="instructor-info">
+                    <img src="img/image.jpg" alt="المدرب" class="instructor-img">
+                    <div>
+                        <h4 style="margin-bottom: 0.3rem;">د. أحمد محمد</h4>
+                        <p style="color: #666; font-size: 0.9rem;">خبير أمن سيبراني - 10 سنوات خبرة</p>
+                    </div>
+                </div>
+
+                <div class="course-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">40+</span>
+                        <span class="stat-label">درس تعليمي</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">15</span>
+                        <span class="stat-label">تمرين عملي</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">5</span>
+                        <span class="stat-label">مشاريع</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">∞</span>
+                        <span class="stat-label">وصول مدى الحياة</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem;">
+                    <h4 style="margin-bottom: 1rem; color: #1a1a2e;">شهادة إتمام</h4>
+                    <p style="color: #666; margin-bottom: 1rem;">
+                        احصل على شهادة معتمدة عند إتمام الكورس بنجاح
+                    </p>
+                    <img src="https://via.placeholder.com/300x150/4361ee/ffffff?text=شهادة+إتمام" alt="شهادة إتمام"
+                        style="width: 100%; border-radius: 8px;">
+                </div>
+            </div>
+        </div>
+
+        <!-- قسم التحميلات -->
+        <div class="downloads-section">
+            <h2><i class="fas fa-download"></i> المواد القابلة للتحميل</h2>
+            <p style="color: #666; margin-top: 0.5rem;">
+                حمّل الكتب والمواد التعليمية مجاناً بعد التسجيل في الكورس
+            </p>
+
+            <ul class="download-list">
+                <li class="download-item">
+                    <div>
+                        <strong>كتاب جافا للمبتدئين.pdf</strong>
+                        <p style="color: #666; font-size: 0.9rem; margin-top: 0.3rem;">
+                            120 صفحة - تغطي الأساسيات
+                        </p>
+                    </div>
+                    <button class="download-btn" onclick="downloadFile('java-basics.pdf')">
+                        <i class="fas fa-download"></i> تحميل
+                    </button>
+                </li>
+                <li class="download-item">
+                    <div>
+                        <strong>تمارين عملية.zip</strong>
+                        <p style="color: #666; font-size: 0.9rem; margin-top: 0.3rem;">
+                            50 تمرين مع الحلول
+                        </p>
+                    </div>
+                    <button class="download-btn" onclick="downloadFile('exercises.zip')">
+                        <i class="fas fa-download"></i> تحميل
+                    </button>
+                </li>
+                <li class="download-item">
+                    <div>
+                        <strong>مشاريع جاهزة.rar</strong>
+                        <p style="color: #666; font-size: 0.9rem; margin-top: 0.3rem;">
+                            5 مشاريع تطبيقية
+                        </p>
+                    </div>
+                    <button class="download-btn" onclick="downloadFile('projects.rar')">
+                        <i class="fas fa-download"></i> تحميل
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+        <!-- قسم التقييمات -->
+        <div class="rating-section">
+            <h2><i class="fas fa-star"></i> تقييم الكورس</h2>
+
+            <div class="rating-form">
+                <div class="stars-input" id="starsContainer">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                </div>
+
+                <textarea class="review-textarea" id="reviewText"
+                    placeholder="شاركنا بتجربتك مع هذا الكورس..."></textarea>
+
+                <button class="btn btn-primary" onclick="submitReview()">
+                    <i class="fas fa-paper-plane"></i> إرسال التقييم
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>cybereye@gmail.com | © 2024 CyberEye. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="../html/index.html">Home</a> |
+            <a href="../html/courses.html">Courses</a> |
+            <a href="../html/contact.html">Contact</a> |
+            <a href="../html/cyber.html">Login</a>
+        </div>
+    </div>
+
+
+    <!-- مودال التسجيل -->
+    <div class="modal" id="enrollModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2 style="margin-bottom: 1.5rem; color: #1a1a2e;">التسجيل في الكورس</h2>
+
+            <form id="enrollmentForm">
+                <div class="form-group">
+                    <label for="fullName">الاسم الكامل *</label>
+                    <input type="text" id="fullName" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني *</label>
+                    <input type="email" id="email" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">رقم الهاتف</label>
+                    <input type="tel" id="phone" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="agreeTerms" required>
+                        أوافق على <a href="terms.html" style="color: #4361ee;">شروط الاستخدام</a> و
+                        <a href="privacy.html" style="color: #4361ee;">سياسة الخصوصية</a>
+                    </label>
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">
+                        <i class="fas fa-check-circle"></i> تأكيد التسجيل
+                    </button>
+                    <button type="button" class="btn btn-outline" onclick="closeModal()" style="flex: 1;">
+                        إلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- مودال النجاح -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div style="text-align: center; padding: 2rem;">
+                <div style="font-size: 4rem; color: #28a745; margin-bottom: 1rem;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2 style="color: #1a1a2e; margin-bottom: 1rem;">تم التسجيل بنجاح!</h2>
+                <p style="color: #666; margin-bottom: 2rem;">
+                    تم تسجيلك في دورة جافا للأمن السيبراني بنجاح.
+                    ستتم إعادة توجيهك إلى صفحة الكورس خلال لحظات...
+                </p>
+                <button class="btn btn-primary" onclick="redirectToCourse()" style="width: 100%;">
+                    <i class="fas fa-rocket"></i> اذهب إلى الكورس الآن
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/course-details.js"></script>
+
+</body>
+
+</html>

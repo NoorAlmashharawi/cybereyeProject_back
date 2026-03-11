@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Student;
 
 use App\Models\User1;
 use Illuminate\Http\Request;
@@ -12,7 +13,11 @@ class User1Controller extends Controller
      */
     public function index()
     {
-        //
+
+        
+         
+
+        
     }
 
     /**

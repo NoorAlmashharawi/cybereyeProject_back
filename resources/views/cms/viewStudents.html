@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الطلاب - تخصص الأمن السيبراني</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/viewStudents.css">
+  
+  
+</head>
+<body>
+    <!-- خلفية مصفوفة الأمن السيبراني -->
+    <div class="hacker-animation" id="matrixAnimation"></div>
+    
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-shield-alt"></i>  All Students</h1>
+            <p></p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="ابحث عن طالب بالاسم أو المعرف الأمني...">
+                <i class="fas fa-search"></i>
+            </div>
+            
+            <div class="filters">
+                <select id="skillFilter">
+                    <option value="all">جميع المهارات</option>
+                    <option value="beginner">مبتدئ</option>
+                    <option value="intermediate">متوسط</option>
+                    <option value="advanced">متقدم</option>
+                    <option value="expert">خبير</option>
+                </select>
+                
+                <select id="specializationFilter">
+                    <option value="all">جميع التخصصات</option>
+                    <option value="pentest">اختبار الاختراق</option>
+                    <option value="forensics">التحقيق الجنائي الرقمي</option>
+                    <option value="network">أمن الشبكات</option>
+                    <option value="appsec">أمن التطبيقات</option>
+                    <option value="risk">إدارة المخاطر</option>
+                </select>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn btn-secondary" id="scanBtn">
+                    <i class="fas fa-radar"></i> مسح الأمن
+                </button>
+                <button class="btn btn-primary" id="addStudentBtn" >
+                    <i class="fas fa-user-secret"></i> إضافة طالب
+                </button>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-icon hacker-icon">
+                    <i class="fas fa-user-secret"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="totalStudents">32</h3>
+                    <p>طالب الأمن السيبراني</p>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon cert-icon">
+                    <i class="fas fa-certificate"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="certCount">84</h3>
+                    <p>شهادات معتمدة</p>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon skill-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="avgSkill">متقدم</h3>
+                    <p>متوسط مستوى المهارة</p>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon threat-icon">
+                    <i class="fas fa-bug"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="threatsNeutralized">156</h3>
+                  
+                </div>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table id="studentsTable">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">
+                            <i class="fas fa-sort"></i> المعرف
+                        </th>
+                        <th onclick="sortTable(1)">
+                            <i class="fas fa-sort"></i> اسم الطالب
+                        </th>
+                        <th onclick="sortTable(2)">
+                            <i class="fas fa-sort"></i> المعرف الأمني
+                        </th>
+                        <th onclick="sortTable(3)">
+                            <i class="fas fa-sort"></i> مستوى المهارة
+                        </th>
+                        <th onclick="sortTable(4)">
+                            <i class="fas fa-sort"></i> التخصص الدقيق
+                        </th>
+                        <th onclick="sortTable(5)">
+                            <i class="fas fa-sort"></i> الشهادات
+                        </th>
+                        <th onclick="sortTable(6)">
+                            <i class="fas fa-sort"></i> الحالة
+                        </th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="studentsTableBody">
+                    <!-- سيتم ملئ هذا القسم بواسطة JavaScript -->
+                </tbody>
+            </table>
+            
+            <div id="noResultsMessage" class="no-results" style="display: none;">
+                <i class="fas fa-search"></i>
+                <h3>لا توجد نتائج</h3>
+                <p>لم يتم العثور على طلاب ينطبقون على معايير البحث الخاصة بك</p>
+            </div>
+        </div>
+        
+        <div class="pagination" id="pagination">
+            <!-- سيتم إنشاء أزرار الترقيم بواسطة JavaScript -->
+        </div>
+
+    </div>
+
+<script src="../js/viewStudents.js"></script>
+</body>
+</html>

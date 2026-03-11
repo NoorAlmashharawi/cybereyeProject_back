@@ -9,4 +9,42 @@ class Student extends Model
 {
     /** @use HasFactory<\Database\Factories\StudentFactory> */
     use HasFactory;
+
+
+    protected $table = 'students';
+
+    protected $fillable = [
+        'user1_id',
+        'enrollment_date',
+        'progress',
+        'level',          
+        'status',          
+        'specialization',  
+        'role',            
+    ];
+
+    protected $casts = [
+        'enrollment_date' => 'date',
+    ];
+
+    // ========== العلاقات ==========
+
+ 
+    public function user1()
+    {
+        return $this->belongsTo(User1::class, 'user1_id', 'id');
+    }
+    // protected $fillable = [
+    //     'username',
+    //     'email',
+    //     'role',
+    //     'password',
+
+    // ];
+
+    // public function students(){
+        
+    // }
+
+
 }

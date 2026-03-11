@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Learning | CYBEReye</title>
+ <link rel="stylesheet" href="../css/mycourse.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ 
+</head>
+
+<body>
+
+<header>
+<div class="container header-content">
+<a class="logo" href="#"><i class="fas fa-shield-alt"></i> CYBEReye</a>
+<div style="display:flex; gap:12px; align-items:center;">
+<div class="avatar" id="avatar">م</div>
+<div>
+<strong id="userName">محمد أحمد</strong><br>
+<small id="userEmail">mohamed@example.com</small>
+</div>
+</div>
+</div>
+</header>
+
+<div class="container">
+<div class="page-header">
+<h1>My Learning</h1>
+<p>أكمّل من حيث توقفت واحصل على شهادتك 🎓</p>
+</div>
+
+<div class="main-content">
+<div class="sidebar">
+<h3>القائمة</h3>
+<ul>
+<li class="active" onclick="filterCourses('all')"><i class="fas fa-th-large"></i> الكل</li>
+<li onclick="filterCourses('in-progress')"><i class="fas fa-play-circle"></i> جاري التعلم</li>
+<li onclick="filterCourses('completed')"><i class="fas fa-check-circle"></i> مكتمل</li>
+<li onclick="filterCourses('wishlist')"><i class="fas fa-heart"></i> المفضلة</li>
+</ul>
+</div>
+
+<div class="content">
+<div id="continueBox"></div>
+<div id="courses" class="courses-grid"></div>
+</div>
+</div>
+</div>
+
+<footer>
+<p>cybereye@gmail.com | © 2024 CyberEye. All rights reserved.</p>
+<div class="footer-links">
+<a href="../html/index.html">Home</a> |
+<a href="../html/courses.html">Courses</a> |
+<a href="../html/contact.html">Contact</a> |
+<a href="../html/cyber.html">Login</a>
+</div>
+</footer>
+
+ 
+<script src="../js/mycourse.js"></script>
+</body>
+</html>
