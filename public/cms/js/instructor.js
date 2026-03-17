@@ -4,17 +4,17 @@
 
 /*     document.addEventListener('DOMContentLoaded', function() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    
+
     if (!currentUser || currentUser.role !== 'instructor') {
         window.location.href = 'login.html';
         return;
     }
-    
+
     // عرض بيانات المدرب
     document.getElementById('instructorName').textContent = currentUser.firstName;
     document.getElementById('instructorEmail').textContent = currentUser.email;
     document.getElementById('instructorAvatar').textContent = currentUser.firstName.charAt(0);
-    
+
     // تحميل البيانات
     loadInstructorData();
 });*/
@@ -45,10 +45,10 @@ function loadInstructorData() {
             revenue: 4500
         }
     ];
-    
+
     const coursesTable = document.getElementById('coursesTable');
     coursesTable.innerHTML = '';
-    
+
     courses.forEach(course => {
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -69,7 +69,7 @@ function loadInstructorData() {
         `;
         coursesTable.appendChild(row);
     });
-    
+
     // تحميل الطلاب
     const students = [
         { name: 'محمد أحمد', course: 'الأساسيات', progress: 85 },
@@ -78,10 +78,10 @@ function loadInstructorData() {
         { name: 'فاطمة علي', course: 'الأساسيات', progress: 30 },
         { name: 'خالد سعيد', course: 'جافا', progress: 75 }
     ];
-    
+
     const studentsList = document.getElementById('studentsList');
     studentsList.innerHTML = '';
-    
+
     students.forEach(student => {
         const studentItem = document.createElement('div');
         studentItem.className = 'student-item';

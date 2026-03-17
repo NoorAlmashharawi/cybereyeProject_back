@@ -16,8 +16,26 @@ class InstructorFactory extends Factory
      */
     public function definition(): array
     {
+
+        //    id()
+             //specialization
+             //experience_years
+           //bio
+           //rating
+          //enrollment_date
+
         return [
-            //
+
+            'username' => $this->faker->unique()->username(),
+
+           'email' => $this-> faker->email(),
+           'experience_years' =>$this-> faker->numberBetween(0,10),
+
+            'specialization' =>$this-> faker->word,
+
+
+
         ];
+
     }
 }
