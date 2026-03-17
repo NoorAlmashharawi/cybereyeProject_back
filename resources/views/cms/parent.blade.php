@@ -54,7 +54,7 @@
                 <a href="courses.html" class="admin-menu-item">
                     <i class="fas fa-graduation-cap"></i>
                     <span>الكورسات</span>
-              
+
 
                     <a href="categories.html" class="admin-menu-item">
                         <i class="fas fa-tags"></i>
@@ -72,12 +72,12 @@
                 <a href="{{ route('students.index') }}" class="admin-menu-item">
                     <i class="fas fa-users"></i>
                     <span>الطلاب</span>
-                 
+
                 </a>
-                <a href="viewTeachers.html" class="admin-menu-item">
+                <a   href="{{ route('instructors.index') }}"  class="admin-menu-item">
                     <i class="fas fa-chalkboard-teacher"></i>
                     <span>المدربون</span>
-                  
+
                 </a>
 
             </div>
@@ -88,7 +88,7 @@
                 <a href="order.html" class="admin-menu-item">
                     <i class="fas fa-shopping-cart"></i>
                     <span>الطلبات</span>
-          
+
                 </a>
                 <a href="transactions.html" class="admin-menu-item">
                     <i class="fas fa-credit-card"></i>
@@ -138,7 +138,7 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('cms/js/crud.js') }}"></script>
-    
+
     @yield('scripts')
 
 
