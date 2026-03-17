@@ -14,8 +14,11 @@ Route::get('/', function () {
 Route::prefix('cms/student')->group(function(){
     Route::view('/', 'cms.parent');
 Route::view('temp', 'cms.temp');
+// Route::view('main', 'cms.student.main')->name('main');;
 
 Route::put('students_update/{id}', [StudentController::class, 'update'])->name('students_update');
+Route::get('main', [StudentController::class, 'dashboard'])->name('main');
+
 Route::resource('students', StudentController::class);
 Route::resource('users', User1sController::class);
 

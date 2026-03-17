@@ -42,7 +42,7 @@
             <!-- القسم الرئيسي -->
             <div class="admin-menu-section">
                 <div class="menu-title">الرئيسية</div>
-                <a href="#dashboard" class="admin-menu-item active">
+                <a href="{{ route('main') }}" class="admin-menu-item active">
                     <i class="fas fa-tachometer-alt"></i>
                     <span>لوحة التحكم</span>
                 </a>

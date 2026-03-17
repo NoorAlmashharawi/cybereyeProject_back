@@ -8,6 +8,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="{{ asset('cms/css/viewStudents.css') }}">
+
+
 @endsection
 
 @section('content')
@@ -139,5 +141,164 @@
     function performDestroy(id, reference) {
         confirmDestroy('/cms/student/students/' + id, reference);
     }
+
 </script>
+
+
+
+
+
+<script>
+    // تنفيذ البحث الفوري
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let searchTerm = this.value.toLowerCase();
+        let tableRows = document.querySelectorAll('#studentsTable tbody tr');
+        let hasResults = false;
+        
+        tableRows.forEach(row => {
+            let studentName = row.cells[1]?.textContent.toLowerCase() || '';
+            let studentId = row.cells[0]?.textContent.toLowerCase() || '';
+            let studentEmail = row.cells[2]?.textContent.toLowerCase() || '';
+            let studentLevel = row.cells[3]?.textContent.toLowerCase() || '';
+            let studentSpecialization = row.cells[4]?.textContent.toLowerCase() || '';
+            
+            if (studentName.includes(searchTerm) || 
+                studentId.includes(searchTerm) || 
+                studentEmail.includes(searchTerm) ||
+                studentLevel.includes(searchTerm) ||
+                studentSpecialization.includes(searchTerm)) {
+                row.style.display = '';
+                hasResults = true;
+                
+                // إضافة تأثير تمييز للنتيجة
+                row.style.backgroundColor = '#fff3cd';
+                setTimeout(() => {
+                    row.style.backgroundColor = '';
+                }, 500);
+            } else {
+                row.style.display = 'none';
+            }
+        });
+        
+        // إظهار/إخفاء رسالة عدم وجود نتائج
+        let noResultsDiv = document.getElementById('noResultsMessage');
+        if (!hasResults && searchTerm !== '') {
+            noResultsDiv.style.display = 'block';
+        } else {
+            noResultsDiv.style.display = 'none';
+        }
+        
+        // تحديث إحصائيات البحث
+        updateSearchStats(searchTerm);
+    });
+    
+    // دالة لتحديث إحصائيات البحث
+    function updateSearchStats(searchTerm) {
+        let visibleRows = document.querySelectorAll('#studentsTable tbody tr[style="display: "]').length;
+        let totalRows = document.querySelectorAll('#studentsTable tbody tr').length;
+        
+        // إضافة أو تحديث عداد النتائج
+        let statsDiv = document.getElementById('searchStats');
+        if (!statsDiv) {
+            statsDiv = document.createElement('div');
+            statsDiv.id = 'searchStats';
+            statsDiv.className = 'search-stats';
+            document.querySelector('.table-container').insertBefore(statsDiv, document.getElementById('studentsTable'));
+        }
+        
+        if (searchTerm !== '') {
+            statsDiv.innerHTML = `
+                <div class="search-results-info">
+                    <i class="fas fa-search"></i>
+                    <span>نتائج البحث عن "${searchTerm}": <strong>${visibleRows}</strong> من <strong>${totalRows}</strong> طالب</span>
+                    <button onclick="clearSearch()" class="clear-search-btn">
+                        <i class="fas fa-times"></i> مسح
+                    </button>
+                </div>
+            `;
+            statsDiv.style.display = 'block';
+        } else {
+            statsDiv.style.display = 'none';
+        }
+    }
+    
+    // دالة لمسح البحث
+    function clearSearch() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('searchInput').dispatchEvent(new Event('keyup'));
+        document.getElementById('searchStats').style.display = 'none';
+    }
+    
+    // دالة ترتيب الجدول
+    function sortTable(columnIndex) {
+        let table = document.getElementById('studentsTable');
+        let tbody = table.getElementsByTagName('tbody')[0];
+        let rows = Array.from(tbody.getElementsByTagName('tr'));
+        
+        // تحديد اتجاه الترتيب
+        let isAscending = table.querySelectorAll('th')[columnIndex].classList.contains('sort-asc');
+        
+        // إعادة تعيين كل أعمدة الترتيب
+        table.querySelectorAll('th').forEach(th => {
+            th.classList.remove('sort-asc', 'sort-desc');
+        });
+        
+        // تعيين اتجاه الترتيب الجديد
+        let currentTh = table.querySelectorAll('th')[columnIndex];
+        currentTh.classList.add(isAscending ? 'sort-desc' : 'sort-asc');
+        
+        // ترتيب الصفوف
+        rows.sort((a, b) => {
+            let aValue = a.cells[columnIndex]?.textContent.trim() || '';
+            let bValue = b.cells[columnIndex]?.textContent.trim() || '';
+            
+            // محاولة التحويل إلى رقم
+            let aNum = parseFloat(aValue);
+            let bNum = parseFloat(bValue);
+            
+            if (!isNaN(aNum) && !isNaN(bNum)) {
+                return isAscending ? aNum - bNum : bNum - aNum;
+            }
+            
+            // مقارنة نصية
+            return isAscending ? 
+                aValue.localeCompare(bValue, 'ar') : 
+                bValue.localeCompare(aValue, 'ar');
+        });
+        
+        // إعادة ترتيب الصفوف في الجدول
+        rows.forEach(row => tbody.appendChild(row));
+    }
+    
+    // دالة تأكيد الحذف
+    function performDestroy(id, reference) {
+        if (confirm('هل أنت متأكد من حذف هذا الطالب؟')) {
+            // يمكنك إضافة كود الحذف الفعلي هنا
+            alert('تم حذف الطالب بنجاح');
+            // window.location.href = '/cms/student/students/' + id;
+        }
+    }
+    
+    // إضافة تأثيرات للبحث
+    document.addEventListener('DOMContentLoaded', function() {
+        let searchInput = document.getElementById('searchInput');
+        
+        // إضافة أيقونة مسح البحث عند الكتابة
+        searchInput.addEventListener('input', function() {
+            let clearIcon = document.querySelector('.search-clear');
+            if (this.value.length > 0) {
+                if (!clearIcon) {
+                    let icon = document.createElement('i');
+                    icon.className = 'fas fa-times-circle search-clear';
+                    icon.onclick = clearSearch;
+                    this.parentNode.appendChild(icon);
+                }
+            } else {
+                if (clearIcon) clearIcon.remove();
+            }
+        });
+    });
+</script>
+
+
 @endsection

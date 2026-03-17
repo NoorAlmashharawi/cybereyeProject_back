@@ -218,4 +218,12 @@ return response()->view('cms.student.index', compact(
         $students = Student::destroy($id);
         
     }
+
+    public function dashboard()
+{
+    $newStudents = Student::with('user1')->latest()->limit(10)->get();
+    $totalUsers = User1::count();
+    
+    return view('cms.student.main', compact('newStudents', 'totalUsers'));
+}
 }
