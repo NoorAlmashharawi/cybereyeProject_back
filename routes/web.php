@@ -20,7 +20,7 @@ Route::put('students_update/{id}', [StudentController::class, 'update'])->name('
 Route::get('main', [StudentController::class, 'dashboard'])->name('main');
 
 Route::resource('students', StudentController::class);
-Route::resource('users', User1sController::class);
+Route::resource('users', User1Controller::class);
 
 });
 Route::prefix('cms/instructor')->group(function(){
@@ -29,7 +29,7 @@ Route::view('temp', 'cms.temp');
 
 Route::put('instructors_update/{id}', [InstructorController::class, 'update'])->name('instructors_update');
 Route::resource('instructors', InstructorController::class);
-Route::resource('users', User1sController::class);
+Route::resource('users', User1Controller::class);
 
 });
 
