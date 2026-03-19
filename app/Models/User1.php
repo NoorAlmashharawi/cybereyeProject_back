@@ -40,6 +40,10 @@ class User1 extends Model
         return $this->hasOne(Student::class, 'user_id', 'id');
     }
 
-    
+      public function instructor()
+    {
+        return $this->hasOne(Instructor::class, 'user1_id', 'id');
+    }
+
 
 }
