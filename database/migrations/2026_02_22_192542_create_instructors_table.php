@@ -14,12 +14,14 @@ return new class extends Migration
         Schema::create('instructors', function (Blueprint $table) {
             $table->id();
 
-            $table->string('specialization');
+            $table->string('specialization')->nullable();
             $table->integer('experience_years')->nullable();
             $table->text('bio')->nullable();
-            $table->decimal('rating',2,1)->default(0);
+            $table->decimal('rating',2,1)->default(0)->nullable();
             $table->date('enrollment_date')->nullable();
-            $table->foreignId('user1_id');
+             $table->foreignId('user1_id');
+            $table->foreign('user1_id')->on('user1s')->references('id')->cascadeOnDelete();
+
 
             $table->timestamps();
         });

@@ -477,3 +477,19 @@ select {
 .btn-primary.loading i {
     animation: gentleSpin 1s linear infinite;
 }
+.bio{
+    width: 100%;
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid #30363d;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: transform 0.3s;
+   
+}
+.bio:hover{
+   
+    transform: translateY(-5px);
+    border-color: #238636;
+}

@@ -61,7 +61,7 @@
                 <i class="fas fa-star"></i>
             </div>
             <div class="stat-content">
-                <h3>{{ $avgRating }}</h3>
+                {{-- <h3>{{ $avgRating }}</h3> --}}
                 <p>متوسط التقييم</p>
             </div>
         </div>

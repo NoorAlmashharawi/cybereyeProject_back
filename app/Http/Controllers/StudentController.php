@@ -6,7 +6,8 @@ use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User1;        
+use App\Models\User1;  
+    
 
 
 class StudentController extends Controller
@@ -22,6 +23,9 @@ class StudentController extends Controller
 // 2. حساب الإحصائيات من قاعدة البيانات مباشرة
         $totalStudents = Student::count(); 
 
+     
+
+
 // تحديد المستوى الأكثر تكراراً بين الطلاب
 $mostCommonLevel = Student::select('level')
     ->groupBy('level')
@@ -34,7 +38,8 @@ if ($mostCommonLevel) {
         'beginner' => 'مبتدئ',
         'intermediate' => 'متوسط',  
         'advanced' => 'متقدم',
-        'expert' => 'خبير'          
+        'expert' => 'خبير'   
+
     ];
     $avgSkillArabic = $skillsMap[$mostCommonLevel->level] ?? $mostCommonLevel->level;
 }
@@ -43,13 +48,14 @@ if ($mostCommonLevel) {
 $certCount = $totalStudents * 2; 
 $threats = 156; 
 
-// 3. الـ return النهائي
+// .الـ return النهائي
 return response()->view('cms.student.index', compact(
     'students', 
     'totalStudents', 
     'avgSkillArabic', 
     'certCount', 
-    'threats'
+    'threats',
+    
 ));}
 
 
@@ -219,11 +225,5 @@ return response()->view('cms.student.index', compact(
         
     }
 
-    public function dashboard()
-{
-    $newStudents = Student::with('user1')->latest()->limit(10)->get();
-    $totalUsers = User1::count();
-    
-    return view('cms.student.main', compact('newStudents', 'totalUsers'));
-}
+
 }

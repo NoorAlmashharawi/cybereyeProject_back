@@ -8,7 +8,8 @@ use IlluminateHttpResponse;
 use IlluminateHttpFacadesDB;
 use App\http\Controllers\StudentController;
 use App\Models\Student;
-
+use App\Models\Instructor;  
+use App\Models\User1; 
 
 
 class AdminController extends Controller
@@ -18,11 +19,12 @@ class AdminController extends Controller
      */
     public function index()
     {
- 
-
+        $newStudents = Student::with('user1')->latest()->limit(10)->get();
+        $totalUsers = User1::count();
+        
+        return view('cms.admin.main', compact('newStudents', 'totalUsers'));}
      
-    }
-
+    
     /**
      * Show the form for creating a new resource.
      */

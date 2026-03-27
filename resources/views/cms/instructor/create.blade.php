@@ -83,8 +83,8 @@
 
 <div class="form-group">
 
-<label>نبذة عن المدرس</label>
-<textarea id="bio" rows="4"></textarea>
+<label class="form-subtitle">نبذة عن المدرس</label>
+<textarea id="bio" rows="4" class="bio"></textarea>
 
 </div>
 

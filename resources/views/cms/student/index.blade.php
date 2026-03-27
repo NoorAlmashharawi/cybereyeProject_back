@@ -13,7 +13,7 @@
 @endsection
 
 @section('content')
-<!-- خلفية مصفوفة الأمن السيبراني -->
+
 <div class="hacker-animation" id="matrixAnimation"></div>
 
 <header>
@@ -45,7 +45,7 @@
                 <i class="fas fa-user-secret"></i>
             </div>
             <div class="stat-content">
-                <h3 id="totalStudents">{{ $totalStudents }}</h3>
+                <h3 id="totalStudents">{{ $totalStudents }} </h3>
                 <p>طالب</p>
             </div>
         </div>
@@ -270,14 +270,14 @@
         rows.forEach(row => tbody.appendChild(row));
     }
     
-    // دالة تأكيد الحذف
-    function performDestroy(id, reference) {
-        if (confirm('هل أنت متأكد من حذف هذا الطالب؟')) {
-            // يمكنك إضافة كود الحذف الفعلي هنا
-            alert('تم حذف الطالب بنجاح');
-            // window.location.href = '/cms/student/students/' + id;
-        }
-    }
+    // // دالة تأكيد الحذف
+    // function performDestroy(id, reference) {
+    //     if (confirm('هل أنت متأكد من حذف هذا الطالب؟')) {
+    //         // يمكنك إضافة كود الحذف الفعلي هنا
+    //         alert('تم حذف الطالب بنجاح');
+    //         // window.location.href = '/cms/student/students/' + id;
+    //     }
+    // }
     
     // إضافة تأثيرات للبحث
     document.addEventListener('DOMContentLoaded', function() {

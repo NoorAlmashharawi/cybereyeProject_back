@@ -179,4 +179,38 @@ nav .search input {
     nav .search input {
         width: 200px;
     }
+    .footer-links {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+}
+.footer {
+    background: linear-gradient(135deg, #4a19b4 0%, #6c14d0 100%);
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.footer p {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.footer-links a {
+    color: white;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+}
+
+.footer-links a:hover {
+    opacity: 0.8;
+    text-decoration: underline;
 }
