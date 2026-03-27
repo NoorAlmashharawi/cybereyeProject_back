@@ -55,12 +55,12 @@ Route::prefix('cms/instructor')->group(function(){
 
 
 
-    // Route::view('details','cms/courseDetails/details')
-    // ;
+    Route::view('details','cms/courseDetails/details')
+    ;
 
-    Route::prefix('courses')->group(function () {
+    // Route::prefix('courses')->group(function () {
     // صفحة تفاصيل الكورس
-    Route::get('{id}', [CourseController::class, 'show'])->name('course.details');
+    // Route::get('{id}', [CourseController::class, 'show'])->name('course.details');
 
     // تسجيل في الكورس
     // Route::post('{id}/enroll', [CourseController::class, 'enroll'])->name('course.enroll');
@@ -73,4 +73,4 @@ Route::prefix('cms/instructor')->group(function(){
 
     // // إضافة للمفضلة
     // Route::post('{id}/favorite', [CourseController::class, 'addToFavorites'])->name('course.favorite');
-});
+// });
