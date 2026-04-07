@@ -9,7 +9,6 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="{{ asset('cms/css/viewStudents.css') }}">
 
-
 @endsection
 
 @section('content')
@@ -23,62 +22,28 @@
     </div>
 </header>
 
+
+
 <div class="container">
     <div class="controls">
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="ابحث عن طالب بالاسم أو المعرف الأمني...">
-            <i class="fas fa-search"></i>
-        </div>
+    
 
         <div class="action-buttons">
-            <button class="btn btn-primary" id="addStudentBtn">
-                <a href="{{ route('students.create') }}" style="color:white; text-decoration:none;">
-                    <i class="fas fa-user-secret"></i> إضافة طالب
+            <button class="btn btn-primary" id="addStudentBtn" style="background-color: red">
+                <a href="{{ route('students_forceAll') }}" style="color:white; text-decoration:none;">
+                    <i class="fas fa-user-secret"></i> حذف الجميع
                 </a>
+            </button>
 
-               
-            </button>
-            <button class="btn btn-primary" id="addStudentBtn" style="background-color:red">
-                <a href="{{ route('students_trashed') }}" style="color:white; text-decoration:none; ">
-                    <i class="fas fa-user-secret"></i> قديم
+            <button class="btn btn-secondary">
+                <a href="{{ route('students.index') }}" style="color:white; text-decoration:none;">
+                    <i class="fas fa-arrow-left"></i> العودة للطلاب
                 </a>
-               
             </button>
-            
         </div>
     </div>
 
-    <div class="stats">
-        <div class="stat-card">
-            <div class="stat-icon hacker-icon">
-                <i class="fas fa-user-secret"></i>
-            </div>
-            <div class="stat-content">
-                <h3 id="totalStudents">{{ $totalStudents }} </h3>
-                <p>طالب</p>
-            </div>
-        </div>
-        
-        <div class="stat-card">
-            <div class="stat-icon cert-icon">
-                <i class="fas fa-certificate"></i>
-            </div>
-            <div class="stat-content">
-                <h3 id="certCount">{{ $certCount ?? 0 }}</h3>
-                <p>شهادات معتمدة</p>
-            </div>
-        </div>
-        
-        <div class="stat-card">
-            <div class="stat-icon skill-icon">
-                <i class="fas fa-chart-line"></i>
-            </div>
-            <div class="stat-content">
-                <h3 id="avgSkill">{{ $avgSkillArabic ?? 'مبتدئ' }}</h3>
-                <p>متوسط مستوى المهارة</p>
-            </div>
-        </div>
-    </div>
+    
 
     <div class="table-container">
         <table id="studentsTable">
@@ -115,27 +80,22 @@
                         @endif
                     </td>
                     <td class="text-center" style="display:flex; gap:5px;">
-                        <a href="{{ route('students.show', $student->id) }}" class="btn-action btn-info" title="عرض التفاصيل">
-                            <i class="fas fa-eye"></i>
+                   
+                     
+                        <a href="{{ route('students_restore', $student->id) }}" class="btn-action btn-primary" title="استعادة">
+                            <i class="fas fa-trash-restore"></i>
                         </a>
-                        <a href="{{ route('students.edit', $student->id) }}" class="btn-action btn-primary" title="تعديل">
-                            <i class="fas fa-edit"></i>
+
+                        <a href="{{ route('students_force', $student->id) }}" class="btn-action btn-danger" title="حذف">
+                            <i class="fas fa-trash-alt"></i>
                         </a>
-                        <form action="{{ route('students.destroy', $student->id) }}" method="post" style="display: inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="button" class="btn-action btn-danger" title="حذف" onclick="performDestroy({{ $student->id }}, this)">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </form>
+                     
                     </td>
                 </tr>
                 @endforeach
             </tbody>
         </table>
 
-        {{ $students->links() }}
-        
         <div id="noResultsMessage" class="no-results" style="display: none;">
             <i class="fas fa-search"></i>
             <h3>لا توجد نتائج</h3>
@@ -143,19 +103,27 @@
         </div>
     </div>
 </div>
+
+<div id="noResultsMessage" class="no-results" style="display: none;">
+    <i class="fas fa-search"></i>
+    <h3>لا توجد نتائج</h3>
+    <p>لم يتم العثور على مدرسين ينطبقون على معايير البحث الخاصة بك</p>
+</div>
 @endsection
 
 @section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-    function performDestroy(id, reference) {
-        confirmDestroy('/cms/student/students/' + id, reference);
-    }
+    // function performDestroy(id, reference) {
+    //     confirmDestroy('/cms/student/students_force/' + id, reference);
+    // }
 
 </script>
+<script>
+  
+  
 
-
-
-
+</script>
 
 <script>
     // تنفيذ البحث الفوري
@@ -179,7 +147,6 @@
                 row.style.display = '';
                 hasResults = true;
                 
-                // إضافة تأثير تمييز للنتيجة
                 row.style.backgroundColor = '#fff3cd';
                 setTimeout(() => {
                     row.style.backgroundColor = '';
@@ -189,7 +156,6 @@
             }
         });
         
-        // إظهار/إخفاء رسالة عدم وجود نتائج
         let noResultsDiv = document.getElementById('noResultsMessage');
         if (!hasResults && searchTerm !== '') {
             noResultsDiv.style.display = 'block';
@@ -197,16 +163,13 @@
             noResultsDiv.style.display = 'none';
         }
         
-        // تحديث إحصائيات البحث
         updateSearchStats(searchTerm);
     });
     
-    // دالة لتحديث إحصائيات البحث
     function updateSearchStats(searchTerm) {
         let visibleRows = document.querySelectorAll('#studentsTable tbody tr[style="display: "]').length;
         let totalRows = document.querySelectorAll('#studentsTable tbody tr').length;
         
-        // إضافة أو تحديث عداد النتائج
         let statsDiv = document.getElementById('searchStats');
         if (!statsDiv) {
             statsDiv = document.createElement('div');
@@ -231,37 +194,30 @@
         }
     }
     
-    // دالة لمسح البحث
     function clearSearch() {
         document.getElementById('searchInput').value = '';
         document.getElementById('searchInput').dispatchEvent(new Event('keyup'));
         document.getElementById('searchStats').style.display = 'none';
     }
     
-    // دالة ترتيب الجدول
     function sortTable(columnIndex) {
         let table = document.getElementById('studentsTable');
         let tbody = table.getElementsByTagName('tbody')[0];
         let rows = Array.from(tbody.getElementsByTagName('tr'));
         
-        // تحديد اتجاه الترتيب
         let isAscending = table.querySelectorAll('th')[columnIndex].classList.contains('sort-asc');
         
-        // إعادة تعيين كل أعمدة الترتيب
         table.querySelectorAll('th').forEach(th => {
             th.classList.remove('sort-asc', 'sort-desc');
         });
         
-        // تعيين اتجاه الترتيب الجديد
         let currentTh = table.querySelectorAll('th')[columnIndex];
         currentTh.classList.add(isAscending ? 'sort-desc' : 'sort-asc');
         
-        // ترتيب الصفوف
         rows.sort((a, b) => {
             let aValue = a.cells[columnIndex]?.textContent.trim() || '';
             let bValue = b.cells[columnIndex]?.textContent.trim() || '';
             
-            // محاولة التحويل إلى رقم
             let aNum = parseFloat(aValue);
             let bNum = parseFloat(bValue);
             
@@ -269,23 +225,17 @@
                 return isAscending ? aNum - bNum : bNum - aNum;
             }
             
-            // مقارنة نصية
             return isAscending ? 
                 aValue.localeCompare(bValue, 'ar') : 
                 bValue.localeCompare(aValue, 'ar');
         });
         
-        // إعادة ترتيب الصفوف في الجدول
         rows.forEach(row => tbody.appendChild(row));
     }
     
-  
-    
-    // إضافة تأثيرات للبحث
     document.addEventListener('DOMContentLoaded', function() {
         let searchInput = document.getElementById('searchInput');
         
-        // إضافة أيقونة مسح البحث عند الكتابة
         searchInput.addEventListener('input', function() {
             let clearIcon = document.querySelector('.search-clear');
             if (this.value.length > 0) {
@@ -300,10 +250,5 @@
             }
         });
     });
-
-
 </script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
 @endsection

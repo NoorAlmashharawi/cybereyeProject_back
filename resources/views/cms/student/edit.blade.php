@@ -10,7 +10,7 @@
 @section('content')
 <div class="form-container">
     <h2 class="form-title">
-        <i class="fas fa-user-edit"></i> معلومات النظام: '{{ $student->user1->username }}'
+        <i class="fas fa-user-edit"></i> معلومات النظام: '{{ $student->user1->username ?? 'غير محدد' }}'
     </h2>
 
     <form id="edit-student-form">
@@ -22,10 +22,11 @@
                     <i class="fas fa-info-circle"></i> الرقم التعريفي الخاص بالطالب
                 </div>
             </div>
+       
 
             <div class="form-group">
                 <label for="username">اسم المستخدم *</label>
-                <input type="text" id="username" name="username" required placeholder="أدخل اسم المستخدم" value="{{ $student->user1->username }}">
+                <input type="text" id="username" name="username" required placeholder="أدخل اسم المستخدم" value="{{ $student->user1->username ?? 'غير محدد'}}">
                 <div class="form-help">
                     <i class="fas fa-info-circle"></i> اسم الدخول للنظام
                 </div>
@@ -35,7 +36,7 @@
         <div class="form-row">
             <div class="form-group">
                 <label for="email">البريد الإلكتروني *</label>
-                <input type="email" id="email" name="email" required placeholder="example@mail.com" value="{{ $student->user1->email }}">
+                <input type="email" id="email" name="email" required placeholder="example@mail.com" value="{{ $student->user1->email?? 'غير محدد' }}">
             </div>
 
             <div class="form-group">
@@ -53,12 +54,12 @@
         <div class="form-row">
             <div class="form-group">
                 <label for="specialization">التخصص</label>
-                <input type="text" id="specialization" name="specialization" placeholder="مثال: أمن شبكات" value="{{ $student->specialization }}">
+                <input type="text" id="specialization" name="specialization" placeholder="مثال: أمن شبكات" value="{{ $student->specialization ?? 'غير محدد' }}">
             </div>
 
             <div class="form-group">
                 <label for="progress">نسبة التقدم</label>
-                <input type="number" id="progress" name="progress" min="0" max="100" value="{{ $student->progress }}">
+                <input type="number" id="progress" name="progress" min="0" max="100" value="{{ $student->progress?? 'غير محدد' }}">
             </div>
         </div>
 
@@ -96,11 +97,16 @@ function performUpdate(id) {
     let formData = new FormData();
     formData.append('_method', 'PUT'); 
     formData.append('username', document.getElementById('username').value);
-    formData.append('email',    document.getElementById('email').value);
-    formData.append('level',    document.getElementById('level').value);
-    formData.append('status',   document.getElementById('status').value);
+    formData.append('email', document.getElementById('email').value);
+    formData.append('level', document.getElementById('level').value);
+    formData.append('status', document.getElementById('status').value);
+    
 
-    // استخدام axios مباشرة لضمان التحكم الكامل
+    formData.append('specialization', document.getElementById('specialization').value);
+    formData.append('progress', document.getElementById('progress').value);
+    formData.append('enrollment_date', document.getElementById('enrollment_date').value);
+
+    
     axios.post('/cms/student/students_update/' + id, formData)
     .then(function (response) {
         // إذا كان toastr غير معرف، سيستخدم alert عادي حتى لا ينهار الكود

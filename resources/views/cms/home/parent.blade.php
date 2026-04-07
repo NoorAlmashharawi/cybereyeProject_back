@@ -7,55 +7,9 @@
     <title>CyberEye - Home</title>
     <link rel="stylesheet" href="{{ asset('cms/css/navbar.css') }}">
   
-    <link rel="shortcut icon" href="../img/digital.jpg">
+    <link rel="shortcut icon" href="{{ asset('cms/img/digital.jpg') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-<style>
-    .search-container {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
 
-.search-container input {
-    padding: 8px 15px;
-    border: 2px solid rgba(255,255,255,0.2);
-    border-radius: 25px;
-    background: rgba(255,255,255,0.1);
-    color: white;
-    outline: none;
-    transition: all 0.3s ease;
-    width: 150px;
-}
-
-.search-container input::placeholder {
-    color: rgba(255,255,255,0.7);
-}
-
-.search-container input:focus {
-    border-color: #4caf50;
-    background: rgba(255,255,255,0.2);
-    width: 200px;
-}
-
-.search-container button {
-    background: #4caf50;
-    border: none;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    color: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.search-container button:hover {
-    background: #45a049;
-    transform: scale(1.05);
-}
-</style>
 
     @yield('styles')
 </head>
@@ -76,7 +30,7 @@
             <li><a href="{{ route('home') }}#resources">Resources</a></li>
             <li><a href="{{ route('home') }}#about">About</a></li>
             <li><a href="{{ route('home') }}#Review">Review</a></li>
-            <li><a href=" ../html/contact.html">Contact</a></li>
+            <li><a href="{{ route('contact') }}">Contact</a></li>
             <li class="search">
                 <div class="search-container">
                     <input type="text" id="searchInput" placeholder="Search...">
@@ -97,7 +51,7 @@
     @yield('content')
 <!-- Footer -->
 <div class="footer">
-    <p>cybereye@gmail.com | © 2024 CyberEye. All rights reserved.</p>
+    <p>cybereye@gmail.com | ©  CyberEye. All rights reserved.</p>
     <div class="footer-links">
         <a href="{{ route('home') }}">Home</a> | 
         <a href="../html/contact.html">Contact</a> | 

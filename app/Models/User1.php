@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User1 as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 
@@ -15,14 +16,20 @@ class User1 extends Model
 
 
     use HasFactory, Notifiable;
+    use SoftDeletes;
 
     protected $table = 'user1s';
+
+ 
+
+
 
     protected $fillable = [
         'username',
         'password',
         'email',
         'role',
+        'actor_type', 'actor_id'
     ];
 
     protected $hidden = [
@@ -35,15 +42,27 @@ class User1 extends Model
 
     // ========== العلاقات ==========
 
-    public function student()
+    public function actor()
     {
-        return $this->hasOne(Student::class, 'user_id', 'id');
+        return $this->morphTo();
     }
 
-      public function instructor()
-    {
-        return $this->hasOne(Instructor::class, 'user1_id', 'id');
-    }
+// public function isStudent()
+// {
+//     return $this->actor_type === Student::class && $this->actor;
+// }
+
+// public function isInstructor()
+// {
+//     return $this->actor_type === Instructor::class && $this->actor;
+// }
+
+// public function isAdmin()
+// {
+//     return $this->actor_type === Admin::class && $this->actor;
+// }
+
+
 
 
 }

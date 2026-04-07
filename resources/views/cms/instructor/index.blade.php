@@ -25,18 +25,21 @@
 <div class="container">
 
     <div class="controls">
+  
 
-
-               <div class="search-box">
-            <input type="text" id="searchInput" placeholder="ابحث عن  مدرس بالاسم أو المعرف الأمني...">
-            <i class="fas fa-search"></i>
-        </div>
 
         <div class="action-buttons">
             <button class="btn btn-primary">
                 <a href="{{ route('instructors.create') }}" style="color:white;">
-                    <i class="fas fa-user-plus"></i> إضافة مدرس
+                    <i class="fas fa-user-plus"></i> إضافة مدرب
                 </a>
+            </button>
+
+            <button class="btn btn-primary" id="addStudentBtn" style="background-color:rgb(74, 28, 228)">
+                <a href="{{ route('instructors_trashed') }}" style="color:white; text-decoration:none; ">
+                    <i class="fas fa-user-secret"></i> قديم
+                </a>
+               
             </button>
         </div>
 
@@ -61,7 +64,7 @@
                 <i class="fas fa-star"></i>
             </div>
             <div class="stat-content">
-                {{-- <h3>{{ $avgRating }}</h3> --}}
+                <h3>{{ $avgRating }}</h3>
                 <p>متوسط التقييم</p>
             </div>
         </div>
@@ -165,7 +168,6 @@
         </table>
 
 
-        {{ $instructors->links() }}
 
     </div>
 
@@ -176,13 +178,8 @@
 
 @section('scripts')
 
-<script src="{{ asset('cms/js/rating.js') }}">
+<script src="{{ asset('cms/js/rating.js') }}"></script>
 
- 
-
-
-
-
-</script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 @endsection

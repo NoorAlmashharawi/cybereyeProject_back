@@ -14,6 +14,7 @@ use App\Http\Controllers\CourseController;
 
 Route::prefix('cms/home')->group(function(){
     Route::view('parent', 'cms.home.parent');
+    Route::view('contact', 'cms.home.contact')->name('contact');
     Route::get('/', [DictionaryController::class, 'home'])->name('home');
 });
 
@@ -26,11 +27,18 @@ Route::post('/cms/ai/chat', [AIChatController::class, 'chat'])->name('ai.chat');
 
 
 // ==================== Routes للطلاب ====================
+
+
 Route::prefix('cms/student')->group(function(){
     Route::view('/', 'cms.parent');
     Route::view('temp', 'cms.temp');
+    
     Route::put('students_update/{id}', [StudentController::class, 'update'])->name('students_update');
-
+    Route::get('students_trashed', [StudentController::class, 'trashed'])->name('students_trashed');
+    Route::get('students_restore/{id}', [StudentController::class, 'restore'])->name('students_restore');
+    Route::get('students_force/{id}', [StudentController::class, 'force'])->name('students_force');
+    Route::get('students_forceAll', [StudentController::class, 'forceAll'])->name('students_forceAll');
+    
     Route::resource('students', StudentController::class);
     Route::resource('users', User1Controller::class);
 });
@@ -38,9 +46,9 @@ Route::prefix('cms/student')->group(function(){
 // ==================== Routes admin ====================
 Route::prefix('cms/admin')->group(function(){
 
-    Route::get('main', [AdminController::class, 'index'])->name('main');
+    Route::get('main', [AdminController::class, 'main'])->name('main');
     // Route::get('main', [AdminController::class, 'dashboard'])->name('main');
-
+    Route::resource('admins', AdminController::class);
 });
 
 
@@ -51,26 +59,15 @@ Route::prefix('cms/instructor')->group(function(){
     Route::put('instructors_update/{id}', [InstructorController::class, 'update'])->name('instructors_update');
     Route::resource('instructors', InstructorController::class);
     Route::resource('users', User1Controller::class);
+
+    Route::get('instructors_trashed', [InstructorController::class, 'trashed'])->name('instructors_trashed');
+    Route::get('instructors_restore/{id}', [InstructorController::class, 'restore'])->name('instructors_restore');
+    Route::get('instructors_force/{id}', [InstructorController::class, 'force'])->name('instructors_force');
+    Route::get('instructors_forceAll', [InstructorController::class, 'forceAll'])->name('instructors_forceAll');
+    
 });
 
 
 
     Route::view('details','cms/courseDetails/details')
     ;
-
-    // Route::prefix('courses')->group(function () {
-    // صفحة تفاصيل الكورس
-    // Route::get('{id}', [CourseController::class, 'show'])->name('course.details');
-
-    // تسجيل في الكورس
-    // Route::post('{id}/enroll', [CourseController::class, 'enroll'])->name('course.enroll');
-
-    // // إضافة تقييم
-    // Route::post('{id}/review', [CourseController::class, 'addReview'])->name('course.review');
-
-    // // تحميل مادة
-    // Route::get('material/{id}/download', [CourseController::class, 'downloadMaterial'])->name('course.download');
-
-    // // إضافة للمفضلة
-    // Route::post('{id}/favorite', [CourseController::class, 'addToFavorites'])->name('course.favorite');
-// });

@@ -31,54 +31,15 @@
         </div>
 
         <div class="action-buttons">
-            <button class="btn btn-primary" id="addStudentBtn">
-                <a href="{{ route('students.create') }}" style="color:white; text-decoration:none;">
-                    <i class="fas fa-user-secret"></i> إضافة طالب
+            <button class="btn btn-primary" id="addStudentBtn" style="background-color: red">
+                <a href="{{ route('students_forceAll') }}" style="color:white; text-decoration:none;">
+                    <i class="fas fa-user-secret"></i> حذف الجميع
                 </a>
-
-               
             </button>
-            <button class="btn btn-primary" id="addStudentBtn" style="background-color:red">
-                <a href="{{ route('students_trashed') }}" style="color:white; text-decoration:none; ">
-                    <i class="fas fa-user-secret"></i> قديم
-                </a>
-               
-            </button>
-            
         </div>
     </div>
 
-    <div class="stats">
-        <div class="stat-card">
-            <div class="stat-icon hacker-icon">
-                <i class="fas fa-user-secret"></i>
-            </div>
-            <div class="stat-content">
-                <h3 id="totalStudents">{{ $totalStudents }} </h3>
-                <p>طالب</p>
-            </div>
-        </div>
-        
-        <div class="stat-card">
-            <div class="stat-icon cert-icon">
-                <i class="fas fa-certificate"></i>
-            </div>
-            <div class="stat-content">
-                <h3 id="certCount">{{ $certCount ?? 0 }}</h3>
-                <p>شهادات معتمدة</p>
-            </div>
-        </div>
-        
-        <div class="stat-card">
-            <div class="stat-icon skill-icon">
-                <i class="fas fa-chart-line"></i>
-            </div>
-            <div class="stat-content">
-                <h3 id="avgSkill">{{ $avgSkillArabic ?? 'مبتدئ' }}</h3>
-                <p>متوسط مستوى المهارة</p>
-            </div>
-        </div>
-    </div>
+    
 
     <div class="table-container">
         <table id="studentsTable">
@@ -118,7 +79,8 @@
                         <a href="{{ route('students.show', $student->id) }}" class="btn-action btn-info" title="عرض التفاصيل">
                             <i class="fas fa-eye"></i>
                         </a>
-                        <a href="{{ route('students.edit', $student->id) }}" class="btn-action btn-primary" title="تعديل">
+                     
+                        <a href="{{ route('students_restore', $student->id) }}" class="btn-action btn-primary" title="استعادة">
                             <i class="fas fa-edit"></i>
                         </a>
                         <form action="{{ route('students.destroy', $student->id) }}" method="post" style="display: inline">
@@ -134,8 +96,6 @@
             </tbody>
         </table>
 
-        {{ $students->links() }}
-        
         <div id="noResultsMessage" class="no-results" style="display: none;">
             <i class="fas fa-search"></i>
             <h3>لا توجد نتائج</h3>
@@ -148,9 +108,10 @@
 @section('scripts')
 <script>
     function performDestroy(id, reference) {
-        confirmDestroy('/cms/student/students/' + id, reference);
+        confirmDestroy('/cms/student/students_force' + id, reference);
     }
 
+ 
 </script>
 
 
@@ -279,7 +240,14 @@
         rows.forEach(row => tbody.appendChild(row));
     }
     
-  
+    // // دالة تأكيد الحذف
+    // function performDestroy(id, reference) {
+    //     if (confirm('هل أنت متأكد من حذف هذا الطالب؟')) {
+    //         // يمكنك إضافة كود الحذف الفعلي هنا
+    //         alert('تم حذف الطالب بنجاح');
+    //         // window.location.href = '/cms/student/students/' + id;
+    //     }
+    // }
     
     // إضافة تأثيرات للبحث
     document.addEventListener('DOMContentLoaded', function() {
@@ -300,10 +268,7 @@
             }
         });
     });
-
-
 </script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
 
 @endsection

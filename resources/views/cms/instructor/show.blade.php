@@ -26,10 +26,7 @@
 <input type="text" value="{{ $instructor->id }}" disabled>
 </div>
 
-<div class="form-group">
-<label>معرف المستخدم</label>
-<input type="text" value="{{ $instructor->user1_id }}" disabled>
-</div>
+
 
 </div>
 
