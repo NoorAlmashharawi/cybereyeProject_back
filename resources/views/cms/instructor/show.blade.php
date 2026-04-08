@@ -3,7 +3,7 @@
 @section('title', 'عرض المدرس')
 
 @section('styles')
-<link rel="stylesheet" href="{{ asset('cms/css/addStudent.css') }}">
+<link rel="stylesheet" href="{{ asset('cms/css/showStudent.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 @endsection
 
@@ -26,10 +26,7 @@
 <input type="text" value="{{ $instructor->id }}" disabled>
 </div>
 
-<div class="form-group">
-<label>معرف المستخدم</label>
-<input type="text" value="{{ $instructor->user1_id }}" disabled>
-</div>
+
 
 </div>
 

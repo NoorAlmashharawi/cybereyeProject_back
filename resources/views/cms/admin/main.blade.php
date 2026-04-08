@@ -48,7 +48,7 @@
                         <i class="fas fa-users"></i>
                     </div>
                     <div class="stat-info">
-                        <h3>1,254</h3>
+                        <h3 id="tot">{{ $totalUsers }}</h3>
                         <p>إجمالي المستخدمين</p>
                         <div class="stat-trend trend-up">
                             <i class="fas fa-arrow-up"></i>
@@ -74,56 +74,13 @@
                 </div>
             </div>
 
-            <div class="stat-card revenue">
-                <div class="stat-content">
-                    <div class="stat-icon revenue">
-                        <i class="fas fa-dollar-sign"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3>$12,540</h3>
-                        <p>الإيرادات الشهرية</p>
-                        <div class="stat-trend trend-up">
-                            <i class="fas fa-arrow-up"></i>
-                            <span>18% زيادة</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="stat-card active">
-                <div class="stat-content">
-                    <div class="stat-icon active">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3>87%</h3>
-                        <p>نسبة الإشغال</p>
-                        <div class="stat-trend trend-down">
-                            <i class="fas fa-arrow-down"></i>
-                            <span>3% عن الأسبوع الماضي</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          
         </div>
 
         <!-- المخططات والرسوم البيانية -->
         <div class="charts-section">
-            <!-- مخطط الإيرادات -->
-            <div class="chart-card">
-                <div class="chart-header">
-                    <h3>الإيرادات الشهرية</h3>
-                    <div class="chart-period">
-                        <button class="period-btn active">شهري</button>
-                        <button class="period-btn">سنوي</button>
-                        <button class="period-btn">إجمالي</button>
-                    </div>
-                </div>
-                <div class="chart-container">
-                    <canvas id="revenueChart"></canvas>
-                </div>
-            </div>
-
+         
             <!-- مخطط التسجيلات -->
             <div class="chart-card">
                 <div class="chart-header">
@@ -315,6 +272,42 @@
                 </li>
             </ul>
         </div>
+
+
+        <!-- AI Assistant Chat -->
+<div class="ai-assistant-card" style="margin-top: 30px; background: white; border-radius: 15px; padding: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.08);">
+    <div class="card-header" style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+        <i class="fas fa-robot" style="font-size: 24px; color: #4361ee;"></i>
+        <h3 style="margin: 0;">المساعد الذكي</h3>
+    </div>
+    
+    <div class="chat-container" style="height: 350px; overflow-y: auto; border: 1px solid #e9ecef; border-radius: 10px; padding: 15px; margin-bottom: 15px; background: #f8f9fa;" id="chatContainer">
+        <div id="chatMessages">
+            <!-- رسالة ترحيب -->
+            <div class="message ai-message" style="margin-bottom: 15px;">
+                <div style="display: flex; gap: 10px; align-items: flex-start;">
+                    <div style="background: #4361ee; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div style="background: white; padding: 12px 18px; border-radius: 18px 18px 18px 5px; max-width: 80%; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                        <p style="margin: 0; color: #1e293b;">مرحباً! أنا المساعد الذكي. كيف يمكنني مساعدتك اليوم؟</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="chat-input" style="display: flex; gap: 10px;">
+        <input type="text" id="chatInput" placeholder="اكتب سؤالك هنا..." style="flex: 1; padding: 14px 18px; border: 2px solid #e9ecef; border-radius: 30px; font-size: 0.95rem; outline: none;">
+        <button onclick="sendMessage()" style="background: #4361ee; color: white; border: none; border-radius: 30px; padding: 0 30px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-paper-plane"></i> إرسال
+        </button>
+    </div>
+</div>
+
+
+
+
     </main>
 
   
@@ -324,5 +317,121 @@
   <!-- مكتبة Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="{{ asset('cms/js/admin.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script>
+    function sendMessage() {
+        let input = document.getElementById('chatInput');
+        let message = input.value.trim();
+        
+        if (!message) return;
+        
+        // إضافة رسالة المستخدم
+        addMessage(message, 'user');
+        input.value = '';
+        
+        // إظهار مؤشر الكتابة
+        showTypingIndicator();
+        
+        // إرسال للـ API
+        fetch('{{ route("ai.chat") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ message: message })
+        })
+        .then(response => response.json())
+        .then(data => {
+            removeTypingIndicator();
+            if (data.success) {
+                addMessage(data.message, 'ai');
+            } else {
+                addMessage('عذراً، حدث خطأ: ' + data.message, 'error');
+            }
+        })
+        .catch(error => {
+            removeTypingIndicator();
+            addMessage('عذراً، حدث خطأ في الاتصال', 'error');
+        });
+    }
+    
+    function addMessage(text, type) {
+        let chat = document.getElementById('chatMessages');
+        let messageDiv = document.createElement('div');
+        messageDiv.style.marginBottom = '15px';
+        
+        let content = '';
+        if (type === 'user') {
+            content = `
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <div style="background: #4361ee; color: white; padding: 12px 18px; border-radius: 18px 18px 5px 18px; max-width: 80%;">
+                        <p style="margin: 0;">${text}</p>
+                    </div>
+                    <div style="background: #6c757d; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+            `;
+        } else if (type === 'ai') {
+            content = `
+                <div style="display: flex; gap: 10px; align-items: flex-start;">
+                    <div style="background: #4361ee; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div style="background: white; padding: 12px 18px; border-radius: 18px 18px 18px 5px; max-width: 80%; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                        <p style="margin: 0; color: #1e293b;">${text}</p>
+                    </div>
+                </div>
+            `;
+        } else {
+            content = `
+                <div style="display: flex; gap: 10px; align-items: flex-start;">
+                    <div style="background: #dc3545; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div style="background: #f8d7da; padding: 12px 18px; border-radius: 18px; max-width: 80%; color: #721c24;">
+                        <p style="margin: 0;">${text}</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        messageDiv.innerHTML = content;
+        chat.appendChild(messageDiv);
+        chat.scrollTop = chat.scrollHeight;
+    }
+    
+    function showTypingIndicator() {
+        let chat = document.getElementById('chatMessages');
+        let typingDiv = document.createElement('div');
+        typingDiv.id = 'typingIndicator';
+        typingDiv.style.marginBottom = '15px';
+        typingDiv.innerHTML = `
+            <div style="display: flex; gap: 10px; align-items: flex-start;">
+                <div style="background: #4361ee; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div style="background: white; padding: 12px 18px; border-radius: 18px 18px 18px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <p style="margin: 0; color: #1e293b;">يكتب...</p>
+                </div>
+            </div>
+        `;
+        chat.appendChild(typingDiv);
+        chat.scrollTop = chat.scrollHeight;
+    }
+    
+    function removeTypingIndicator() {
+        let indicator = document.getElementById('typingIndicator');
+        if (indicator) indicator.remove();
+    }
+    
 
+    // إرسال بالضغط على Enter
+    document.getElementById('chatInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+</script>
 @endsection

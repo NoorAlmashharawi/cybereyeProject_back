@@ -3,227 +3,264 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\User1;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User1;        
-
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(){
-         // 1. جلب الطلاب مع الترقيم
-         $students = Student::with('user1')->orderBy('id', 'desc')->paginate(10);
-
-
-// 2. حساب الإحصائيات من قاعدة البيانات مباشرة
-        $totalStudents = Student::count(); 
-
-// تحديد المستوى الأكثر تكراراً بين الطلاب
-$mostCommonLevel = Student::select('level')
-    ->groupBy('level')
-    ->orderByRaw('COUNT(*) DESC')
-    ->first();
-
-$avgSkillArabic = 'غير محدد';
-if ($mostCommonLevel) {
-    $skillsMap = [
-        'beginner' => 'مبتدئ',
-        'intermediate' => 'متوسط',  
-        'advanced' => 'متقدم',
-        'expert' => 'خبير'          
-    ];
-    $avgSkillArabic = $skillsMap[$mostCommonLevel->level] ?? $mostCommonLevel->level;
-}
-
-// قيم إضافية للإحصائيات الأخرى
-$certCount = $totalStudents * 2; 
-$threats = 156; 
-
-// 3. الـ return النهائي
-return response()->view('cms.student.index', compact(
-    'students', 
-    'totalStudents', 
-    'avgSkillArabic', 
-    'certCount', 
-    'threats'
-));}
-
-
     
+    public function index()
+    {
+        $students = Student::with('user1')->orderBy('id', 'desc')->withoutTrashed()->paginate(10);
+        $totalStudents = Student::count();
 
-    /**
-     * Show the form for creating a new resource.
-     */
+        $mostCommonLevel = Student::select('level')
+            ->groupBy('level')
+            ->orderByRaw('COUNT(*) DESC')
+            ->first();
+
+        $avgSkillArabic = 'غير محدد';
+        if ($mostCommonLevel) {
+            $skillsMap = [
+                'beginner' => 'مبتدئ',
+                'intermediate' => 'متوسط',
+                'advanced' => 'متقدم',
+                'expert' => 'خبير'
+            ];
+            $avgSkillArabic = $skillsMap[$mostCommonLevel->level] ?? $mostCommonLevel->level;
+        }
+
+        $certCount = $totalStudents * 2;
+        $threats = 156;
+
+        return view('cms.student.index', compact(
+            'students',
+            'totalStudents',
+            'avgSkillArabic',
+            'certCount',
+            'threats'
+        ));
+    }
+
+    // عرض صفحة إنشاء طالب جديد
     public function create()
     {
-        return response()->view('cms.student.create');
+        return view('cms.student.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // حفظ طالب جديد
+    public function store(Request $request)
+    {
+        $validator = Validator($request->all(), [
+            'username' => 'required|string|min:3|max:20|unique:user1s,username',
+            'email'    => 'required|email|unique:user1s,email',
+            'password' => 'required|min:8|confirmed',
+            'level'    => 'required|string',
+            'status'   => 'required|string',
+        ]);
 
-     public function store(Request $request)
-     {
-         $validator = Validator($request->all(), [
-             'username' => 'required|string|min:3|max:20|unique:user1s,username',
-             'email'    => 'required|email|unique:user1s,email',
-             'password' => 'required|min:8|confirmed',
-             'level'    => 'required|string',          
-             'status'   => 'required|string',
-         ]);
-     
-         if ($validator->fails()) {
-             return response()->json([
-                 'icon'  => 'error',
-                 'title' => $validator->errors()->first(),
-             ], 400);
-         }
-     
-         try {
-             $user1 = User1::create([
-                 'username' => $request->username,
-                 'email'    => $request->email,
-                 'password' => Hash::make($request->password),
-                 'role'     => 'student',
-             ]);
-     
-             $student = Student::create([
-                 'user1_id'        => $user1->id,
-                 'level'           => $request->level,           
-                 'status'          => $request->status,
-                 'specialization'  => $request->specialization ?? 'General',
-                 'progress'        => $request->progress ?? 0,
-                 'enrollment_date' => $request->enrollment_date ?? now(),
-                 'role'            => 'student',
-             ]);
-     
-             return response()->json([
-                 'icon'  => 'success',
-                 'title' => 'تم إنشاء الطالب بنجاح'
-             ], 200);
-             
-     
-         } catch (\Exception $e) {
-             return response()->json([
-                 'icon'  => 'error',
-                 'title' => 'خطأ في قاعدة البيانات: ' . $e->getMessage()
-             ], 500);
-         }
-     }
- 
+        if ($validator->fails()) {
+            return response()->json([
+                'icon'  => 'error',
+                'title' => $validator->errors()->first(),
+            ], 400);
+        }
 
+        try {
+            DB::beginTransaction();
 
-    /**
-     * Display the specified resource.
-     */
+            $student = Student::create([
+                'level'           => $request->level,
+                'status'          => $request->status,
+                'specialization'  => $request->specialization ?? 'General',
+                'progress'        => $request->progress ?? 0,
+                'enrollment_date' => $request->enrollment_date ?? now(),
+            ]);
+
+            $user1 = User1::create([
+                'username'   => $request->username,
+                'email'      => $request->email,
+                'password'   => Hash::make($request->password),
+                'role'       => 'student',
+                'actor_id'   => $student->id,
+                'actor_type' => 'App\Models\Student',
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'icon'  => 'success',
+                'title' => 'تم إنشاء الطالب بنجاح'
+            ], 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'icon'  => 'error',
+                'title' => 'خطأ: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // عرض تفاصيل طالب
     public function show($id)
     {
-
-        $student = Student::with('user1')->findOrFail($id);  
-        return response()->view('cms.student.show', compact('student'));
+        $student = Student::withTrashed()->with('user1')->find($id);
+        
+        if (!$student) {
+            return redirect()->back()->with('error', 'الطالب غير موجود');
+        }
+        
+        return view('cms.student.show', compact('student'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    // عرض صفحة تعديل طالب
     public function edit($id)
     {
-
-        $student = Student::with('user1')->findOrFail($id);
-            //    return response()->view('cms.student.edit', compact('students'));
-
+        $student = Student::with('user1')->find($id);
+        
+        if (!$student) {
+            return redirect()->back()->with('error', 'الطالب غير موجود');
+        }
+        
         return view('cms.student.edit', compact('student'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-
-     public function update(Request $request, $id)
-     {
-         $validator = Validator($request->all(), [
-             'username' => 'required|string|min:3|max:20|unique:user1s,username,' . $this->getUser1Id($id),
-             'email'    => 'required|email|unique:user1s,email,' . $this->getUser1Id($id),
-             'level'    => 'required|string',
-             'status'   => 'required|string',
-             'specialization' => 'nullable|string',
-             'progress' => 'nullable|integer|min:0|max:100',
-             'enrollment_date' => 'nullable|date',
-         ], [
-             'username.required' => 'اسم المستخدم مطلوب',
-             'username.unique'   => 'اسم المستخدم موجود بالفعل',
-             'email.required'    => 'البريد الإلكتروني مطلوب',
-             'email.unique'      => 'البريد الإلكتروني موجود بالفعل',
-             'level.required'    => 'المستوى مطلوب',
-             'status.required'   => 'الحالة مطلوبة',
-         ]);
-     
-         if ($validator->fails()) {
-             return response()->json([
-                 'icon'  => 'error',
-                 'title' => $validator->errors()->first(),
-             ], 400);
-         }
-     
-         try {
-             // البحث عن الطالب
-             $student = Student::with('user1')->findOrFail($id);
-             
-             // تحديث بيانات User1
-             $student->user1->update([
-                 'username' => $request->username,
-                 'email'    => $request->email,
-             ]);
-     
-             // تحديث بيانات Student
-             $student->update([
-                 'level'           => $request->level,
-                 'status'          => $request->status,
-                 'specialization'  => $request->specialization ?? $student->specialization,
-                 'progress'        => $request->progress ?? $student->progress,
-                 'enrollment_date' => $request->enrollment_date ?? $student->enrollment_date,
-             ]);
-     
-             return response()->json([
-                 'icon'  => 'success',
-                 'title' => 'تم تحديث البيانات بنجاح'
-             ], 200);
-     
-         } catch (\Exception $e) {
-             return response()->json([
-                 'icon'  => 'error',
-                 'title' => 'خطأ في التحديث: ' . $e->getMessage()
-             ], 500);
-         }
-     }
-     
-     // دالة مساعدة لجلب user1_id من student_id
-     private function getUser1Id($studentId)
-     {
-         $student = Student::find($studentId);
-         return $student ? $student->user1_id : 0;
-     }
-
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy( $id)
+    // تحديث بيانات طالب
+    public function update(Request $request, $id)
     {
-        $students = Student::destroy($id);
+        $student = Student::with('user1')->find($id);
         
+        if (!$student) {
+            return response()->json([
+                'icon'  => 'error',
+                'title' => 'الطالب غير موجود'
+            ], 404);
+        }
+        
+        $user1Id = $student->user1 ? $student->user1->id : null;
+
+        $validator = Validator($request->all(), [
+            'username' => 'sometimes|required|string|min:3|max:20|unique:user1s,username,' . $user1Id,
+            'email'    => 'required|email|unique:user1s,email,' . $user1Id,
+            'level'    => 'required|string',
+            'status'   => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'icon'  => 'error',
+                'title' => $validator->errors()->first(),
+            ], 400);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            if ($student->user1) {
+                $student->user1->update([
+                    'username' => $request->username,
+                    'email'    => $request->email,
+                ]);
+            }
+
+            $student->update([
+                'level'           => $request->level,
+                'status'          => $request->status,
+                'specialization'  => $request->specialization ?? $student->specialization,
+                'progress'        => $request->progress ?? $student->progress,
+                'enrollment_date' => $request->enrollment_date ?? $student->enrollment_date,
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'icon'  => 'success',
+                'title' => 'تم تحديث البيانات بنجاح'
+            ], 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'icon'  => 'error',
+                'title' => 'خطأ: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
-    public function dashboard()
-{
-    $newStudents = Student::with('user1')->latest()->limit(10)->get();
-    $totalUsers = User1::count();
+    // حذف مؤقت (نقل إلى سلة المحذوفات)
+    public function destroy($id)
+    {
+        $student = Student::find($id);
+        
+        if (!$student) {
+            return redirect()->back()->with('error', 'الطالب غير موجود');
+        }
+        
+        if ($student->user1) {
+            $student->user1->delete();
+        }
+        
+        $student->delete();
+        
+        return redirect()->back()->with('success', 'تم حذف الطالب مؤقتاً');
+    }
+
+    public function trashed()
+    {
+        $students = Student::onlyTrashed()
+            ->with(['user1' => function($query) {
+                $query->withTrashed();  // جلب user1 المحذوف أيضاً
+            }])
+            ->orderBy('deleted_at', 'desc')
+            ->get();
+        
+        return view('cms.student.trashed', compact('students'));
+    }
+    // استعادة طالب من سلة المحذوفات
+    public function restore($id)
+    {
+        try {
+            // البحث عن الطالب المحذوف
+            $student = Student::onlyTrashed()->findOrFail($id);
+            
+            // استعادة الطالب
+            $student->restore();
+            
+          
+            $user1 = User1::where('actor_id', $student->id)
+                          ->where('actor_type', 'App\Models\Student')
+                          ->withTrashed() 
+                          ->first();
+          
+            if ($user1 && $user1->trashed()) {
+                $user1->restore();
+            }
+            
+            return redirect()->back()->with('success', 'تم استعادة الطالب والمستخدم بنجاح');
+            
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'خطأ في الاستعادة: ' . $e->getMessage());
+        }
+    }
+
+    // حذف نهائي لطالب واحد
+    public function force($id)
+    {
+        $students = Student::onlyTrashed()->findOrFail($id)->forceDelete();
+        return back()->with('sucess','sucess');
     
-    return view('cms.student.main', compact('newStudents', 'totalUsers'));
-}
+    
+    }
+
+    public function forceAll()
+    {
+    $students = Student::onlyTrashed()->forceDelete();
+    return back()->with('sucess','sucess');
+
+
+    }
 }
