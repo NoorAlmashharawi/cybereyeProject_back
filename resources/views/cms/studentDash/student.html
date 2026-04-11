@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة الطالب | CYBEReye</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/student.css">
+  
+</head>
+<body>
+    <!-- شريط التنقل العلوي -->
+    <nav class="student-navbar">
+        <div class="nav-left">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>CYBEReye</span>
+            </div>
+            <span class="student-role">👨‍🎓 لوحة الطالب</span>
+        </div>
+        
+        <div class="nav-right">
+            <button class="notification-btn">
+                <i class="far fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </button>
+            
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">م</div>
+                <div>
+                    <div id="userName">محمد أحمد</div>
+                    <div id="userEmail" style="font-size: 0.8rem;">student@cybereye.com</div>
+                </div>
+            </div>
+            
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                تسجيل الخروج
+            </button>
+        </div>
+    </nav>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="student-container">
+        <!-- الشريط الجانبي -->
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <a href="#" class="menu-item active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>لوحة التحكم</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>كورساتي</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-play-circle"></i>
+                    <span>الدروس النشطة</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-certificate"></i>
+                    <span>شهاداتي</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>الجدول الدراسي</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>التقارير</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-cog"></i>
+                    <span>الإعدادات</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- المحتوى الرئيسي -->
+        <main class="main-content">
+            <!-- بطاقة الترحيب -->
+            <div class="welcome-card">
+                <h1>مرحباً بعودتك، <span id="studentNameDisplay">محمد</span>! 👋</h1>
+                <p>استمر في رحلتك التعليمية واكتشف كورسات جديدة في عالم الأمن السيبراني</p>
+            </div>
+
+            <!-- إحصائيات سريعة -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="stat-number" id="coursesCount">3</div>
+                    <div class="stat-label">كورسات مسجلة</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-number" id="studyHours">45</div>
+                    <div class="stat-label">ساعة دراسة</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <div class="stat-number" id="certificatesCount">1</div>
+                    <div class="stat-label">شهادات مكتملة</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-number" id="averageProgress">85%</div>
+                    <div class="stat-label">معدل التقدم</div>
+                </div>
+            </div>
+
+            <!-- الكورسات النشطة -->
+            <div class="courses-section">
+                <div class="section-header">
+                    <h2>كورساتي النشطة</h2>
+                    <button class="view-all-btn"  onclick="goToMyCourses()">عرض جميع الكورسات</button>
+                </div>
+                
+                <div class="courses-grid" id="activeCourses">
+                    <!-- الكورسات تظهر هنا -->
+                </div>
+            </div>
+
+            <!-- التوصيات -->
+            <div class="recommendations-section">
+                <div class="section-header">
+                    <h2>توصيات لك</h2>
+                </div>
+                
+                <div class="recommendations-grid">
+                    <div class="recommendation-card">
+                        <h3>🎯 تحديات عملية</h3>
+                        <p>حل 3 تحديات عملية هذا الأسبوع لزيادة خبرتك</p>
+                    </div>
+                    
+                    <div class="recommendation-card">
+                        <h3>📚 كورس جديد</h3>
+                        <p>جرب كورس "أمن تطبيقات الموبايل" المناسب لمستواك</p>
+                    </div>
+                    
+                    <div class="recommendation-card">
+                        <h3>👥 مجتمع الدراسة</h3>
+                        <p>انضم إلى مجموعة دراسة الأمن السيبراني المتقدمة</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- الفوتر -->
+    <footer class="student-footer">
+        <div class="footer-links">
+            <a href="#">الدعم الفني</a>
+            <a href="#">الأسئلة الشائعة</a>
+            <a href="#">سياسة الخصوصية</a>
+            <a href="#">الشروط والأحكام</a>
+        </div>
+        <div class="copyright">
+            © 2024 CYBEReye. جميع الحقوق محفوظة.
+        </div>
+    </footer>
+
+  <script src="../js/student.js"></script>
+</body>
+</html>

@@ -27,16 +27,19 @@
     <div class="controls">
 
 
-               <div class="search-box">
-            <input type="text" id="searchInput" placeholder="ابحث عن  مدرس بالاسم أو المعرف الأمني...">
-            <i class="fas fa-search"></i>
-        </div>
 
         <div class="action-buttons">
             <button class="btn btn-primary">
                 <a href="{{ route('instructors.create') }}" style="color:white;">
-                    <i class="fas fa-user-plus"></i> إضافة مدرس
+                    <i class="fas fa-user-plus"></i> إضافة مدرب
                 </a>
+            </button>
+
+            <button class="btn btn-primary" id="addStudentBtn" style="background-color:rgb(74, 28, 228)">
+                <a href="{{ route('instructors_trashed') }}" style="color:white; text-decoration:none; ">
+                    <i class="fas fa-user-secret"></i> قديم
+                </a>
+
             </button>
         </div>
 
@@ -165,7 +168,6 @@
         </table>
 
 
-        {{ $instructors->links() }}
 
     </div>
 
@@ -175,14 +177,6 @@
 
 
 @section('scripts')
-
-<script src="{{ asset('cms/js/rating.js') }}">
-
-
-
-
-
-
-</script>
-
+<script src="{{ asset('cms/js/rating.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 @endsection

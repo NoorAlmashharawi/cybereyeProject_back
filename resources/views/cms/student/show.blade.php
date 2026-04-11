@@ -3,7 +3,7 @@
 @section('title', 'show student')
 
 @section('styles')
-<link rel="stylesheet" href="{{ asset('cms/css/addStudent.css') }}">
+<link rel="stylesheet" href="{{ asset('cms/css/showStudent.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 @endsection
 
@@ -22,13 +22,6 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <label for="user1_id">معرف المستخدم</label>
-            <input type="text" id="user1_id" value="{{ $student->user1_id }}" disabled>
-            <div class="form-help">
-                <i class="fas fa-info-circle"></i> الرابط مع جدول المستخدمين
-            </div>
-        </div>
     </div>
 
     <div class="form-row">

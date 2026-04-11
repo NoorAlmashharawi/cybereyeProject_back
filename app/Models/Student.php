@@ -4,23 +4,28 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\softDeletes;
 
 class Student extends Model
 {
     /** @use HasFactory<\Database\Factories\StudentFactory> */
-    use HasFactory;
+    use HasFactory,softDeletes;
 
 
     protected $table = 'students';
 
     protected $fillable = [
-        'user1_id',
+
         'enrollment_date',
         'progress',
+
         'level',
         'status',
         'specialization',
         'role',
+
+
+
     ];
 
     protected $casts = [
@@ -30,10 +35,13 @@ class Student extends Model
     // ========== العلاقات ==========
 
 
+
+
     public function user1()
     {
-        return $this->belongsTo(User1::class, 'user1_id', 'id');
+        return $this->morphOne(User1::class, 'actor');
     }
+
     public function courses()
 {
     return $this->belongsToMany(Course::class, 'enrollments');
@@ -49,6 +57,7 @@ class Student extends Model
     // public function students(){
 
     // }
+
 
 
 }

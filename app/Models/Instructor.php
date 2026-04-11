@@ -5,14 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User1;
+
+use Illuminate\Database\Eloquent\softDeletes;
+
+
 class Instructor extends Model
 {
     /** @use HasFactory<\Database\Factories\InstructorFactory> */
-    use HasFactory;
+    use HasFactory,softDeletes;
 
 
    protected $fillable = [
-            'user1_id',
+
             'specialization',
             'experience_years',
             'rating',
@@ -20,17 +24,17 @@ class Instructor extends Model
             'enrollment_date'
             ];
 
+
+
   protected $casts = [
         'enrollment_date' => 'date',
     ];
 
     // ========== العلاقات ==========
 
-
     public function user1()
     {
-        return $this->belongsTo(User1::class, 'user1_id', 'id');
+        return $this->morphOne(User1::class, 'actor');
     }
-
 
 }

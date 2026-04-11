@@ -1,4 +1,4 @@
-/* addStudent.css - نسخة لطيفة وأنيقة */
+/* showStudent.css - نسخة لطيفة لعرض بيانات الطالب */
 
 :root {
     --primary-lighter: #e0e7ff;
@@ -20,6 +20,10 @@
     --radius-soft: 24px;
     --radius-sm: 18px;
     --transition-bounce: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --disabled-bg: #f8fafc;
+    --disabled-text: #64748b;
+    --info-bg: #eff6ff;
+    --info-border: #bfdbfe;
 }
 
 * {
@@ -50,12 +54,29 @@ body::before {
     z-index: -1;
 }
 
+body::after {
+    content: '🔍';
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    font-size: 3rem;
+    opacity: 0.1;
+    transform: rotate(-10deg);
+    animation: float 6s ease-in-out infinite;
+    z-index: -1;
+}
+
 @keyframes rotate {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
 
-/* الحاوية الرئيسية - بتصميم كرت شفاف */
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(-10deg); }
+    50% { transform: translateY(-20px) rotate(-5deg); }
+}
+
+/* الحاوية الرئيسية */
 .form-container {
     max-width: 950px;
     margin: 30px auto;
@@ -66,6 +87,18 @@ body::before {
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.7);
     animation: floatIn 0.6s ease-out;
+    position: relative;
+}
+
+.form-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-light), var(--primary-main), var(--primary-light));
+    opacity: 0.5;
 }
 
 @keyframes floatIn {
@@ -79,7 +112,7 @@ body::before {
     }
 }
 
-/* العنوان الرئيسي - تصميم لطيف */
+/* العنوان الرئيسي */
 .form-title {
     background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(79, 70, 229, 0.05));
     color: var(--primary-main);
@@ -108,42 +141,18 @@ body::before {
     50% { transform: scale(1.05); opacity: 0.9; }
 }
 
-/* العناوين الفرعية - بتصميم لطيف */
-.form-subtitle {
-    color: var(--text-soft);
-    font-size: 1.2rem;
-    font-weight: 500;
-    margin: 25px 35px 20px;
-    padding: 10px 20px;
-    background: linear-gradient(135deg, var(--primary-lighter), transparent);
-    border-radius: 50px;
-    display: inline-block;
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.05);
-}
-
-.form-subtitle i {
-    margin-left: 10px;
-    color: var(--primary-soft);
-    font-size: 1rem;
-}
-
-/* النموذج */
-form {
-    padding: 0 35px 35px;
-}
-
 /* صفوف النموذج */
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 25px;
-    margin-bottom: 15px;
+    padding: 0 35px;
+    margin-bottom: 20px;
 }
 
 /* مجموعات الحقول */
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     position: relative;
 }
 
@@ -163,47 +172,45 @@ form {
     font-size: 0.9rem;
 }
 
-/* حقول الإدخال - بتصميم ناعم جداً */
-.form-group input,
-.form-group select {
+/* الحقول المعطلة - بتصميم خاص وعرض البيانات */
+.form-group input:disabled,
+.form-group select:disabled {
     width: 100%;
     padding: 14px 18px;
     border: 2px solid var(--border-lighter);
     border-radius: 18px;
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: var(--text-soft);
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(5px);
-    transition: all 0.3s ease;
+    background: linear-gradient(135deg, var(--disabled-bg), var(--white));
     direction: rtl;
     font-family: 'Cairo', sans-serif;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    cursor: default;
+    opacity: 0.9;
+    transition: all 0.3s ease;
+    font-weight: 500;
 }
 
-.form-group input:hover,
-.form-group select:hover {
+.form-group:hover input:disabled,
+.form-group:hover select:disabled {
     border-color: var(--primary-light);
     background: var(--white);
     transform: translateY(-2px);
     box-shadow: 0 10px 25px -10px var(--primary-light);
 }
 
-.form-group input:focus,
-.form-group select:focus {
-    outline: none;
-    border-color: var(--primary-main);
-    background: var(--white);
-    transform: translateY(-3px);
-    box-shadow: 0 15px 30px -12px var(--primary-main);
+/* تنسيق خاص للـ select المعطل */
+select:disabled {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236366f1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: left 18px center;
+    background-size: 18px;
+    padding-left: 50px !important;
+    opacity: 0.9;
 }
 
-.form-group input::placeholder {
-    color: var(--text-light);
-    font-size: 0.9rem;
-    font-weight: 300;
-}
-
-/* رسائل المساعدة اللطيفة */
+/* رسائل المساعدة */
 .form-help {
     margin-top: 8px;
     font-size: 0.8rem;
@@ -212,7 +219,7 @@ form {
     align-items: center;
     gap: 6px;
     padding-right: 10px;
-    opacity: 0.8;
+    opacity: 0.7;
     transition: opacity 0.3s ease;
 }
 
@@ -231,34 +238,35 @@ form {
     50% { opacity: 1; }
 }
 
-/* الحقول المطلوبة - بتصميم لطيف */
-.form-group label[for="username"]::after,
-.form-group label[for="email"]::after,
-.form-group label[for="password"]::after,
-.form-group label[for="password_confirmation"]::after,
-.form-group label[for="level"]::after,
-.form-group label[for="status"]::after {
-    content: '';
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    background: linear-gradient(135deg, #f43f5e, #fb7185);
-    border-radius: 50%;
-    margin-right: 6px;
-    animation: gentleGlow 2s infinite;
+/* إضافة أيقونات للحقول */
+.form-group::after {
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    left: 18px;
+    top: 45px;
+    color: var(--primary-light);
+    opacity: 0.5;
+    font-size: 1rem;
 }
 
-@keyframes gentleGlow {
-    0%, 100% { opacity: 0.6; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.2); }
-}
+.form-group:has(#id)::after { content: '\f2c2'; } /* 🔑 */
+.form-group:has(#user1_id)::after { content: '\f126'; } /* 🔗 */
+.form-group:has(#username)::after { content: '\f007'; } /* 👤 */
+.form-group:has(#email)::after { content: '\f0e0'; } /* ✉️ */
+.form-group:has(#level)::after { content: '\f19d'; } /* 📊 */
+.form-group:has(#specialization)::after { content: '\f0b1'; } /* 💼 */
+.form-group:has(#status)::after { content: '\f0f0'; } /* ⚡ */
+.form-group:has(#progress)::after { content: '\f0e8'; } /* 📈 */
+.form-group:has(#enrollment_date)::after { content: '\f073'; } /* 📅 */
+.form-group:has(#created_at)::after { content: '\f017'; } /* 🕒 */
 
-/* أزرار الإجراءات - بتصميم كيوت */
+/* أزرار الإجراءات */
 .form-actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 40px;
+    margin: 40px 35px 35px;
     padding-top: 25px;
     border-top: 2px dashed var(--border-lighter);
 }
@@ -300,10 +308,6 @@ form {
     transform: scale(1.1) rotate(5deg);
 }
 
-.btn-primary:active {
-    transform: translateY(-1px);
-}
-
 .btn-secondary {
     background: rgba(255, 255, 255, 0.9);
     color: var(--text-soft);
@@ -342,7 +346,52 @@ form {
     opacity: 0;
 }
 
-/* للجوال - تصاميم لطيفة */
+/* بطاقة معلومات إضافية */
+.info-card {
+    background: linear-gradient(135deg, var(--info-bg), white);
+    border: 1px solid var(--info-border);
+    border-radius: 18px;
+    padding: 15px 25px;
+    margin: 20px 35px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    animation: slideRight 0.5s ease;
+}
+
+.info-card i {
+    font-size: 2rem;
+    color: var(--primary-main);
+    opacity: 0.7;
+}
+
+.info-card-content {
+    flex: 1;
+}
+
+.info-card-title {
+    font-weight: 600;
+    color: var(--text-soft);
+    margin-bottom: 5px;
+}
+
+.info-card-text {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+@keyframes slideRight {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* للجوال */
 @media (max-width: 768px) {
     body {
         padding: 10px;
@@ -357,34 +406,32 @@ form {
         font-size: 1.4rem;
     }
     
-    .form-subtitle {
-        margin: 20px 25px 15px;
-        padding: 8px 15px;
-        font-size: 1.1rem;
-    }
-    
-    form {
-        padding: 0 25px 25px;
-    }
-    
     .form-row {
         grid-template-columns: 1fr;
         gap: 0;
+        padding: 0 25px;
     }
     
     .form-group {
-        margin-bottom: 18px;
+        margin-bottom: 15px;
     }
     
-    .form-group input,
-    .form-group select {
+    .form-group input:disabled,
+    .form-group select:disabled {
         padding: 12px 15px;
+        font-size: 0.95rem;
+    }
+    
+    .form-group::after {
+        top: 42px;
+        left: 15px;
+        font-size: 0.9rem;
     }
     
     .form-actions {
         flex-direction: column-reverse;
         gap: 12px;
-        margin-top: 30px;
+        margin: 30px 25px 25px;
         padding-top: 20px;
     }
     
@@ -392,6 +439,11 @@ form {
         width: 100%;
         justify-content: center;
         padding: 14px;
+    }
+    
+    .info-card {
+        margin: 15px 25px;
+        padding: 12px 20px;
     }
 }
 
@@ -405,13 +457,8 @@ form {
         font-size: 1.6rem;
     }
     
-    .form-subtitle {
-        margin: 15px 20px 10px;
-        font-size: 1rem;
-    }
-    
-    form {
-        padding: 0 20px 20px;
+    .form-row {
+        padding: 0 20px;
     }
     
     .form-group label {
@@ -421,75 +468,77 @@ form {
     .form-help {
         font-size: 0.7rem;
     }
+    
+    .form-group::after {
+        display: none; /* إخفاء الأيقونات في الشاشات الصغيرة جداً */
+    }
+    
+    .info-card {
+        margin: 10px 20px;
+        flex-direction: column;
+        text-align: center;
+    }
 }
 
-/* تنسيق خاص للـ select */
-select {
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236366f1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: left 18px center;
-    background-size: 18px;
-    padding-left: 50px !important;
+/* تنسيق خاص لعرض القيم المهمة */
+#id, #user1_id {
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px;
+    color: var(--primary-main) !important;
+    font-weight: 600 !important;
 }
 
-/* تأثيرات خاصة لبعض الحقول */
-.form-group:nth-child(odd) input {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(249, 250, 251, 0.9));
+#progress {
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe) !important;
+    color: #0284c7 !important;
+    font-weight: 700 !important;
 }
 
-/* رسالة نجاح أو خطأ لطيفة */
-.field-message {
-    font-size: 0.75rem;
-    margin-top: 5px;
-    padding: 4px 12px;
-    border-radius: 20px;
-    display: inline-block;
-    animation: slideMessage 0.3s ease;
+/* تنسيق الحالة بشكل مميز */
+#status {
+    font-weight: 600;
 }
 
-.field-message.success {
-    background: rgba(16, 185, 129, 0.1);
-    color: #059669;
+#status[value="active"] {
+    color: #059669 !important;
 }
 
-.field-message.error {
-    background: rgba(239, 68, 68, 0.1);
-    color: #dc2626;
+#status[value="inactive"] {
+    color: #6b7280 !important;
 }
 
-@keyframes slideMessage {
+#status[value="suspended"] {
+    color: #d97706 !important;
+}
+
+#status[value="graduated"] {
+    color: #7c3aed !important;
+}
+
+/* إضافة تأثير لطيف عند تحميل الصفحة */
+.form-group {
+    animation: fadeInUp 0.5s ease backwards;
+    animation-delay: calc(var(--order) * 0.1s);
+}
+
+.form-group:nth-child(1) { --order: 1; }
+.form-group:nth-child(2) { --order: 2; }
+.form-group:nth-child(3) { --order: 3; }
+.form-group:nth-child(4) { --order: 4; }
+.form-group:nth-child(5) { --order: 5; }
+.form-group:nth-child(6) { --order: 6; }
+.form-group:nth-child(7) { --order: 7; }
+.form-group:nth-child(8) { --order: 8; }
+.form-group:nth-child(9) { --order: 9; }
+.form-group:nth-child(10) { --order: 10; }
+
+@keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(-10px);
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-/* تأثير تحميل لطيف */
-@keyframes gentleSpin {
-    to { transform: rotate(360deg); }
-}
-
-.btn-primary.loading i {
-    animation: gentleSpin 1s linear infinite;
-}
-.bio{
-    width: 100%;
-    padding: 25px;
-    border-radius: 12px;
-    border: 1px solid #30363d;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    transition: transform 0.3s;
-   
-}
-.bio:hover{
-   
-    transform: translateY(-5px);
-    border-color: #238636;
 }

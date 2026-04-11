@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('file_path');
             $table->string('file_type');
+            $table->string('title');
+            $table->string('description');
+            $table->string('downloads_count');
+
             $table->timestamps();
              $table->foreignId('course_id')->constrained()->onDelete('cascade');
         });

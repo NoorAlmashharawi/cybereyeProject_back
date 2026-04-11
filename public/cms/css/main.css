@@ -1,0 +1,890 @@
+/* main.css - Modern Admin Dashboard RTL */
+
+:root {
+    --primary-color: #4361ee;
+    --primary-dark: #3a56d4;
+    --secondary-color: #6c757d;
+    --success-color: #2ecc71;
+    --danger-color: #e74c3c;
+    --warning-color: #f39c12;
+    --info-color: #3498db;
+    --dark-color: #2c3e50;
+    --light-color: #f8f9fa;
+    --gray-100: #f1f4f9;
+    --gray-200: #e9ecef;
+    --gray-300: #dee2e6;
+    --gray-400: #ced4da;
+    --gray-500: #adb5bd;
+    --gray-600: #7f8c8d;
+    --body-bg: #f4f7fc;
+    --card-bg: #ffffff;
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --border-radius: 16px;
+    --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--body-bg);
+    color: var(--text-primary);
+    line-height: 1.6;
+    direction: rtl;
+}
+
+/* Main Layout */
+.admin-main {
+    margin-right: 280px; /* عرض القائمة الجانبية - سيتم التحكم به من parent */
+    padding: 30px;
+    transition: var(--transition);
+}
+
+/* Sidebar Toggle for Mobile */
+.sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1001;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
+    transition: var(--transition);
+}
+
+.sidebar-toggle:hover {
+    background: var(--primary-dark);
+    transform: scale(1.05);
+}
+
+/* Toolbar */
+.admin-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.toolbar-title h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 5px;
+}
+
+.toolbar-title p {
+    color: var(--gray-600);
+    font-size: 0.95rem;
+}
+
+/* Notifications */
+.admin-notifications {
+    position: relative;
+}
+
+.notification-btn {
+    background: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    font-size: 1.3rem;
+    color: var(--gray-600);
+    cursor: pointer;
+    position: relative;
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+}
+
+.notification-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-3px);
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    background: var(--danger-color);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 3px 6px;
+    border-radius: 50px;
+    min-width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Quick Stats */
+.quick-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+}
+
+.stat-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.stat-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+}
+
+.stat-icon.users { background: linear-gradient(135deg, #4361ee, #3a0ca3); }
+.stat-icon.courses { background: linear-gradient(135deg, #f72585, #b5179e); }
+.stat-icon.revenue { background: linear-gradient(135deg, #4cc9f0, #4895ef); }
+.stat-icon.active { background: linear-gradient(135deg, #f8961e, #f3722c); }
+
+.stat-info h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: var(--dark-color);
+}
+
+.stat-info p {
+    color: var(--gray-600);
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+}
+
+.stat-trend {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85rem;
+}
+
+.trend-up { color: var(--success-color); }
+.trend-down { color: var(--danger-color); }
+
+/* Charts Section */
+.charts-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.chart-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: var(--box-shadow);
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.chart-header h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.chart-period {
+    display: flex;
+    gap: 8px;
+    background: var(--gray-100);
+    padding: 5px;
+    border-radius: 50px;
+}
+
+.period-btn {
+    padding: 8px 16px;
+    border: none;
+    background: transparent;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    transition: var(--transition);
+}
+
+.period-btn.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.chart-container {
+    height: 300px;
+    position: relative;
+}
+
+/* Tables Section */
+.tables-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.table-container, .table-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: var(--box-shadow);
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.table-header h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.table-actions .table-action-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    border: none;
+    background: var(--gray-100);
+    color: var(--gray-600);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.table-actions .table-action-btn:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th {
+    text-align: right;
+    padding: 15px 10px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    border-bottom: 2px solid var(--gray-200);
+}
+
+.admin-table td {
+    padding: 15px 10px;
+    border-bottom: 1px solid var(--gray-200);
+    color: var(--dark-color);
+}
+
+.admin-table tbody tr:hover {
+    background: var(--gray-100);
+}
+
+/* Students Table Specific */
+#studentsTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#studentsTable th {
+    text-align: right;
+    padding: 15px 10px;
+    background: var(--gray-100);
+    color: var(--dark-color);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+#studentsTable th:hover {
+    background: var(--gray-200);
+}
+
+#studentsTable td {
+    padding: 15px 10px;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+/* Badges */
+.badge {
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.bg-success {
+    background: rgba(46, 204, 113, 0.15);
+    color: var(--success-color);
+}
+
+.bg-secondary {
+    background: rgba(108, 117, 125, 0.15);
+    color: var(--secondary-color);
+}
+
+.bg-warning {
+    background: rgba(243, 156, 18, 0.15);
+    color: var(--warning-color);
+}
+
+.bg-info {
+    background: rgba(52, 152, 219, 0.15);
+    color: var(--info-color);
+}
+
+.bg-dark {
+    background: rgba(44, 62, 80, 0.15);
+    color: var(--dark-color);
+}
+
+/* Action Buttons */
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    border-radius: 10px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+}
+
+.btn-info { background: var(--info-color); }
+.btn-primary { background: var(--primary-color); }
+.btn-danger { background: var(--danger-color); }
+
+.btn-action:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+/* No Results */
+.no-results {
+    text-align: center;
+    padding: 40px;
+    color: var(--gray-500);
+}
+
+.no-results i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.no-results h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+/* Activity Section */
+.activity-section {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: var(--box-shadow);
+}
+
+.activity-list {
+    list-style: none;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    background: var(--gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-title {
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 3px;
+}
+
+.activity-desc {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+}
+
+.activity-time {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    white-space: nowrap;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .tables-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .charts-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 992px) {
+    .admin-main {
+        margin-right: 0;
+        padding: 20px;
+    }
+    
+    .sidebar-toggle {
+        display: block;
+    }
+    
+    .quick-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .quick-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .chart-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .admin-table {
+        font-size: 0.9rem;
+    }
+    
+    .btn-action {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+@media (max-width: 576px) {
+    .admin-main {
+        padding: 15px;
+    }
+    
+    .toolbar-title h1 {
+        font-size: 1.5rem;
+    }
+    
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    
+    .stat-info h3 {
+        font-size: 1.5rem;
+    }
+    
+    .chart-container {
+        height: 250px;
+    }
+    
+    #studentsTable th, 
+    #studentsTable td {
+        padding: 10px 5px;
+        font-size: 0.8rem;
+    }
+    
+    .activity-item {
+        flex-wrap: wrap;
+    }
+    
+    .activity-time {
+        width: 100%;
+        margin-right: 60px;
+    }
+}
+
+/* RTL Specific Adjustments */
+.chart-period {
+    margin-right: auto;
+    margin-left: 0;
+}
+
+.activity-icon {
+    margin-left: 15px;
+    margin-right: 0;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--gray-100);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--gray-400);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--gray-500);
+}
+
+
+
+
+
+
+
+/* تحديث الجداول لتصبح أصغر وأكثر أناقة */
+
+/* الحاوية العامة للجدول */
+.table-container, .table-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    box-shadow: var(--box-shadow);
+    overflow-x: auto;
+}
+
+/* رأس الجدول */
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.table-header h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--dark-color);
+    margin: 0;
+}
+
+.table-actions .table-action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+/* الجدول الرئيسي */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.admin-table th {
+    text-align: right;
+    padding: 10px 8px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border-bottom: 1px solid var(--gray-200);
+    white-space: nowrap;
+}
+
+.admin-table td {
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--gray-200);
+    color: var(--dark-color);
+    font-size: 0.85rem;
+}
+
+.admin-table tbody tr:hover {
+    background: var(--gray-100);
+}
+
+/* جدول الطلاب */
+#studentsTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+#studentsTable th {
+    text-align: right;
+    padding: 10px 8px;
+    background: var(--gray-100);
+    color: var(--dark-color);
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+#studentsTable th i {
+    margin-left: 4px;
+    font-size: 0.7rem;
+    opacity: 0.7;
+}
+
+#studentsTable td {
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--gray-200);
+    font-size: 0.85rem;
+}
+
+/* تصغير شارة الحالة */
+.badge {
+    padding: 4px 8px;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+/* أزرار الإجراءات أصغر */
+.btn-action {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+}
+
+/* صف الإجراءات */
+td.text-center {
+    display: flex;
+    gap: 4px;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* جدول الكورسات الأكثر شعبية */
+.admin-table td:last-child,
+.admin-table th:last-child {
+    text-align: left;
+}
+
+.admin-table td:first-child,
+.admin-table th:first-child {
+    font-weight: 500;
+}
+
+/* تحسين عرض التقييم بالنجوم */
+.admin-table td:nth-child(4) {
+    font-size: 0.75rem;
+    color: var(--warning-color);
+}
+
+/* جعل الجدول أكثر كثافة في الشاشات الكبيرة */
+@media (min-width: 1200px) {
+    #studentsTable th,
+    #studentsTable td,
+    .admin-table th,
+    .admin-table td {
+        padding: 8px 6px;
+        font-size: 0.8rem;
+    }
+    
+    .badge {
+        padding: 3px 6px;
+        font-size: 0.65rem;
+    }
+    
+    .btn-action {
+        width: 24px;
+        height: 24px;
+        font-size: 0.7rem;
+        border-radius: 4px;
+    }
+}
+
+/* للشاشات المتوسطة */
+@media (max-width: 992px) {
+    #studentsTable th,
+    #studentsTable td,
+    .admin-table th,
+    .admin-table td {
+        padding: 8px 6px;
+        font-size: 0.8rem;
+    }
+    
+    .table-container, .table-card {
+        padding: 15px;
+    }
+}
+
+/* للشاشات الصغيرة - تمرير أفقي */
+@media (max-width: 768px) {
+    .table-container, .table-card {
+        padding: 12px;
+    }
+    
+    #studentsTable th,
+    #studentsTable td,
+    .admin-table th,
+    .admin-table td {
+        padding: 6px 4px;
+        font-size: 0.75rem;
+    }
+    
+    .badge {
+        padding: 2px 4px;
+        font-size: 0.6rem;
+    }
+    
+    .btn-action {
+        width: 22px;
+        height: 22px;
+        font-size: 0.6rem;
+        border-radius: 4px;
+    }
+    
+    td.text-center {
+        gap: 2px;
+    }
+}
+
+/* تحسين ظهور الروابط والأزرار */
+.btn-action:hover {
+    transform: translateY(-1px);
+}
+
+/* جعل النصوص الطويلة مقصوصة مع علامة ... */
+.admin-table td {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* استثناء عمود الإجراءات من القص */
+.admin-table td:last-child {
+    max-width: none;
+    overflow: visible;
+    white-space: normal;
+}
+
+/* تحسين مظهر رقم المعرف */
+#studentsTable td:first-child {
+    font-weight: 500;
+    color: var(--primary-color);
+    width: 50px;
+}
+
+/* تحسين ظهور الإيميل */
+#studentsTable td:nth-child(3) {
+    direction: ltr;
+    text-align: right;
+    font-size: 0.75rem;
+}
+
+/* تنسيق خاص للجداول في قسم الإحصائيات */
+.quick-stats + .charts-section + .tables-section {
+    margin-top: 20px;
+}
+
+/* إضافة بعض الألوان الخفيفة للصفوف */
+#studentsTable tbody tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* تحسين ظهور رسالة "لا توجد نتائج" */
+.no-results {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--gray-500);
+}
+
+.no-results i {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    opacity: 0.5;
+}
+
+.no-results h3 {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    color: var(--gray-600);
+}
+
+.no-results p {
+    font-size: 0.85rem;
+    color: var(--gray-400);
+}

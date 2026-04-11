@@ -30,7 +30,7 @@
         <nav class="admin-menu">
             <div class="admin-menu-section">
                 <div class="menu-title">الرئيسية</div>
-                <a href="#" class="admin-menu-item active">
+                <a href="{{ route('main') }}" class="admin-menu-item active">
                     <i class="fas fa-tachometer-alt"></i>
                     <span>لوحة التحكم</span>
                 </a>
@@ -88,6 +88,9 @@
     <script src="{{ asset('cms/js/admin.js') }}"></script>
     <script src="{{ asset('cms/js/crud.js') }}"></script>
 
+    <script src="{{ asset('js/chart.umd.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     @yield('scripts')
 </body>
+
 </html>
