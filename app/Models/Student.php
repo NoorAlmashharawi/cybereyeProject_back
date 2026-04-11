@@ -17,10 +17,10 @@ class Student extends Model
         'user1_id',
         'enrollment_date',
         'progress',
-        'level',          
-        'status',          
-        'specialization',  
-        'role',            
+        'level',
+        'status',
+        'specialization',
+        'role',
     ];
 
     protected $casts = [
@@ -29,11 +29,15 @@ class Student extends Model
 
     // ========== العلاقات ==========
 
- 
+
     public function user1()
     {
         return $this->belongsTo(User1::class, 'user1_id', 'id');
     }
+    public function courses()
+{
+    return $this->belongsToMany(Course::class, 'enrollments');
+}
     // protected $fillable = [
     //     'username',
     //     'email',
@@ -43,7 +47,7 @@ class Student extends Model
     // ];
 
     // public function students(){
-        
+
     // }
 
 

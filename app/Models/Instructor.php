@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\User1;
 class Instructor extends Model
 {
     /** @use HasFactory<\Database\Factories\InstructorFactory> */
