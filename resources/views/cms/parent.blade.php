@@ -56,7 +56,7 @@
                     <span>الكورسات</span>
 
 
-                    <a href="categories.html" class="admin-menu-item">
+                    <a href="{{ route('categories.index') }}" class="admin-menu-item {{ request()->routeIs('categories.*') ? 'active' : '' }}">
                         <i class="fas fa-tags"></i>
                         <span>التصنيفات</span>
                     </a>
