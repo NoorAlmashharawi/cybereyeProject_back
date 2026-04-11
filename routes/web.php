@@ -74,5 +74,4 @@ Route::prefix('cms/instructor')->group(function(){
 
 
 
-    Route::view('details','cms/courseDetails/details')
-    ;
+    Route::view('details','cms/courseDetails/details');
