@@ -91,7 +91,7 @@
 
 <div class="form-actions">
 
-<a href="{{ route('instructors.index') }}" class="btn btn-secondary">
+<a href="{{ route('questions.index') }}" class="btn btn-secondary">
 رجوع
 </a>
 

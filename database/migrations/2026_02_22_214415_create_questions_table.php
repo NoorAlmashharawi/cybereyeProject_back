@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->text('question_text');
+            
+            $table->string('title');                   // نص السؤال
+            $table->enum('type', ['mc', 'tf']);        // mc = اختيار من متعدد، tf = صح/خطأ
+            $table->json('options')->nullable();       // الخيارات (مصفوفة) فقط لـ mc
+            $table->string('correct_answer');          // الإجابة الصحيحة (نص)
+            $table->integer('points')->default(1);     // درجة السؤال
             $table->timestamps();
             $table->foreignId('quizz_id')->constrained()->onDelete('cascade');
         });
