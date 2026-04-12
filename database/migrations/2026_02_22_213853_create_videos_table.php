@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('description');
             $table->string('url/file_path');
             $table->integer('duration_minutes');
-
+             $table->integer('order')->default(1); // ترتيب الفيديو داخل الدرس
             $table->timestamps();
              $table->foreignId('lesson_id')->constrained()->onDelete('cascade');
         });
