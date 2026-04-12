@@ -42,7 +42,7 @@
                     <i class="fas fa-graduation-cap"></i>
                     <span>الكورسات</span>
                 </a>
-                <a href="#" class="admin-menu-item">
+                <a href="{{ route('categories.index') }}" class="admin-menu-item">
                     <i class="fas fa-tags"></i>
                     <span>التصنيفات</span>
                 </a>
