@@ -206,11 +206,11 @@
                 <div class="form-group">
                     <label for="category_id">التصنيف الدراسي *</label>
                     <select id="category_id">
-                        {{-- هنا شغل نور  --}}
-                        <option value="">-- اختر التصنيف --</option>
-                        @foreach($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                        @endforeach
+                    <option value="">-- اختر المسار التعليمي --</option>
+                    @foreach($categories as $category)
+                        {{-- هنا بنعرض الـ title تبع المسارات اللي أنتِ عملتيها --}}
+                        <option value="{{ $category->id }}">{{ $category->title }}</option>
+                    @endforeach
                     </select>
                 </div>
 

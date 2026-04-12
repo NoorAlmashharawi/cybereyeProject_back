@@ -4,14 +4,19 @@
 
 @section('styles')
 <style>
-    .main-content-fluid {
-        margin-right: 250px;
+    /* التعديل الجوهري: جعل الحاوية تفرش وتوحد اللون */
+    .create-page-wrapper {
+        width: 100%;
+        padding: 50px 20px;
         background-color: #0b0f19;
         min-height: 100vh;
-        padding: 50px 20px;
         direction: rtl;
-        width: calc(100% - 250px);
-        float: left;
+        box-sizing: border-box;
+    }
+
+    /* ضمان انسجام الخلفية مع الداشبورد */
+    .admin-main {
+        background-color: #0b0f19 !important;
     }
 
     .cyber-form-card {
@@ -20,7 +25,7 @@
         border-radius: 20px;
         padding: 50px;
         max-width: 950px;
-        margin: 0 auto;
+        margin: 0 auto; /* توسيط الفورم في المساحة الجديدة الكبيرة */
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
     }
 
@@ -59,7 +64,6 @@
         outline: none;
     }
 
-    /* منطقة إرفاق الصورة الاحترافية */
     .upload-preview-area {
         width: 100%;
         height: 250px;
@@ -86,7 +90,6 @@
         object-fit: contain;
     }
 
-    /* أزرار التحكم بالأسفل */
     .action-footer {
         display: flex;
         gap: 20px;
@@ -128,19 +131,20 @@
         text-decoration: none;
         text-align: center;
         transition: 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .btn-back-cyber:hover {
         background: #374151 !important;
         color: white !important;
     }
-
-    @media (max-width: 991px) { .main-content-fluid { margin-right: 0; width: 100%; } }
 </style>
 @endsection
 
 @section('content')
-<div class="main-content-fluid">
+<div class="create-page-wrapper">
     <div class="cyber-form-card">
         <h2 class="form-header-title">
             <i class="fas fa-shield-alt"></i> إعداد تصنيف تعليمي جديد
@@ -195,7 +199,6 @@
 
 @section('scripts')
 <script>
-    // وظيفة معاينة الصورة قبل الرفع
     function previewImage(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
@@ -209,15 +212,12 @@
         }
     }
 
-    // وظيفة الإرسال البرمجي 
     function performStore() {
-        // 1. جمع البيانات من الفورم
         let title = document.getElementById('title').value;
         let description = document.getElementById('description').value;
         let status = document.getElementById('status').value;
         let imageFile = document.getElementById('imageInput').files[0];
 
-        // 2. التحقق من البيانات الأساسية
         if(!title || !description || !imageFile) {
             Swal.fire({
                 title: 'نقص في البيانات!',
@@ -231,32 +231,27 @@
             return;
         }
 
-        // 3. تجهيز البيانات للإرسال
         let formData = new FormData();
         formData.append('title', title);
         formData.append('description', description);
         formData.append('status', status);
         formData.append('url', imageFile);
 
-        // 4. تنفيذ طلب الـ POST
         axios.post('/cms/admin/categories', formData)
             .then(function (response) {
-                // إظهار رسالة النجاح
                 Swal.fire({
                     title: 'تمت الإضافة!',
                     text: response.data.message || 'تم إنشاء التصنيف الجديد بنجاح',
                     icon: 'success',
-                    timer: 3000,
+                    timer: 2000,
                     showConfirmButton: false,
                     background: '#111827',
                     color: '#ffffff'
                 }).then(() => {
-                    // التوجيه لصفحة القائمة بعد اختفاء الرسالة
                     window.location.href = "{{ route('categories.index') }}";
                 });
             })
             .catch(function (error) {
-                // عرض رسالة الخطأ
                 Swal.fire({
                     title: 'فشل الإجراء',
                     text: error.response?.data?.message || 'حدث خطأ أثناء الحفظ',

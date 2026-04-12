@@ -4,16 +4,18 @@
 
 @section('styles')
 <style>
-    /* التنسيقات العامة للمحتوى */
-    .main-wrapper {
-        margin-right: 250px;
-        width: calc(100% - 250px);
+    /* التعديل الجوهري: جعل المحتوى يفرش بدون بياض مع الحفاظ على التنسيق */
+    .admin-main {
+        background-color: #0b0f19 !important;
+    }
+
+    .main-wrapper-custom {
+        width: 100%;
         padding: 40px;
         background-color: #0b0f19;
         min-height: 100vh;
         direction: rtl;
         box-sizing: border-box;
-        float: left;
     }
 
     .page-header {
@@ -68,7 +70,6 @@
         opacity: 0.9;
     }
 
-    /* عرض الشبكة والكروت */
     .categories-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -76,15 +77,16 @@
         width: 100%;
     }
 
+    /* --- التعديل لتوحيد محاذاة الفوتر دون تغيير التصميم --- */
     .category-card {
         background: #111827;
         border: 1px solid #1f2937;
         border-radius: 15px;
         overflow: hidden;
         display: flex;
-        flex-direction: column;
-        height: 100%;
-        transition: all 0.4s ease; /* التأكد من أن جميع الخصائص تتأثر بالانتقال */
+        flex-direction: column; /* ترتيب العناصر عمودياً */
+        height: 100%;           /* لتتساوى الكروت في الصف الواحد */
+        transition: all 0.4s ease;
     }
 
     .category-card:hover {
@@ -96,6 +98,7 @@
         position: relative;
         width: 100%;
         height: 160px;
+        flex-shrink: 0; /* الحفاظ على أبعاد الصورة */
     }
 
     .card-image-wrapper img {
@@ -121,8 +124,9 @@
 
     .card-content {
         padding: 18px;
-        flex-grow: 1;
-        border-bottom: 1px solid #1f2937;
+        flex-grow: 1; /* السر هنا: جعل منطقة النص تتمدد لتدفع الفوتر للأسفل */
+        display: flex;
+        flex-direction: column;
         unicode-bidi: plaintext;
         text-align: start;
     }
@@ -132,21 +136,25 @@
         font-size: 18px;
         font-weight: 800;
         margin-bottom: 8px;
+        min-height: 2.4em; /* محاذاة العناوين حتى لو سطر واحد */
     }
 
     .card-content p {
         color: #9ca3af;
         font-size: 13px;
         line-height: 1.5;
-        margin-bottom: 0;
+        margin-bottom: 20px;
+        flex-grow: 1; /* يضمن دفع الفوتر لأسفل الكارد تماماً */
     }
 
     .card-footer {
-        padding: 12px 18px;
+        margin-top: auto; /* تأكيد الالتصاق بقعر الكارد */
+        padding: 15px 18px;
         background: #161e2d;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        border-top: 1px solid #1f2937;
     }
 
     .stat-item {
@@ -164,8 +172,8 @@
     }
 
     .btn-icon {
-        width: 34px;
-        height: 34px;
+        width: 35px;
+        height: 35px;
         border-radius: 8px;
         display: flex;
         align-items: center;
@@ -182,73 +190,15 @@
     .btn-edit:hover { background: #3b82f6; color: white; }
     .btn-delete:hover { background: #ef4444; color: white; }
 
-    .btn-add-course {
-        color: #10b981;
-        text-decoration: none;
-        font-weight: 800;
-        font-size: 13px;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        transition: 0.3s;
-    }
-
-    .btn-add-course:hover { color: #ffffff; }
-
-    /* --- تنسيق SweetAlert2 الموحد --- */
-    .dark-swal {
-        background: #111827 !important;
-        border: 1px solid #1f2937 !important;
-        border-radius: 20px !important;
-        padding: 30px !important;
-    }
-    .dark-swal .swal2-title {
-        color: #ffffff !important;
-        font-size: 22px !important;
-        font-weight: 700 !important;
-    }
-    .dark-swal .swal2-html-container {
-        color: #9ca3af !important;
-        font-size: 15px !important;
-        margin-top: 10px !important;
-    }
-
-    .swal2-confirm-custom {
-        background-color: #10b981 !important;
-        color: white !important;
-        padding: 12px 28px !important;
-        border-radius: 12px !important;
-        font-weight: 700 !important;
-        font-size: 14px !important;
-        margin: 0 10px !important;
-        min-width: 120px !important;
-        border: none !important;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-    .swal2-confirm-custom:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
-
-    .swal2-cancel-custom {
-        background-color: #374151 !important;
-        color: #ffffff !important;
-        padding: 12px 28px !important;
-        border-radius: 12px !important;
-        font-weight: 700 !important;
-        font-size: 14px !important;
-        margin: 0 10px !important;
-        min-width: 120px !important;
-        border: none !important;
-        cursor: pointer;
-    }
-
-    .swal2-actions-gap { margin-top: 30px !important; }
-
-    @media (max-width: 991px) { .main-wrapper { margin-right: 0; width: 100%; } }
+    /* تنسيقات الـ SweetAlert */
+    .dark-swal { background: #111827 !important; border: 1px solid #1f2937 !important; color: white !important; }
+    .swal2-confirm-custom { background: #10b981 !important; color: white !important; padding: 10px 20px; border-radius: 8px; }
+    .swal2-cancel-custom { background: #374151 !important; color: white !important; padding: 10px 20px; border-radius: 8px; }
 </style>
 @endsection
 
 @section('content')
-<div class="main-wrapper">
+<div class="main-wrapper-custom">
     <div class="page-header">
         <div class="page-header-text">
             <h1>المسارات التعليمية</h1>
@@ -267,49 +217,43 @@
     <div class="categories-grid" id="categories-container">
         @forelse($categories as $category)
             <div class="category-card" id="card-{{ $category->id }}">
-                <div class="card-image-wrapper">
-                    <span class="status-badge {{ $category->status == 'inactive' ? 'inactive' : '' }}">
-                        {{ $category->status == 'active' ? 'نشط' : 'مؤرشف' }}
-                    </span>
-                    <img src="{{ asset('storage/' . $category->url) }}"
-                         onerror="this.src='https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600'"
-                         alt="{{ $category->title }}">
-                </div>
-
-                <div class="card-content">
-                    <h3>{{ $category->title }}</h3>
-                    <p>{{ Str::limit($category->description, 100) }}</p>
-                </div>
-
-                <div class="card-footer">
-                    <div class="stat-item">
-                        <i class="fas fa-book-open"></i> {{ $category->courses_count ?? 0 }} كورس
+                <a href="{{ route('courses.index', ['category_id' => $category->id]) }}" style="text-decoration: none; display: flex; flex-direction: column; flex-grow: 1;">
+                    <div class="card-image-wrapper">
+                        <span class="status-badge {{ $category->status == 'inactive' ? 'inactive' : '' }}">
+                            {{ $category->status == 'active' ? 'نشط' : 'مؤرشف' }}
+                        </span>
+                        <img src="{{ asset('storage/' . $category->url) }}"
+                             onerror="this.src='https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600'"
+                             alt="{{ $category->title }}">
                     </div>
 
-                    <a href="#" class="btn-add-course">
-                        إضافة <i class="fas fa-plus-square"></i>
-                    </a>
+                    <div class="card-content">
+                        <h3>{{ $category->title }}</h3>
+                        <p>{{ Str::limit($category->description, 100) }}</p>
+                    </div>
+                </a>
 
+                <div class="card-footer">
+                    {{-- الأزرار على اليسار (تعديل وحذف) --}}
                     <div class="action-btns">
-                        <button onclick="confirmArchive({{ $category->id }})"
-                                class="btn-icon btn-delete"
-                                title="نقل إلى الأرشيف">
-                            <i class="fas fa-archive"></i>
+                        <button onclick="confirmArchive({{ $category->id }})" class="btn-icon btn-delete" title="نقل إلى الأرشيف">
+                            <i class="fas fa-trash-alt"></i>
                         </button>
                         <a href="{{ route('categories.edit', $category->id) }}" class="btn-icon btn-edit" title="تعديل">
                             <i class="fas fa-edit"></i>
                         </a>
                     </div>
+
+                    {{-- عدد الكورسات على اليمين --}}
+                    <div class="stat-item">
+                        <span>{{ $category->courses_count ?? 0 }} كورس</span>
+                        <i class="fas fa-book-open"></i>
+                    </div>
                 </div>
             </div>
         @empty
-            <div id="empty-state" style="grid-column: 1/-1; text-align: center; padding: 100px 20px; background: #111827; border-radius: 20px; border: 2px dashed #1f2937;">
-                <i class="fas fa-layer-group fa-4x mb-4" style="color: #1f2937;"></i>
-                <h3 style="color: #9ca3af; font-weight: 700;">سجل البيانات فارغ</h3>
-                <p style="color: #4b5563;">لم يتم تأسيس أي مسارات تعليمية بعد.</p>
-                <a href="{{ route('categories.create') }}" class="btn-add-main" style="display: inline-flex; margin-top: 20px;">
-                    <i class="fas fa-plus-circle"></i> تأسيس أول مسار
-                </a>
+            <div style="color: white; text-align: center; width: 100%;">
+                لا توجد مسارات تعليمية حالياً.
             </div>
         @endforelse
     </div>
@@ -329,8 +273,7 @@
             customClass: {
                 popup: 'dark-swal',
                 confirmButton: 'swal2-confirm-custom',
-                cancelButton: 'swal2-cancel-custom',
-                actions: 'swal2-actions-gap'
+                cancelButton: 'swal2-cancel-custom'
             },
             buttonsStyling: false
         }).then((result) => {
@@ -343,35 +286,16 @@
     function performArchive(id) {
         axios.delete('/cms/admin/categories/' + id)
             .then(function (response) {
-                // البحث عن الكارد
                 const card = document.querySelector('#card-' + id);
-
                 if (card) {
-                    // تشغيل الأنيميشن (الاختفاء التدريجي)
-                    card.style.transition = "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)";
-                    card.style.transform = "scale(0.8) translateY(30px)";
+                    card.style.transition = "all 0.5s ease";
+                    card.style.transform = "scale(0.8)";
                     card.style.opacity = "0";
-
-                    setTimeout(() => {
-                        card.remove();
-
-                        // التحقق إذا كانت القائمة أصبحت فارغة لإظهار رسالة "السجل فارغ"
-                        const remainingCards = document.querySelectorAll('.category-card');
-                        if (remainingCards.length === 0) {
-                            location.reload(); 
-                        }
-                    }, 500);
+                    setTimeout(() => card.remove(), 500);
                 }
-
-                // إظهار رسالة النجاح
-                toastr.success(response.data.message || 'تم نقل المسار للأرشيف بنجاح');
+                toastr.success(response.data.message);
             })
-            .catch(function (error) {
-                console.error(error);
-                toastr.error(error.response?.data?.message || 'عذراً، حدث خطأ أثناء الأرشفة');
-            });
+            .catch(error => toastr.error('خطأ في العملية'));
     }
-
-
 </script>
 @endsection

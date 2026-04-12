@@ -5,20 +5,93 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
-    /**
-     * عرض قائمة التصنيفات النشطة
-     */
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::withCount('courses')->get();
         return view('cms.Category.index', compact('categories'));
     }
 
+    public function create()
+    {
+        return view('cms.Category.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'title'       => 'required|string|max:100',
+            'status'      => 'required|in:active,inactive',
+            'description' => 'nullable|string',
+            'url'         => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->getMessageBag()->first()], 422);
+        }
+
+        $data = $validator->validated();
+
+        if ($request->hasFile('url')) {
+            $data['url'] = $request->file('url')->store('categories', 'public');
+        }
+
+        $category = Category::create($data);
+
+        return response()->json([
+            'message' => $category ? 'تم الحفظ بنجاح' : 'فشل الحفظ'
+        ], $category ? 200 : 400);
+    }
+
+    public function edit(Category $category)
+    {
+        return view('cms.Category.edit', compact('category'));
+    }
+
+    public function update(Request $request, Category $category)
+    {
+        $validator = Validator::make($request->all(), [
+            'title'       => 'required|string|max:100',
+            'status'      => 'required|in:active,inactive',
+            'description' => 'nullable|string',
+            'url'         => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->getMessageBag()->first()], 422);
+        }
+
+        $data = $validator->validated();
+
+        if ($request->hasFile('url')) {
+            if ($category->url && Storage::disk('public')->exists($category->url)) {
+                Storage::disk('public')->delete($category->url);
+            }
+            $data['url'] = $request->file('url')->store('categories', 'public');
+        }
+
+        $isUpdated = $category->update($data);
+
+        return response()->json([
+            'message' => $isUpdated ? 'تم تحديث البيانات بنجاح' : 'فشل التحديث'
+        ], $isUpdated ? 200 : 400);
+    }
+
+    // --- دوال الحذف والأرشفة ---
+
+    public function destroy(Category $category)
+    {
+        $isDeleted = $category->delete();
+        return response()->json([
+            'message' => $isDeleted ? 'تم نقل المسار إلى الأرشيف' : 'حدث خطأ ما'
+        ], $isDeleted ? 200 : 400);
+    }
+
     /**
-     * عرض سلة المحذوفات
+     * عرض الأرشيف (سلة المحذوفات)
      */
     public function trashed()
     {
@@ -27,7 +100,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * استعادة تصنيف
+     * استعادة من الأرشيف
      */
     public function restore($id)
     {
@@ -44,108 +117,12 @@ class CategoryController extends Controller
     {
         $category = Category::withTrashed()->findOrFail($id);
 
-        // حذف الصورة باستخدام الدالة الخاصة بالأسفل
-        $this->deleteImage($category->url);
+        // حذف الصورة نهائياً من الـ Storage
+        if ($category->url && Storage::disk('public')->exists($category->url)) {
+            Storage::disk('public')->delete($category->url);
+        }
 
         $category->forceDelete();
         return redirect()->back()->with('success', 'تم حذف التصنيف نهائياً');
-    }
-
-    /**
-     * عرض صفحة إنشاء تصنيف جديد
-     */
-    public function create()
-    {
-        return view('cms.Category.create');
-    }
-
-    /**
-     * تخزين تصنيف جديد
-     */
-    public function store(Request $request)
-    {
-        $data = $request->validate([
-            'title' => 'required|string|max:100',
-            'url' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'description' => 'nullable|string',
-            'status' => 'required|in:active,inactive',
-        ]);
-
-        if ($request->hasFile('url')) {
-            $data['url'] = $request->file('url')->store('categories', 'public');
-        }
-
-        $category = Category::create($data);
-
-        return response()->json([
-            'message' => $category ? 'تم الحفظ بنجاح' : 'فشل الحفظ'
-        ], $category ? 200 : 400);
-    }
-
-    /**
-     * عرض تفاصيل
-     */
-    public function show(Category $category)
-    {
-        //
-    }
-
-    /**
-     * عرض صفحة التعديل
-     */
-    public function edit(Category $category)
-    {
-        return view('cms.Category.edit', compact('category'));
-    }
-
-    /**
-     * تحديث بيانات التصنيف
-     */
-    public function update(Request $request, Category $category)
-    {
-        $data = $request->validate([
-            'title' => 'required|string|max:100',
-            'status' => 'required|in:active,inactive',
-            'description' => 'nullable|string',
-            'url' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
-
-        if ($request->hasFile('url')) {
-            // حذف الصورة القديمة
-            $this->deleteImage($category->url);
-            // تخزين الجديدة
-            $data['url'] = $request->file('url')->store('categories', 'public');
-        }
-
-        $isUpdated = $category->update($data);
-
-        return response()->json([
-            'message' => $isUpdated ? 'تم تحديث بيانات المسار بنجاح' : 'فشل التحديث'
-        ], $isUpdated ? 200 : 400);
-    }
-
-    /**
-     * نقل إلى سلة المحذوفات (Soft Delete)
-     */
-    public function destroy($id)
-    {
-        $category = Category::findOrFail($id);
-        $isDeleted = $category->delete();
-
-        return response()->json([
-            'icon'    => $isDeleted ? 'success' : 'error',
-            'title'   => $isDeleted ? 'تمت الأرشفة' : 'فشل الإجراء',
-            'message' => $isDeleted ? 'تم نقل المسار إلى الأرشيف بنجاح' : 'حدث خطأ ما'
-        ], $isDeleted ? 200 : 400);
-    }
-
-    /**
-     * دالة خاصة لحذف الصور
-     */
-    private function deleteImage($url)
-    {
-        if ($url && Storage::disk('public')->exists($url)) {
-            Storage::disk('public')->delete($url);
-        }
     }
 }

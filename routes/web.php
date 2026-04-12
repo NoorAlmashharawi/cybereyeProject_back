@@ -11,7 +11,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\UserAuthController;
- 
+
 
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuizzController;
@@ -38,9 +38,6 @@ Route::post('/cms/ai/chat', [AIChatController::class, 'chat'])->name('ai.chat');
 Route::prefix('cms/student')->group(function(){
     Route::view('/', 'cms.parent');
 
-    Route::view('temp', 'cms.temp');
-
-Route::view('temp', 'cms.temp');
 
 
     Route::put('students_update/{id}', [StudentController::class, 'update'])->name('students_update');
@@ -53,7 +50,6 @@ Route::view('temp', 'cms.temp');
     Route::resource('students', StudentController::class);
     Route::resource('users', User1Controller::class);
 
-    Route::view('temp', 'cms.temp');
 
     Route::put('students_update/{id}', [StudentController::class, 'update'])->name('students_update');
     Route::get('students_trashed', [StudentController::class, 'trashed'])->name('students_trashed');
@@ -70,9 +66,13 @@ Route::view('temp', 'cms.temp');
 Route::prefix('cms/admin')->group(function(){
     Route::get('main', [AdminController::class, 'main'])->name('main');
     Route::resource('admins', AdminController::class);
+    // Categories Routes
     Route::get('categories_trashed', [CategoryController::class, 'trashed'])->name('categories.trashed');
     Route::get('categories_restore/{id}', [CategoryController::class, 'restore'])->name('categories.restore');
+
+    // تأكدي أن اسم الدالة في الكنترولر هو forceDelete كما في الرووت
     Route::get('categories_force/{id}', [CategoryController::class, 'forceDelete'])->name('categories.force');
+
     Route::resource('categories', CategoryController::class);
 });
 
@@ -83,7 +83,6 @@ Route::prefix('cms/instructor')->group(function(){
     Route::put('instructors_update/{id}', [InstructorController::class, 'update'])->name('instructors_update');
     Route::resource('instructors', InstructorController::class);
     Route::resource('users', User1Controller::class);
-
 
 Route::view('/', 'cms.parent');
 Route::view('temp', 'cms.temp');
@@ -109,10 +108,7 @@ Route::prefix('cms/course')->group(function(){
 
 Route::view('details', 'cms/courseDetails/details');
 
-
-
-    Route::view('details','cms/courseDetails/details')
-    ;
+ 
 
 
     Route::prefix('cms/video')->group(function(){
@@ -158,5 +154,3 @@ Route::post('/quiz/{quiz}/save-temp', [QuizzController::class, 'saveTemp'])->nam
 
 
 });
-
-
