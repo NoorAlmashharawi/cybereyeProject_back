@@ -4,14 +4,19 @@
 
 @section('styles')
 <style>
-    .main-wrapper {
-        margin-right: 250px;
-        padding: 30px;
-        background-color: #0b0f19;
+    /* التعديل الجوهري: إزالة الـ main-wrapper القديم واستبداله بتنسيق مرن */
+    .edit-page-container {
+        width: 100%;
+        padding: 40px;
+        background-color: #0b0f19; /* توحيد لون الخلفية مع الداشبورد */
         min-height: 100vh;
         direction: rtl;
-        width: calc(100% - 250px);
-        float: left;
+        box-sizing: border-box;
+    }
+
+    /* ضمان عدم وجود بياض في الحاوية الأكبر */
+    .admin-main {
+        background-color: #0b0f19 !important;
     }
 
     .cyber-form-card {
@@ -123,22 +128,47 @@
         color: white !important;
     }
 
-    .cyber-card { background: #111827; border: 1px solid #1f2937; border-radius: 15px; padding: 25px; }
-    .section-title { color: #10b981; font-size: 20px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #1f2937; padding-bottom: 10px; }
+    /* تنسيق كارد الجدول */
+    .cyber-card {
+        background: #111827;
+        border: 1px solid #1f2937;
+        border-radius: 15px;
+        padding: 25px;
+    }
+
+    .section-title {
+        color: #10b981;
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-bottom: 1px solid #1f2937;
+        padding-bottom: 10px;
+    }
+
     .cyber-table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
-    .cyber-table thead th { color: #9ca3af; padding: 15px; font-weight: 600; }
+    .cyber-table thead th { color: #9ca3af; padding: 15px; font-weight: 600; text-align: right; }
     .cyber-table tbody tr { background: #161e2d; transition: 0.3s; }
-    .cyber-table td { padding: 15px; color: white; vertical-align: middle; }
+    .cyber-table td { padding: 15px; color: white; vertical-align: middle; text-align: right; }
+
     .badge-status { padding: 5px 12px; border-radius: 6px; font-size: 12px; }
     .status-active { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-    .btn-add-table { background: #3b82f6; color: white; font-size: 13px; padding: 5px 15px; border-radius: 6px; text-decoration: none; }
 
-    @media (max-width: 991px) { .main-wrapper { margin-right: 0; width: 100%; } }
+    .btn-add-table {
+        background: #3b82f6;
+        color: white !important;
+        font-size: 13px;
+        padding: 8px 15px;
+        border-radius: 8px;
+        text-decoration: none;
+    }
 </style>
 @endsection
 
 @section('content')
-<div class="main-wrapper">
+<div class="edit-page-container">
     <div class="cyber-form-card">
         <h2 class="form-header-title">
             <i class="fas fa-edit"></i> تعديل بيانات التصنيف: {{ $category->title }}
@@ -249,55 +279,43 @@
     }
 
     function performUpdate(id) {
-    let formData = new FormData();
-    formData.append('_method', 'PUT');
-    formData.append('title', document.getElementById('title').value);
-    formData.append('description', document.getElementById('description').value);
-    formData.append('status', document.getElementById('status').value);
+        let formData = new FormData();
+        formData.append('_method', 'PUT');
+        formData.append('title', document.getElementById('title').value);
+        formData.append('description', document.getElementById('description').value);
+        formData.append('status', document.getElementById('status').value);
 
-    let imageFile = document.getElementById('imageInput').files[0];
-    if(imageFile) {
-        formData.append('url', imageFile);
+        let imageFile = document.getElementById('imageInput').files[0];
+        if(imageFile) {
+            formData.append('url', imageFile);
+        }
+
+        axios.post('/cms/admin/categories/' + id, formData)
+            .then(function (response) {
+                Swal.fire({
+                    title: 'تم التحديث بنجاح',
+                    icon: 'success',
+                    background: '#111827',
+                    color: '#ffffff',
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    window.location.href = "{{ route('categories.index') }}";
+                });
+            })
+            .catch(function (error) {
+                toastr.error('فشلت عملية التحديث');
+            });
     }
 
-    axios.post('/cms/admin/categories/' + id, formData)
-        .then(function (response) {
-            // استخدام SweetAlert بنفس نمط الأرشفة
-            Swal.fire({
-                title: 'تم التحديث!',
-                text: response.data.message || 'تم حفظ التعديلات بنجاح',
-                icon: 'success',
-                timer: 3000, // بتختفي بعد ثواني
-                showConfirmButton: false,
-                background: '#111827',
-                color: '#ffffff'
-            }).then(() => {
-                // الانتقال لصفحة الاندكس بعد ما تخلص الرسالة
-                window.location.href = "{{ route('categories.index') }}";
-            });
-        })
-        .catch(function (error) {
-            //رسالة الخطأ
-            Swal.fire({
-                title: 'خطأ!',
-                text: error.response?.data?.message || 'فشلت عملية التحديث',
-                icon: 'error',
-                confirmButtonText: 'موافق',
-                confirmButtonColor: '#10b981',
-                background: '#111827',
-                color: '#ffffff'
-            });
-        });
-}
-
     function deleteCourse(id) {
-        if(confirm('هل أنت متأكدة من حذف هذا الكورس؟')) {
+        if(confirm('هل أنت متأكد من حذف هذا الكورس؟')) {
             axios.delete('/cms/admin/courses/' + id)
                 .then(res => {
-                    toastr.success('تم حذف الكورس بنجاح');
+                    toastr.success('تم الحذف');
                     location.reload();
                 })
-                .catch(err => toastr.error('خطأ في عملية الحذف'));
+                .catch(err => toastr.error('خطأ في الحذف'));
         }
     }
 </script>

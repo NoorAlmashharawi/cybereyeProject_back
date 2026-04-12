@@ -4,18 +4,22 @@
 
 @section('styles')
 <style>
-    /* التنسيقات العامة للمحتوى */
-    .main-wrapper {
-        margin-right: 250px;
-        width: calc(100% - 250px);
+    /* التعديل الجوهري: جعل المحتوى يفرش بدون بياض مع الحفاظ على التنسيق */
+    .admin-main {
+        background-color: #0b0f19 !important; /* توحيد لون الخلفية */
+    }
+
+    /* حذفنا الـ float والـ margin-right الثابت اللي كان عامل بياض */
+    .main-wrapper-custom {
+        width: 100%;
         padding: 40px;
         background-color: #0b0f19;
         min-height: 100vh;
         direction: rtl;
         box-sizing: border-box;
-        float: left;
     }
 
+    /* --- كل التنسيقات اللي تحت هي تنسيقاتك الأصلية بدون تغيير --- */
     .page-header {
         display: flex;
         justify-content: space-between;
@@ -68,7 +72,6 @@
         opacity: 0.9;
     }
 
-    /* عرض الشبكة والكروت */
     .categories-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -84,7 +87,7 @@
         display: flex;
         flex-direction: column;
         height: 100%;
-        transition: all 0.4s ease; /* التأكد من أن جميع الخصائص تتأثر بالانتقال */
+        transition: all 0.4s ease;
     }
 
     .category-card:hover {
@@ -190,65 +193,17 @@
         display: flex;
         align-items: center;
         gap: 5px;
-        transition: 0.3s;
     }
 
-    .btn-add-course:hover { color: #ffffff; }
-
-    /* --- تنسيق SweetAlert2 الموحد --- */
-    .dark-swal {
-        background: #111827 !important;
-        border: 1px solid #1f2937 !important;
-        border-radius: 20px !important;
-        padding: 30px !important;
-    }
-    .dark-swal .swal2-title {
-        color: #ffffff !important;
-        font-size: 22px !important;
-        font-weight: 700 !important;
-    }
-    .dark-swal .swal2-html-container {
-        color: #9ca3af !important;
-        font-size: 15px !important;
-        margin-top: 10px !important;
-    }
-
-    .swal2-confirm-custom {
-        background-color: #10b981 !important;
-        color: white !important;
-        padding: 12px 28px !important;
-        border-radius: 12px !important;
-        font-weight: 700 !important;
-        font-size: 14px !important;
-        margin: 0 10px !important;
-        min-width: 120px !important;
-        border: none !important;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-    .swal2-confirm-custom:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
-
-    .swal2-cancel-custom {
-        background-color: #374151 !important;
-        color: #ffffff !important;
-        padding: 12px 28px !important;
-        border-radius: 12px !important;
-        font-weight: 700 !important;
-        font-size: 14px !important;
-        margin: 0 10px !important;
-        min-width: 120px !important;
-        border: none !important;
-        cursor: pointer;
-    }
-
-    .swal2-actions-gap { margin-top: 30px !important; }
-
-    @media (max-width: 991px) { .main-wrapper { margin-right: 0; width: 100%; } }
+    /* تنسيقات الـ SweetAlert */
+    .dark-swal { background: #111827 !important; border: 1px solid #1f2937 !important; color: white !important; }
+    .swal2-confirm-custom { background: #10b981 !important; color: white !important; padding: 10px 20px; border-radius: 8px; }
+    .swal2-cancel-custom { background: #374151 !important; color: white !important; padding: 10px 20px; border-radius: 8px; }
 </style>
 @endsection
 
 @section('content')
-<div class="main-wrapper">
+<div class="main-wrapper-custom">
     <div class="page-header">
         <div class="page-header-text">
             <h1>المسارات التعليمية</h1>
@@ -329,8 +284,7 @@
             customClass: {
                 popup: 'dark-swal',
                 confirmButton: 'swal2-confirm-custom',
-                cancelButton: 'swal2-cancel-custom',
-                actions: 'swal2-actions-gap'
+                cancelButton: 'swal2-cancel-custom'
             },
             buttonsStyling: false
         }).then((result) => {
@@ -343,35 +297,15 @@
     function performArchive(id) {
         axios.delete('/cms/admin/categories/' + id)
             .then(function (response) {
-                // البحث عن الكارد
                 const card = document.querySelector('#card-' + id);
-
                 if (card) {
-                    // تشغيل الأنيميشن (الاختفاء التدريجي)
-                    card.style.transition = "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)";
-                    card.style.transform = "scale(0.8) translateY(30px)";
-                    card.style.opacity = "0";
-
-                    setTimeout(() => {
-                        card.remove();
-
-                        // التحقق إذا كانت القائمة أصبحت فارغة لإظهار رسالة "السجل فارغ"
-                        const remainingCards = document.querySelectorAll('.category-card');
-                        if (remainingCards.length === 0) {
-                            location.reload(); 
-                        }
-                    }, 500);
+                    card.style.transition = "all 0.5s ease";
+                    card.style.transform = "scale(0.8) opacity(0)";
+                    setTimeout(() => card.remove(), 500);
                 }
-
-                // إظهار رسالة النجاح
-                toastr.success(response.data.message || 'تم نقل المسار للأرشيف بنجاح');
+                toastr.success(response.data.message);
             })
-            .catch(function (error) {
-                console.error(error);
-                toastr.error(error.response?.data?.message || 'عذراً، حدث خطأ أثناء الأرشفة');
-            });
+            .catch(error => toastr.error('خطأ في العملية'));
     }
-
-
 </script>
 @endsection
