@@ -1,4 +1,4 @@
-  @extends('cms.parent')
+@extends('cms.parent')
 
 @section('title', 'Admin')
 @section('main-title', 'لوحة تحكم المشرف')
@@ -7,9 +7,7 @@
 @section('styles')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="{{ asset('cms/css/viewStudents.css') }}">
-
 @endsection
 
 @section('content')
@@ -25,9 +23,6 @@
 <div class="container">
 
     <div class="controls">
-  
-
-
         <div class="action-buttons">
             <button class="btn btn-primary">
                 <a href="{{ route('instructors.create') }}" style="color:white;">
@@ -36,19 +31,15 @@
             </button>
 
             <button class="btn btn-primary" id="addStudentBtn" style="background-color:rgb(74, 28, 228)">
-                <a href="{{ route('instructors_trashed') }}" style="color:white; text-decoration:none; ">
+                <a href="{{ route('instructors_trashed') }}" style="color:white; text-decoration:none;">
                     <i class="fas fa-user-secret"></i> قديم
                 </a>
-               
             </button>
         </div>
-
     </div>
-
 
     {{-- الإحصائيات --}}
     <div class="stats">
-
         <div class="stat-card">
             <div class="stat-icon hacker-icon">
                 <i class="fas fa-chalkboard-teacher"></i>
@@ -78,15 +69,11 @@
                 <p>متوسط الخبرة</p>
             </div>
         </div>
-
     </div>
-
 
     {{-- جدول المدرسين --}}
     <div class="table-container">
-
         <table>
-
             <thead>
                 <tr>
                     <th>ID</th>
@@ -98,38 +85,28 @@
                     <th>الإجراءات</th>
                 </tr>
             </thead>
-
             <tbody>
-
             @foreach ($instructors as $instructor)
-
                 <tr>
-
                     <td>{{ $instructor->id }}</td>
-
                     <td class="student-name">
                         {{ $instructor->user1->username ?? 'غير محدد' }}
                     </td>
-
                     <td>
                         {{ $instructor->user1->email ?? 'غير محدد' }}
                     </td>
-
                     <td>
                         <span class="specialization">
                             {{ $instructor->specialization }}
                         </span>
                     </td>
-
                     <td>
                         {{ $instructor->experience_years }} سنة
                     </td>
-                        <td>
-                            <span class="stars" data-rating="{{ $instructor->rating }}"></span>
-                        </td>
-
                     <td>
-
+                        <span class="stars" data-rating="{{ $instructor->rating }}"></span>
+                    </td>
+                    <td>
                         <a href="{{ route('instructors.show',$instructor->id) }}"
                            class="btn-action btn-info">
                             <i class="fas fa-eye"></i>
@@ -143,43 +120,24 @@
                         <form action="{{ route('instructors.destroy',$instructor->id) }}"
                               method="POST"
                               style="display:inline">
-
                             @csrf
                             @method('DELETE')
-
                             <button type="button"
                                 onclick="performDestroy({{ $instructor->id }}, this)"
                                 class="btn-action btn-delete-custom">
-
                                 <i class="fas fa-trash"></i>
-
                             </button>
-
                         </form>
-
                     </td>
-
                 </tr>
-
             @endforeach
-
             </tbody>
-
         </table>
-
-
-
     </div>
-
 </div>
-
 @endsection
 
-
 @section('scripts')
-
 <script src="{{ asset('cms/js/rating.js') }}"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
 @endsection

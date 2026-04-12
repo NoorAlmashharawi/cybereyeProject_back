@@ -4,35 +4,27 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\softDeletes;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Instructor extends Authenticatable
+class Instructor extends Model
 {
-    /** @use HasFactory<\Database\Factories\InstructorFactory> */
-    use HasFactory,softDeletes;
+    use HasFactory, SoftDeletes;
 
+    protected $fillable = [
+        'specialization',
+        'experience_years',
+        'rating',
+        'bio',
+        'enrollment_date'
+    ];
 
-   protected $fillable = [
-            
-            'specialization',
-            'experience_years',
-            'rating',
-            'bio',
-            'enrollment_date'
-            ];
-
-        
-
-  protected $casts = [
+    protected $casts = [
         'enrollment_date' => 'date',
     ];
 
     // ========== العلاقات ==========
-
     public function user1()
     {
         return $this->morphOne(User1::class, 'actor');
     }
-
 }

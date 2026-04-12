@@ -1,10 +1,9 @@
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-   
+
 }
 
 :root {
@@ -404,7 +403,7 @@ body {
 
 .table-card {
     background: white;
-    padding: 1.5rem;
+    padding: 1.8rem;
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }

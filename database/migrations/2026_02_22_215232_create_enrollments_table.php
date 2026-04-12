@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
               $table->date('enrollment_date');
             $table->timestamps();
-             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+             $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+          //   $table->foreignId('user_id')->constrained()->onDelete('cascade');
               $table->foreignId('course_id')->constrained()->onDelete('cascade');
         });
     }

@@ -1,6 +1,5 @@
 <?php
 
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,16 +19,10 @@ return new class extends Migration
             $table->string('specialization')->default('General');
             $table->string('role')->default('student');
             $table->string('status');
-            // $table->foreignId('user1_id');
-            // $table->foreign('user1_id')->on('user1s')->references('id')->cascadeOnDelete();
-
+            
             $table->timestamp('enrollment_date')->nullable();
             $table->softDeletes();
             $table->timestamps();
-
-
-
-
         });
     }
 

@@ -7,17 +7,30 @@ use Illuminate\Database\Eloquent\Model;
 
 class Course extends Model
 {
-    /** @use HasFactory<\Database\Factories\CourseFactory> */
     use HasFactory;
 
-      protected $fillable = [
-        'course_name', 'short_description', 'level', 'no_hours',
-        'rating', 'student_id', 'instructor_id','category_id'
+    protected $fillable = [
+        'course_name',
+        'short_description',
+        'level',
+        'no_hours',
+        'rating',
+        'student_id',
+        'instructor_id',
+        'category_id',
+        'status',
+        'course_image'
     ];
 
+    // العلاقات
     public function instructor()
     {
-        return $this->belongsTo(Instructor::class);
+        return $this->belongsTo(Instructor::class, 'instructor_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 
     public function lessons()
@@ -38,5 +51,10 @@ class Course extends Model
     public function enrollments()
     {
         return $this->hasMany(Enrollment::class);
+    }
+
+    public function students()
+    {
+        return $this->belongsToMany(Student::class, 'enrollments');
     }
 }
