@@ -9,8 +9,30 @@ use App\Http\Controllers\AIChatController;
 use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\UserAuthController;
 
-// ==================== الصفحة الرئيسية ====================
+
+
+// ====================  login ====================
+Route::prefix('cms')->group(function(){
+    Route::get('{guard}/login', [UserAuthController::class, 'showLogin'])->name('view.login');
+    Route::post('{guard}/login', [UserAuthController::class, 'login']);
+    Route::get('logout', [UserAuthController::class, 'logout'])->name('view.logout');
+
+});
+
+
+// ====================  login ====================
+Route::prefix('cms')->group(function(){
+    Route::get('{guard}/login', [UserAuthController::class, 'showLogin'])->name('view.login');
+    Route::post('{guard}/login', [UserAuthController::class, 'login']);
+    Route::get('logout', [UserAuthController::class, 'logout'])->name('view.logout');
+
+});
+
+
+
+// ====================  الرئيسية ====================
 
 Route::prefix('cms/home')->group(function(){
     Route::view('parent', 'cms.home.parent');
@@ -27,7 +49,7 @@ Route::post('/cms/ai/chat', [AIChatController::class, 'chat'])->name('ai.chat');
 
 
 // ==================== Routes للطلاب ====================
-
+// >middleware('auth:admin,student,instructor')
 
 Route::prefix('cms/student')->group(function(){
     Route::view('/', 'cms.parent');
@@ -69,5 +91,5 @@ Route::prefix('cms/instructor')->group(function(){
 
 
 
-    Route::view('details','cms/courseDetails/details')
-    ;
+    // Route::view(' ','cms/courseDetails/details')
+    // ;

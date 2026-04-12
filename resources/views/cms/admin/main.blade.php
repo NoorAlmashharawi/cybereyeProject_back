@@ -36,7 +36,12 @@
                     </button>
                 </div>
 
-  
+  <div>
+    <a href="{{ route('view.logout') }}">
+    <i class="nav-icon fas fa-sign-out-alt"></i>
+    </a>
+    <p>logout</p>
+  </div>
             </div>
         </div>
 

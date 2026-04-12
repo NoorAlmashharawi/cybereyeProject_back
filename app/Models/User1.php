@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Auth\User1 as Authenticatable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 
-class User1 extends Model
+class User1 extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\User1Factory> */
 

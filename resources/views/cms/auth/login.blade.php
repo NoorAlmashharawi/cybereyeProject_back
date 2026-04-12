@@ -1,42 +1,17 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول - CyberEye</title>
-    <link rel="stylesheet" href="../css/navbar.css">
-    <link rel="stylesheet" href="../css/login.css">
-    <link rel="stylesheet" href="css/https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link rel="icon" type="image/x-icon" href="img/digital.jpg">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <!-- شريط التنقل -->
-    <nav>
-        <div class="logo">
-            <h1>CYBER<span>eye</span></h1>
-        </div>
-        
-        <ul>
-            <li><a href="../html/index.html" class="active">Home</a></li>
-            <li><a href="../html/index.html#dictionary">Dictionary</a></li>
-            <li><a href="../html/index.html#roadmap">Roadmap</a></li>
-            <li><a href="../html/courses.html">Courses</a></li>
-            <li><a href="../html/index.html#resources">Resources</a></li>
-            <li><a href="../html/index.html#about">About</a></li>
-            <li><a href="../html/index.html#Review">Review</a></li>
-            <li><a href="../html/contact.html">Contact</a></li>
-            <li class="search">
-                <label for="searchInput">Search</label>
-                <input type="search" id="searchInput" name="search" placeholder="Search...">
-            </li>
-        </ul>
-        
-        <div class="icons">
-            <a href="#"><i class="fa-solid fa-heart"></i></a>
-            <a href="../html/cyber.html"><i class="fa-solid fa-user"></i></a>
-        </div>
-    </nav>
+@extends('cms.home.parent')
+
+@section('title', 'CyberEye - Home')
+@section('styles')
+<link rel="stylesheet" href="{{ asset('cms/css/navbar.css') }}">
+<link rel="stylesheet" href="{{ asset('cms/css/login.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="icon" type="image/x-icon" href="img/digital.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+@endsection
+
+
+@section('content')
+ 
 
     <!-- قسم البانر -->
     <section class="login-hero">
@@ -68,27 +43,28 @@
 
             <!-- نموذج تسجيل الدخول -->
             <form class="auth-form active" id="loginForm">
+                @csrf
                 <div class="form-header">
                     <h2>سجل دخولك</h2>
                     <p>أدخل بيانات حسابك للدخول</p>
                 </div>
 
                 <div class="form-group">
-                    <label for="loginEmail">
+                    <label for="email">
                         <i class="fas fa-envelope"></i>
                         البريد الإلكتروني *
                     </label>
-                    <input type="email" id="loginEmail" placeholder="example@email.com" required>
+                    <input type="email" id="email" name="email" placeholder="example@email.com" required>
                     <div class="error-message" id="emailError"></div>
                 </div>
 
                 <div class="form-group">
-                    <label for="loginPassword">
+                    <label for="password">
                         <i class="fas fa-lock"></i>
                         كلمة المرور *
                     </label>
                     <div class="password-input">
-                        <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" required>
+                        <input type="password" name="password" id="password" placeholder="أدخل كلمة المرور" required>
                         <button type="button" class="toggle-password" id="toggleLoginPassword">
                             <i class="fas fa-eye"></i>
                         </button>
@@ -104,74 +80,10 @@
                     <a href="#" class="forgot-password" id="forgotPassword">نسيت كلمة المرور؟</a>
                 </div>
 
-                <button type="submit" class="submit-btn login-btn">
+                <button type="button" class="submit-btn login-btn" onclick="login()">
                     <i class="fas fa-sign-in-alt"></i>
                     تسجيل الدخول
                 </button>
-
-                <!-- اختيار نوع الحساب (يظهر فقط في تسجيل الدخول) -->
-<div class="user-type-selector" id="userTypeSelector">
-    <h3 style="margin: 20px 0 15px; color: #333; text-align: center;">اختر نوع حسابك</h3>
-    <div class="user-type-options">
-        <label class="user-type-card">
-            <input type="radio" name="userType" value="student" checked>
-            <div class="user-type-icon">
-                <i class="fas fa-user-graduate"></i>
-            </div>
-            <div class="user-type-info">
-                <h4>👨‍🎓 طالب</h4>
-                <p>تسجيل دخول عادي</p>
-            </div>
-        </label>
-        
-        <label class="user-type-card">
-            <input type="radio" name="userType" value="instructor">
-            <div class="user-type-icon">
-                <i class="fas fa-chalkboard-teacher"></i>
-            </div>
-            <div class="user-type-info">
-                <h4>🧑‍🏫 مدرب</h4>
-                <p>دخول المدربين</p>
-            </div>
-        </label>
-        
-        <label class="user-type-card">
-            <input type="radio" name="userType" value="admin">
-            <div class="user-type-icon">
-                <i class="fas fa-user-shield"></i>
-            </div>
-            <div class="user-type-info">
-                <h4>👑 مشرف</h4>
-                <p>دخول الإدارة</p>
-            </div>
-        </label>
-    </div>
-</div>
-
-<!-- حقول إضافية للمدرب والمشرف -->
-<div class="extra-fields" id="extraFields" style="display: none;">
-    <!-- حقول المدرب -->
-    <div class="instructor-fields">
-        <div class="form-group">
-            <label for="instructorCode">
-                <i class="fas fa-key"></i>
-                كود المدرب *
-            </label>
-            <input type="text" id="instructorCode" placeholder="أدخل الكود الخاص بك">
-        </div>
-    </div>
-    
-    <!-- حقول المشرف -->
-    <div class="admin-fields">
-        <div class="form-group">
-            <label for="adminKey">
-                <i class="fas fa-shield-alt"></i>
-                المفتاح السري *
-            </label>
-            <input type="password" id="adminKey" placeholder="أدخل المفتاح السري">
-        </div>
-    </div>
-</div>
 
                 <div class="divider">
                     <span>أو</span>
@@ -219,10 +131,6 @@
                         البريد الإلكتروني *
                     </label>
                     <input type="email" id="signupEmail" placeholder="example@email.com" required>
-                    <div class="email-check" id="emailCheck">
-                        <i class="fas fa-check-circle"></i>
-                        البريد الإلكتروني متاح
-                    </div>
                 </div>
 
                 <div class="form-group">
@@ -242,12 +150,6 @@
                         </div>
                         <span class="strength-text" id="strengthText">ضعيفة</span>
                     </div>
-                    <div class="password-rules">
-                        <p><i class="fas fa-check"></i> 8 أحرف على الأقل</p>
-                        <p><i class="fas fa-check"></i> حرف كبير على الأقل</p>
-                        <p><i class="fas fa-check"></i> رقم على الأقل</p>
-                        <p><i class="fas fa-check"></i> رمز خاص على الأقل</p>
-                    </div>
                 </div>
 
                 <div class="form-group">
@@ -261,7 +163,6 @@
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
-                    <div class="error-message" id="confirmPasswordError"></div>
                 </div>
 
                 <div class="form-group checkbox-group">
@@ -271,20 +172,13 @@
                     </label>
                 </div>
 
-                <div class="form-group checkbox-group">
-                    <input type="checkbox" id="newsletter">
-                    <label for="newsletter">
-                        أرغب في تلقي النشرة الإخبارية والعروض الخاصة
-                    </label>
-                </div>
-
                 <button type="submit" class="submit-btn signup-btn">
                     <i class="fas fa-user-plus"></i>
                     إنشاء حساب
                 </button>
             </form>
 
-            <!-- استعادة كلمة المرور (مخفي افتراضياً) -->
+            <!-- استعادة كلمة المرور -->
             <form class="auth-form" id="forgotForm" style="display: none;">
                 <div class="form-header">
                     <h2>استعادة كلمة المرور</h2>
@@ -314,58 +208,39 @@
         <!-- مزايا التسجيل -->
         <div class="features-section">
             <h2>لماذا تنضم إلى CyberEye؟</h2>
-            
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-graduation-cap"></i></div>
                     <h3>وصول كامل للدورات</h3>
                     <p>استفد من مكتبتنا الشاملة لدورات الأمن السيبراني</p>
                 </div>
-
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-certificate"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-certificate"></i></div>
                     <h3>شهادات معتمدة</h3>
-                    <p>احصل على شهادات إتمام معترف بها في مجال الأمن السيبراني</p>
+                    <p>احصل على شهادات إتمام معترف بها</p>
                 </div>
-
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-users"></i></div>
                     <h3>مجتمع متخصص</h3>
-                    <p>انضم إلى مجتمع من المتخصصين والمهتمين بالأمن السيبراني</p>
+                    <p>انضم إلى مجتمع من المتخصصين</p>
                 </div>
-
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
                     <h3>تتبع التقدم</h3>
-                    <p>راقب تقدمك التعليمي وحقق أهدافك بسهولة</p>
+                    <p>راقب تقدمك التعليمي</p>
                 </div>
-
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-headset"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-headset"></i></div>
                     <h3>دعم فني متواصل</h3>
-                    <p>فريق دعم فني متاح 24/7 لمساعدتك في رحلتك التعليمية</p>
+                    <p>فريق دعم متاح 24/7</p>
                 </div>
-
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-trophy"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-trophy"></i></div>
                     <h3>تحديات وجوائز</h3>
-                    <p>شارك في تحديات أمنية واربح جوائز قيمة</p>
+                    <p>شارك في تحديات أمنية</p>
                 </div>
             </div>
 
-            <!-- إحصائيات -->
             <div class="stats-section">
                 <div class="stat-item">
                     <h3>10,000+</h3>
@@ -382,18 +257,58 @@
             </div>
         </div>
     </div>
-   <!-- Footer -->
-   <div class="footer">
-    <p>cybereye@gmail.com | © 2024 CyberEye. All rights reserved.</p>
-    <div class="footer-links">
-        <a href="../html/index.html">Home</a> | 
-        <a href="../html/courses.html">Courses</a> | 
-        <a href="../html/contact.html">Contact</a> | 
-        <a href="../html/cyber.html">Login</a>
-    </div>
-</div>
 
-<script src="../js/login.js"></script>
 
-</body>
-</html>
+    @endsection
+
+    @section('scripts')
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function login() {
+            var guard = '{{ request('guard') ?? 'admin' }}';
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            
+            axios.post('/cms/' + guard + '/login', {
+                email: email,
+                password: password,
+                guard: guard
+            })
+
+            .then(function(response) {
+                if (response.data.icon === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'تم تسجيل الدخول',
+                        text: response.data.title,
+                        timer: 1500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = '/cms/admin/main';
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'فشل تسجيل الدخول',
+                        text: response.data.title
+                    });
+                }
+            })
+            .catch(function(error) {
+                var errorMsg = 'حدث خطأ في الاتصال';
+                if (error.response && error.response.data) {
+                    errorMsg = error.response.data.title || 'البيانات غير صحيحة';
+                }
+                Swal.fire({
+                    icon: 'error',
+                    title: 'خطأ',
+                    text: errorMsg
+                });
+            });
+        }
+        
+   
+    </script>
+    @endsection

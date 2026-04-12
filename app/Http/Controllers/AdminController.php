@@ -69,19 +69,22 @@ class AdminController extends Controller
         }
     
         try {
-            // 1. إنشاء User1
+
+            $admin = Admin::create([
+             
+            ]);
+
             $user1 = User1::create([
                 'username' => $request->username,
                 'email'    => $request->email,
                 'password' => Hash::make($request->password),
                 'role'     => 'admin',
+                'actor_type' => 'App\Models\ِAdmin',
+            'actor_id'   => $admin->id,
             ]);
     
-            // 2. إنشاء Admin وربطه بـ user1
-            $admin = Admin::create([
-                'user1_id' => $user1->id,  // ✅ ربط المفتاح الأجنبي
-                // إذا في حقول إضافية في جدول admins أضيفيها هنا
-            ]);
+      
+          
     
             return response()->json([
                 'icon'  => 'success',
