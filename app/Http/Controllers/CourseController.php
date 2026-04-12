@@ -25,6 +25,10 @@ public function index(Request $request)
     // 1. جلب الكورسات مع عداد الطلاب المسجلين ارجعيله
     $query = Course::with(['instructor.user1', 'category'])->withCount('students');
 
+    if ($request->has('category_id') && $request->category_id != '') {
+        $query->where('category_id', $request->category_id);
+    }
+    
     // 2. زر البحث
     if ($request->has('search') && $request->search != '') {
         $search = $request->search;

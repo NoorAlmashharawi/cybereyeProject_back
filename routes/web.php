@@ -47,9 +47,13 @@ Route::prefix('cms/student')->group(function(){
 Route::prefix('cms/admin')->group(function(){
     Route::get('main', [AdminController::class, 'main'])->name('main');
     Route::resource('admins', AdminController::class);
+    // Categories Routes
     Route::get('categories_trashed', [CategoryController::class, 'trashed'])->name('categories.trashed');
     Route::get('categories_restore/{id}', [CategoryController::class, 'restore'])->name('categories.restore');
+
+    // تأكدي أن اسم الدالة في الكنترولر هو forceDelete كما في الرووت
     Route::get('categories_force/{id}', [CategoryController::class, 'forceDelete'])->name('categories.force');
+
     Route::resource('categories', CategoryController::class);
 });
 
@@ -59,7 +63,7 @@ Route::prefix('cms/instructor')->group(function(){
     Route::put('instructors_update/{id}', [InstructorController::class, 'update'])->name('instructors_update');
     Route::resource('instructors', InstructorController::class);
     Route::resource('users', User1Controller::class);
-    
+
     Route::get('instructors_trashed', [InstructorController::class, 'trashed'])->name('instructors_trashed');
     Route::get('instructors_restore/{id}', [InstructorController::class, 'restore'])->name('instructors_restore');
     Route::get('instructors_force/{id}', [InstructorController::class, 'force'])->name('instructors_force');

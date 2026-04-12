@@ -222,9 +222,6 @@
     <div class="cyber-card">
         <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
             <h2 class="section-title mb-0" style="border:none;"><i class="fas fa-graduation-cap"></i> الكورسات التابعة له</h2>
-            <a href="#" class="btn-add-table">
-                <i class="fas fa-plus"></i> إضافة كورس جديد
-            </a>
         </div>
         <div class="table-responsive">
             <table class="cyber-table">
@@ -238,33 +235,46 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($category->courses as $course)
-                    <tr>
-                        <td>#{{ $course->id }}</td>
-                        <td>{{ $course->title }}</td>
-                        <td>{{ $course->instructor_name }}</td>
-                        <td><span class="badge-status status-active">نشط</span></td>
-                        <td>
-                            <div class="d-flex gap-2">
-                                <a href="{{ route('courses.edit', $course->id) }}" class="btn btn-sm btn-outline-info"><i class="fas fa-edit"></i></a>
-                                <button onclick="deleteCourse({{ $course->id }})" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="5" class="text-center text-muted">لا يوجد كورسات مضافة لهذا التصنيف بعد.</td>
-                    </tr>
-                    @endforelse
-                </tbody>
+    @forelse($category->courses as $course)
+    <tr>
+        <td>#{{ $course->id }}</td>
+
+        {{-- التعديل هنا: استخدام course_name بدلاً من title --}}
+        <td>{{ $course->course_name }}</td>
+
+        {{-- التعديل هنا: الوصول لاسم المدرب من خلال العلاقة --}}
+        <td>{{ $course->instructor->user1->username ?? 'غير محدد' }}</td>
+
+        <td>
+            <span class="badge-status {{ $course->status == 'active' ? 'status-active' : 'status-inactive' }}">
+                {{ $course->status == 'active' ? 'نشط' : 'مسودة' }}
+            </span>
+        </td>
+        <td>
+            <div class="d-flex gap-2">
+                <a href="{{ route('courses.edit', $course->id) }}" class="btn btn-sm btn-outline-info">
+                    <i class="fas fa-edit"></i>
+                </a>
+                <button onclick="deleteCourse({{ $course->id }})" class="btn btn-sm btn-outline-danger">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
+    @empty
+    <tr>
+        <td colspan="5" class="text-center text-muted">لا يوجد كورسات مضافة لهذا التصنيف بعد.</td>
+    </tr>
+    @endforelse
+</tbody>
             </table>
         </div>
     </div>
 </div>
 @endsection
-
 @section('scripts')
 <script>
+    // معاينة الصورة عند اختيارها
     function previewImage(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
@@ -279,8 +289,11 @@
     }
 
     function performUpdate(id) {
+        console.log("بدء عملية التحديث للمعرف: " + id);
+
+        // تجميع البيانات
         let formData = new FormData();
-        formData.append('_method', 'PUT');
+        formData.append('_method', 'PUT'); // مهم جداً لأننا نستخدم POST لمحاكاة PUT
         formData.append('title', document.getElementById('title').value);
         formData.append('description', document.getElementById('description').value);
         formData.append('status', document.getElementById('status').value);
@@ -290,33 +303,77 @@
             formData.append('url', imageFile);
         }
 
+        // إرسال الطلب عبر Axios
         axios.post('/cms/admin/categories/' + id, formData)
             .then(function (response) {
+                console.log("نجاح العملية:", response.data);
                 Swal.fire({
-                    title: 'تم التحديث بنجاح',
+                    title: response.data.message,
                     icon: 'success',
-                    background: '#111827',
-                    color: '#ffffff',
+                    timer: 1500,
                     showConfirmButton: false,
-                    timer: 1500
+                    background: '#111827',
+                    color: '#fff'
                 }).then(() => {
                     window.location.href = "{{ route('categories.index') }}";
                 });
             })
             .catch(function (error) {
-                toastr.error('فشلت عملية التحديث');
+                console.error("فشل العملية. الرد من السيرفر:", error.response);
+
+                let errorMsg = 'حدث خطأ غير متوقع';
+
+                // إذا كان الخطأ من الـ Validation (كود 422)
+                if (error.response && error.response.status === 422) {
+                    errorMsg = error.response.data.message;
+                }
+
+                // استخدام Swal بدلاً من Toastr لضمان الظهور
+                Swal.fire({
+                    icon: 'error',
+                    title: 'عذراً..',
+                    text: errorMsg,
+                    background: '#111827',
+                    color: '#fff',
+                    confirmButtonColor: '#10b981'
+                });
             });
     }
 
     function deleteCourse(id) {
-        if(confirm('هل أنت متأكد من حذف هذا الكورس؟')) {
-            axios.delete('/cms/admin/courses/' + id)
-                .then(res => {
-                    toastr.success('تم الحذف');
-                    location.reload();
-                })
-                .catch(err => toastr.error('خطأ في الحذف'));
-        }
+        Swal.fire({
+            title: 'هل أنت متأكد؟',
+            text: "سيتم حذف الكورس نهائياً!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#10b981',
+            cancelButtonColor: '#ef4444',
+            confirmButtonText: 'نعم، احذف',
+            cancelButtonText: 'إلغاء',
+            background: '#111827',
+            color: '#fff'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete('/cms/admin/courses/' + id)
+                    .then(res => {
+                        Swal.fire({
+                            title: 'تم الحذف!',
+                            icon: 'success',
+                            background: '#111827',
+                            color: '#fff'
+                        });
+                        location.reload();
+                    })
+                    .catch(err => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'فشل الحذف',
+                            background: '#111827',
+                            color: '#fff'
+                        });
+                    });
+            }
+        });
     }
 </script>
 @endsection

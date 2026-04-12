@@ -6,10 +6,9 @@
 <style>
     /* التعديل الجوهري: جعل المحتوى يفرش بدون بياض مع الحفاظ على التنسيق */
     .admin-main {
-        background-color: #0b0f19 !important; /* توحيد لون الخلفية */
+        background-color: #0b0f19 !important;
     }
 
-    /* حذفنا الـ float والـ margin-right الثابت اللي كان عامل بياض */
     .main-wrapper-custom {
         width: 100%;
         padding: 40px;
@@ -19,7 +18,6 @@
         box-sizing: border-box;
     }
 
-    /* --- كل التنسيقات اللي تحت هي تنسيقاتك الأصلية بدون تغيير --- */
     .page-header {
         display: flex;
         justify-content: space-between;
@@ -79,14 +77,15 @@
         width: 100%;
     }
 
+    /* --- التعديل لتوحيد محاذاة الفوتر دون تغيير التصميم --- */
     .category-card {
         background: #111827;
         border: 1px solid #1f2937;
         border-radius: 15px;
         overflow: hidden;
         display: flex;
-        flex-direction: column;
-        height: 100%;
+        flex-direction: column; /* ترتيب العناصر عمودياً */
+        height: 100%;           /* لتتساوى الكروت في الصف الواحد */
         transition: all 0.4s ease;
     }
 
@@ -99,6 +98,7 @@
         position: relative;
         width: 100%;
         height: 160px;
+        flex-shrink: 0; /* الحفاظ على أبعاد الصورة */
     }
 
     .card-image-wrapper img {
@@ -124,8 +124,9 @@
 
     .card-content {
         padding: 18px;
-        flex-grow: 1;
-        border-bottom: 1px solid #1f2937;
+        flex-grow: 1; /* السر هنا: جعل منطقة النص تتمدد لتدفع الفوتر للأسفل */
+        display: flex;
+        flex-direction: column;
         unicode-bidi: plaintext;
         text-align: start;
     }
@@ -135,21 +136,25 @@
         font-size: 18px;
         font-weight: 800;
         margin-bottom: 8px;
+        min-height: 2.4em; /* محاذاة العناوين حتى لو سطر واحد */
     }
 
     .card-content p {
         color: #9ca3af;
         font-size: 13px;
         line-height: 1.5;
-        margin-bottom: 0;
+        margin-bottom: 20px;
+        flex-grow: 1; /* يضمن دفع الفوتر لأسفل الكارد تماماً */
     }
 
     .card-footer {
-        padding: 12px 18px;
+        margin-top: auto; /* تأكيد الالتصاق بقعر الكارد */
+        padding: 15px 18px;
         background: #161e2d;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        border-top: 1px solid #1f2937;
     }
 
     .stat-item {
@@ -167,8 +172,8 @@
     }
 
     .btn-icon {
-        width: 34px;
-        height: 34px;
+        width: 35px;
+        height: 35px;
         border-radius: 8px;
         display: flex;
         align-items: center;
@@ -184,16 +189,6 @@
     .btn-delete { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
     .btn-edit:hover { background: #3b82f6; color: white; }
     .btn-delete:hover { background: #ef4444; color: white; }
-
-    .btn-add-course {
-        color: #10b981;
-        text-decoration: none;
-        font-weight: 800;
-        font-size: 13px;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
 
     /* تنسيقات الـ SweetAlert */
     .dark-swal { background: #111827 !important; border: 1px solid #1f2937 !important; color: white !important; }
@@ -222,49 +217,43 @@
     <div class="categories-grid" id="categories-container">
         @forelse($categories as $category)
             <div class="category-card" id="card-{{ $category->id }}">
-                <div class="card-image-wrapper">
-                    <span class="status-badge {{ $category->status == 'inactive' ? 'inactive' : '' }}">
-                        {{ $category->status == 'active' ? 'نشط' : 'مؤرشف' }}
-                    </span>
-                    <img src="{{ asset('storage/' . $category->url) }}"
-                         onerror="this.src='https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600'"
-                         alt="{{ $category->title }}">
-                </div>
-
-                <div class="card-content">
-                    <h3>{{ $category->title }}</h3>
-                    <p>{{ Str::limit($category->description, 100) }}</p>
-                </div>
-
-                <div class="card-footer">
-                    <div class="stat-item">
-                        <i class="fas fa-book-open"></i> {{ $category->courses_count ?? 0 }} كورس
+                <a href="{{ route('courses.index', ['category_id' => $category->id]) }}" style="text-decoration: none; display: flex; flex-direction: column; flex-grow: 1;">
+                    <div class="card-image-wrapper">
+                        <span class="status-badge {{ $category->status == 'inactive' ? 'inactive' : '' }}">
+                            {{ $category->status == 'active' ? 'نشط' : 'مؤرشف' }}
+                        </span>
+                        <img src="{{ asset('storage/' . $category->url) }}"
+                             onerror="this.src='https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600'"
+                             alt="{{ $category->title }}">
                     </div>
 
-                    <a href="#" class="btn-add-course">
-                        إضافة <i class="fas fa-plus-square"></i>
-                    </a>
+                    <div class="card-content">
+                        <h3>{{ $category->title }}</h3>
+                        <p>{{ Str::limit($category->description, 100) }}</p>
+                    </div>
+                </a>
 
+                <div class="card-footer">
+                    {{-- الأزرار على اليسار (تعديل وحذف) --}}
                     <div class="action-btns">
-                        <button onclick="confirmArchive({{ $category->id }})"
-                                class="btn-icon btn-delete"
-                                title="نقل إلى الأرشيف">
-                            <i class="fas fa-archive"></i>
+                        <button onclick="confirmArchive({{ $category->id }})" class="btn-icon btn-delete" title="نقل إلى الأرشيف">
+                            <i class="fas fa-trash-alt"></i>
                         </button>
                         <a href="{{ route('categories.edit', $category->id) }}" class="btn-icon btn-edit" title="تعديل">
                             <i class="fas fa-edit"></i>
                         </a>
                     </div>
+
+                    {{-- عدد الكورسات على اليمين --}}
+                    <div class="stat-item">
+                        <span>{{ $category->courses_count ?? 0 }} كورس</span>
+                        <i class="fas fa-book-open"></i>
+                    </div>
                 </div>
             </div>
         @empty
-            <div id="empty-state" style="grid-column: 1/-1; text-align: center; padding: 100px 20px; background: #111827; border-radius: 20px; border: 2px dashed #1f2937;">
-                <i class="fas fa-layer-group fa-4x mb-4" style="color: #1f2937;"></i>
-                <h3 style="color: #9ca3af; font-weight: 700;">سجل البيانات فارغ</h3>
-                <p style="color: #4b5563;">لم يتم تأسيس أي مسارات تعليمية بعد.</p>
-                <a href="{{ route('categories.create') }}" class="btn-add-main" style="display: inline-flex; margin-top: 20px;">
-                    <i class="fas fa-plus-circle"></i> تأسيس أول مسار
-                </a>
+            <div style="color: white; text-align: center; width: 100%;">
+                لا توجد مسارات تعليمية حالياً.
             </div>
         @endforelse
     </div>
@@ -300,7 +289,8 @@
                 const card = document.querySelector('#card-' + id);
                 if (card) {
                     card.style.transition = "all 0.5s ease";
-                    card.style.transform = "scale(0.8) opacity(0)";
+                    card.style.transform = "scale(0.8)";
+                    card.style.opacity = "0";
                     setTimeout(() => card.remove(), 500);
                 }
                 toastr.success(response.data.message);
