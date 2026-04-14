@@ -10,8 +10,9 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\UserAuthController;
+use App\Http\Controllers\VideoController;
 
-// ====================  login ====================
+// ====================  login ====================    
 Route::prefix('cms')->group(function(){
     Route::get('{guard}/login', [UserAuthController::class, 'showLogin'])->name('view.login');
     Route::post('{guard}/login', [UserAuthController::class, 'login']);
@@ -55,6 +56,9 @@ Route::prefix('cms/admin')->group(function(){
     Route::get('categories_force/{id}', [CategoryController::class, 'forceDelete'])->name('categories.force');
 
     Route::resource('categories', CategoryController::class);
+
+    Route::get('videos/player', [VideoController::class, 'player'])->name('videos.player');
+    Route::resource('videos', VideoController::class);
 });
 
 // ==================== Routes للمدرسين ====================
@@ -73,6 +77,10 @@ Route::prefix('cms/instructor')->group(function(){
 // ==================== Routes للكورسات ====================
 Route::prefix('cms/course')->group(function(){
     Route::resource('courses', CourseController::class);
+
 });
 
+  
+
 Route::view('details', 'cms/courseDetails/details');
+Route::view('index', 'cms/course/video/index');

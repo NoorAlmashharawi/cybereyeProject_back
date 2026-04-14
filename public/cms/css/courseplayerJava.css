@@ -64,13 +64,15 @@ header {
 }
 
 .sidebar {
-    width: 300px;
+  
     background: white;
     border-left: 1px solid #eaeaea;
     height: calc(100vh - 80px);
     position: sticky;
     top: 80px;
     overflow-y: auto;
+    padding:20px ;
+    /* width: max-content; */
 }
 
 .main-content {
@@ -194,6 +196,8 @@ header {
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     overflow: hidden;
+ 
+    width: max-content;
 }
 
 .video-container {
@@ -397,7 +401,7 @@ header {
     }
 
     .sidebar {
-        width: 100%;
+        width: max-content;
         height: auto;
         position: static;
         margin-bottom: 1rem;

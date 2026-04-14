@@ -6,26 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
-            $table->String('title');
-            $table->string('description');
-            $table->string('url/file_path');
-            $table->integer('duration_minutes');
-
+            $table->foreignId('lesson_id')->nullable()->constrained()->nullOnDelete();
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->string('url'); 
+            $table->integer('duration')->nullable(); 
+            $table->integer('order_number')->default(0);
             $table->timestamps();
-             $table->foreignId('lesson_id')->constrained()->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('videos');

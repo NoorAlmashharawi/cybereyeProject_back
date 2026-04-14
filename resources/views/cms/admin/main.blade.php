@@ -57,7 +57,6 @@
                         <p>إجمالي المستخدمين</p>
                         <div class="stat-trend trend-up">
                             <i class="fas fa-arrow-up"></i>
-                            <span>12% عن الشهر الماضي</span>
                         </div>
                     </div>
                 </div>
@@ -321,7 +320,7 @@
 @section('scripts')
   <!-- مكتبة Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script src="{{ asset('cms/js/admin.js') }}"></script>
+  {{-- <script src="{{ asset('cms/js/admin.js') }}"></script> --}}
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script>
     function sendMessage() {

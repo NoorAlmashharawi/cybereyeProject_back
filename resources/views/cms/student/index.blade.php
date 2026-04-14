@@ -40,7 +40,7 @@
             </button>
             <button class="btn btn-primary" id="addStudentBtn" style="background-color:red">
                 <a href="{{ route('students_trashed') }}" style="color:white; text-decoration:none; ">
-                    <i class="fas fa-user-secret"></i> قديم
+                    <i class="fas fa-user-secret"></i> الارشيف
                 </a>
                
             </button>
