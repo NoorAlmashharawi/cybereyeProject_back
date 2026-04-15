@@ -9,4 +9,21 @@ class Lesson extends Model
 {
     /** @use HasFactory<\Database\Factories\LessonFactory> */
     use HasFactory;
+    protected $fillable = [
+        'lesson_name',
+        'description',
+        'duration',
+        'video_url',
+        'course_id',
+    ];
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

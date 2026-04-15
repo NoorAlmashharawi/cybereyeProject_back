@@ -10,6 +10,7 @@ use App\Http\Controllers\AIChatController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\UserAuthController;
 
 
@@ -50,16 +51,6 @@ Route::prefix('cms/student')->group(function(){
     Route::resource('students', StudentController::class);
     Route::resource('users', User1Controller::class);
 
-
-    Route::put('students_update/{id}', [StudentController::class, 'update'])->name('students_update');
-    Route::get('students_trashed', [StudentController::class, 'trashed'])->name('students_trashed');
-    Route::get('students_restore/{id}', [StudentController::class, 'restore'])->name('students_restore');
-    Route::get('students_force/{id}', [StudentController::class, 'force'])->name('students_force');
-    Route::get('students_forceAll', [StudentController::class, 'forceAll'])->name('students_forceAll');
-
-    Route::resource('students', StudentController::class);
-    Route::resource('users', User1Controller::class);
-
 });
 
 // ==================== Routes admin ====================
@@ -70,7 +61,6 @@ Route::prefix('cms/admin')->group(function(){
     Route::get('categories_trashed', [CategoryController::class, 'trashed'])->name('categories.trashed');
     Route::get('categories_restore/{id}', [CategoryController::class, 'restore'])->name('categories.restore');
 
-    // تأكدي أن اسم الدالة في الكنترولر هو forceDelete كما في الرووت
     Route::get('categories_force/{id}', [CategoryController::class, 'forceDelete'])->name('categories.force');
 
     Route::resource('categories', CategoryController::class);
@@ -84,18 +74,17 @@ Route::prefix('cms/instructor')->group(function(){
     Route::resource('instructors', InstructorController::class);
     Route::resource('users', User1Controller::class);
 
-Route::view('/', 'cms.parent');
-Route::view('temp', 'cms.temp');
-
-Route::put('instructors_update/{id}', [InstructorController::class, 'update'])->name('instructors_update');
-Route::resource('instructors', InstructorController::class);
-Route::resource('users', User1Controller::class);
-
+    Route::view('temp', 'cms.temp');
 
     Route::get('instructors_trashed', [InstructorController::class, 'trashed'])->name('instructors_trashed');
     Route::get('instructors_restore/{id}', [InstructorController::class, 'restore'])->name('instructors_restore');
     Route::get('instructors_force/{id}', [InstructorController::class, 'force'])->name('instructors_force');
     Route::get('instructors_forceAll', [InstructorController::class, 'forceAll'])->name('instructors_forceAll');
+    Route::get('materials/trashed', [MaterialController::class, 'trashed'])->name('materials.trashed');
+    Route::get('materials/{id}/restore', [MaterialController::class, 'restore'])->name('materials.restore');
+    Route::get('materials/{id}/force', [MaterialController::class, 'forceDelete'])->name('materials.force');
+Route::resource('materials', App\Http\Controllers\MaterialController::class);
+
 
 
 });
@@ -103,12 +92,20 @@ Route::resource('users', User1Controller::class);
 // ==================== Routes للكورسات ====================
 Route::prefix('cms/course')->group(function(){
     Route::resource('courses', CourseController::class);
-});
+    Route::get('courses/{id}/details', [CourseController::class, 'showCourseDetails'])->name('course.details');
+    Route::post('courses/{id}/enroll', [CourseController::class, 'enroll'])->name('course.enroll')->middleware('auth:student');
+    Route::post('comments', [App\Http\Controllers\CommentController::class, 'store'])->name('comments.store');
+    Route::delete('comments/{comment}', [App\Http\Controllers\CommentController::class, 'destroy'])->name('comments.destroy');
+    Route::post('reviews', [App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
+// مسار إرسال التقييم
+    Route::post('/course/{id}/review', [App\Http\Controllers\CourseController::class, 'storeReview'])->name('course.review.store');
+    Route::resource('lessons', App\Http\Controllers\LessonController::class);
+
+    });
 
 
-Route::view('details', 'cms/courseDetails/details');
 
- 
+
 
 
     Route::prefix('cms/video')->group(function(){
@@ -123,7 +120,6 @@ Route::view('details', 'cms/courseDetails/details');
 /////////////////////////
 
 
-Route::resource('questions', QuestionController::class)->only(['create', 'store']);
 // أو يمكن إضافة route منفصلة:
 // Route::get('/questions/create', [QuestionController::class, 'create'])->name('questions.create');
 // Route::post('/questions', [QuestionController::class, 'store'])->name('questions.store');

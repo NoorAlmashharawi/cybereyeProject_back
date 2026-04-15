@@ -57,4 +57,9 @@ class Course extends Model
     {
         return $this->belongsToMany(Student::class, 'enrollments');
     }
+
+    public function comments()
+    {
+    return $this->hasManyThrough(Comment::class, Lesson::class);
+    }
 }

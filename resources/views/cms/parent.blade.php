@@ -46,7 +46,7 @@
                     <i class="fas fa-tags"></i>
                     <span>التصنيفات</span>
                 </a>
-                <a href="#" class="admin-menu-item">
+                <a href="{{ route('materials.index') }}" class="admin-menu-item">
                     <i class="fas fa-file-download"></i>
                     <span>المواد التعليمية</span>
                 </a>
