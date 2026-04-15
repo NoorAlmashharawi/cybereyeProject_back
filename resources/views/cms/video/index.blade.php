@@ -674,7 +674,6 @@
 
         const video = document.getElementById('mainVideo');
         
-        // ✅ التحقق من وجود عنصر الفيديو قبل استخدامه
         if (video) {
             if (currentVideoId) {
                 const savedTime = localStorage.getItem(`video_time_${currentVideoId}`);

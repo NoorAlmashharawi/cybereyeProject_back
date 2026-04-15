@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lesson;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -14,28 +15,26 @@ class VideoController extends Controller
      */
     public function index()
     {
-       
-        $videos = Video::orderBy('created_at', 'asc')->get();
-        
+        $videos = Video::with('lesson')->orderBy('id', 'desc')->paginate(10);
         return view('cms.Video.index', compact('videos'));
     }
 
-
+    /**
+     * Display the video player page.
+     */
     public function player()
     {
         $videos = Video::orderBy('created_at', 'asc')->get();
-        
         return view('cms.Video.player', compact('videos'));
     }
-    
-  
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        return view('cms.Video.create');
+        $lessons = Lesson::all();
+        return view('cms.Video.create', compact('lessons'));
     }
 
     /**
@@ -43,38 +42,38 @@ class VideoController extends Controller
      */
     public function store(Request $request)
     {
+        // 1. Validation
         $validator = Validator::make($request->all(), [
             'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
-            'duration'    => 'nullable|integer',  
+            'duration'    => 'nullable|integer',
             'url'         => 'required|file|mimes:mp4,mkv,avi,mov|max:102400',
             'lesson_id'   => 'nullable|exists:lessons,id',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json([
                 'message' => $validator->getMessageBag()->first()
             ], 422);
         }
-    
+
         $data = $validator->validated();
-    
-       
         $data['duration'] = $request->duration ?? 0;
-    
+
         if ($request->hasFile('url')) {
             $path = $request->file('url')->store('videos', 'public');
             $data['url'] = Storage::url($path);
         }
-    
+
         $video = Video::create($data);
-    
+
         return response()->json([
             'success' => true,
             'message' => $video ? 'تم الحفظ بنجاح' : 'فشل الحفظ',
             'video' => $video
         ], $video ? 200 : 400);
     }
+
     /**
      * Display the specified resource.
      */
@@ -116,15 +115,12 @@ class VideoController extends Controller
         $data = $validator->validated();
         $data['duration'] = $request->duration ?? 0;
         
-        
         if ($request->hasFile('url')) {
-           
             if ($video->url) {
                 $oldPath = str_replace('/storage/', '', $video->url);
                 Storage::disk('public')->delete($oldPath);
             }
             
-        
             $path = $request->file('url')->store('videos', 'public');
             $data['url'] = Storage::url($path);
         }

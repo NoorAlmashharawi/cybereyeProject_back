@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Video extends Model
 {
-    /** @use HasFactory<\Database\Factories\VideoFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -18,4 +17,10 @@ class Video extends Model
         'lesson_id',
         'order_number'
     ];
+
+    // العلاقة مع الدرس
+    public function lesson()
+    {
+        return $this->belongsTo(Lesson::class);
+    }
 }

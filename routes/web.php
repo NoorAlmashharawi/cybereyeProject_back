@@ -11,8 +11,10 @@ use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\QuizzController;
 
-// ====================  login ====================    
+// ====================  login ====================
 Route::prefix('cms')->group(function(){
     Route::get('{guard}/login', [UserAuthController::class, 'showLogin'])->name('view.login');
     Route::post('{guard}/login', [UserAuthController::class, 'login']);
@@ -32,7 +34,6 @@ Route::post('/cms/ai/chat', [AIChatController::class, 'chat'])->name('ai.chat');
 // ==================== Routes للطلاب ====================
 Route::prefix('cms/student')->group(function(){
     Route::view('/', 'cms.parent');
-    Route::view('temp', 'cms.temp');
 
     Route::put('students_update/{id}', [StudentController::class, 'update'])->name('students_update');
     Route::get('students_trashed', [StudentController::class, 'trashed'])->name('students_trashed');
@@ -48,15 +49,14 @@ Route::prefix('cms/student')->group(function(){
 Route::prefix('cms/admin')->group(function(){
     Route::get('main', [AdminController::class, 'main'])->name('main');
     Route::resource('admins', AdminController::class);
+    
     // Categories Routes
     Route::get('categories_trashed', [CategoryController::class, 'trashed'])->name('categories.trashed');
     Route::get('categories_restore/{id}', [CategoryController::class, 'restore'])->name('categories.restore');
-
-    // تأكدي أن اسم الدالة في الكنترولر هو forceDelete كما في الرووت
     Route::get('categories_force/{id}', [CategoryController::class, 'forceDelete'])->name('categories.force');
-
     Route::resource('categories', CategoryController::class);
 
+    // Videos Routes
     Route::get('videos/player', [VideoController::class, 'player'])->name('videos.player');
     Route::resource('videos', VideoController::class);
 });
@@ -77,10 +77,31 @@ Route::prefix('cms/instructor')->group(function(){
 // ==================== Routes للكورسات ====================
 Route::prefix('cms/course')->group(function(){
     Route::resource('courses', CourseController::class);
-
 });
 
-  
+// ==================== Routes للفيديوهات ====================
+Route::prefix('cms/video')->group(function(){
+    Route::put('videos_update/{id}', [VideoController::class, 'update'])->name('videos_update');
+    Route::resource('videos', VideoController::class);
+});
 
+// ==================== Routes للأسئلة ====================
+Route::prefix('cms/question')->group(function(){
+    Route::resource('questions', QuestionController::class);
+    Route::get('/questions/create', [QuestionController::class, 'create'])->name('questions.create');
+    Route::post('/questions', [QuestionController::class, 'store'])->name('questions.store');
+});
+
+// ==================== Routes للاختبارات ====================
+Route::prefix('cms/quizz')->group(function(){
+    Route::get('/quizzs/{quiz}/start', [QuizzController::class, 'show'])->name('quiz.show');
+    Route::post('/quiz/{quiz}/submit', [QuizzController::class, 'submit'])->name('quiz.submit');
+    Route::get('/quiz/{quiz}/result', [QuizzController::class, 'result'])->name('quiz.result');
+    Route::post('/quiz/{quiz}/save-temp', [QuizzController::class, 'saveTemp'])->name('quiz.saveTemp');
+    Route::resource('quizzs', QuizzController::class);
+    Route::get('/quizzs/start', [QuizzController::class, 'create'])->name('quizzs.show');
+});
+
+// ==================== صفحات أخرى ====================
 Route::view('details', 'cms/courseDetails/details');
 Route::view('index', 'cms/course/video/index');
