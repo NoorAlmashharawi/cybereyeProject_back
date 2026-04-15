@@ -90,7 +90,6 @@ Route::prefix('cms/course')->group(function(){
     Route::post('comments', [App\Http\Controllers\CommentController::class, 'store'])->name('comments.store');
     Route::delete('comments/{comment}', [App\Http\Controllers\CommentController::class, 'destroy'])->name('comments.destroy');
     Route::post('reviews', [App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
-// مسار إرسال التقييم
     Route::post('/course/{id}/review', [App\Http\Controllers\CourseController::class, 'storeReview'])->name('course.review.store');
     Route::resource('lessons', App\Http\Controllers\LessonController::class);
 
@@ -102,7 +101,6 @@ Route::prefix('cms/video')->group(function(){
     Route::put('videos_update/{id}', [VideoController::class, 'update'])->name('videos_update');
     Route::resource('videos', VideoController::class);
 });
-
 
 
 
@@ -129,6 +127,4 @@ Route::prefix('cms/quizz')->group(function(){
     Route::get('/quizzs/start', [QuizzController::class, 'create'])->name('quizzs.show');
 });
 
-// ==================== صفحات أخرى ====================
-Route::view('details', 'cms/courseDetails/details');
-Route::view('index', 'cms/course/video/index');
+
