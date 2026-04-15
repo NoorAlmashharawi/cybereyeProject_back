@@ -3,7 +3,7 @@
 @section('title', 'Courses')
 @section('main-title', 'Courses')
 
-@section('sub-title', 'Courses')
+@section('sub-title', 'courses')
 
 @section('styles')
 
@@ -34,6 +34,7 @@
         display: none;
     }
 </style>
+
 @endsection
 
 
@@ -72,7 +73,10 @@
                     <i class="fas fa-graduation-cap"></i>
                 </div>
                 <div class="stat-info">
-                    <h3>{{ $activeCourses }}</h3>
+
+                    <h2>  {{ $activeCourses }} </h2>
+
+
                     <p>الكورسات النشطة</p>
                     <div class="stat-trend trend-up">
                         <i class="fas fa-arrow-up"></i>
@@ -89,11 +93,12 @@
                     <i class="fas fa-chalkboard-teacher"></i>
                 </div>
                 <div class="stat-info">
-                    <h3>{{ $totalInstructors }}</h3>
+
+                    <h2>{{ $totalInstructors }}</h2>
                     <p>إجمالي المدربين</p>
                     <div class="stat-trend trend-up">
                         <i class="fas fa-arrow-up"></i>
-                        <span>نخبة الخبراء</span>
+                        <span>{{ $totalInstructors }} نخبة الخبراء</span>
                     </div>
                 </div>
             </div>
@@ -106,17 +111,17 @@
                     <i class="fas fa-chart-line"></i>
                 </div>
                 <div class="stat-info">
-                    <h3>4.9</h3>
+                    {{-- <h3>4.9</h3> --}}
                     <p>نسبة الرضا</p>
                     <div class="stat-trend trend-up">
                         <i class="fas fa-arrow-up"></i>
-                        <span>أداء ممتاز</span>
+                        {{-- <span>أداء ممتاز</span> --}}
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+<h1>العدد هو: {{ $activeCourses }}</h1>
     <div class="table-card mt-4">
         <div class="table-responsive">
             <table class="admin-table">
@@ -138,14 +143,24 @@
                         <td>{{ $course->course_name }}</td>
                         <td>{{ $course->instructor->user1->username ?? 'بدون مدرب' }}</td>
                         <td>
-                            <span class="badge bg-secondary">{{ $course->category->name ?? 'غير مصنف' }}</span>
+                            <span class="badge bg-secondary">{{ $course->category->title ?? 'غير مصنف' }}</span>
                         </td>
                         <td>
                             {{-- هنا عدد الطلاب المسجلين بالكورس خليها هيك حاليا هرجعلها --}}
                             <span class="badge badge-info">{{ $course->students_count }} طالب</span>
                         </td>
-                        {{-- هاي المفروض تيجي من الطالب رح اعملها مستقبلا --}}
-                        <td>★★★★★ (4.9)</td>
+
+                       <td>
+    @if($course->level == 'beginner')
+        <span class="badge bg-success">مبتدئ</span>
+    @elseif($course->level == 'intermediate')
+        <span class="badge bg-warning text-dark">متوسط</span>
+    @elseif($course->level == 'advanced')
+        <span class="badge bg-danger">متقدم</span>
+    @else
+        <span class="badge bg-info">{{ $course->level }}</span>
+    @endif
+</td>
                         <td>
                             <span class="badge {{ $course->status == 'active' ? 'bg-success' : 'bg-danger' }}">
                                 {{ $course->status == 'active' ? 'نشط' : 'معطل' }}

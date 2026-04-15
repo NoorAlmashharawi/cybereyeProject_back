@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class UserAuthController extends Controller
 {
-    
+
 
 
     public function showLogin($guard){
@@ -53,18 +53,25 @@ class UserAuthController extends Controller
     }
 
     public function changePassword(){
-        
+
     }
 
     public function resetPassword(Request $request){
-        
+
     }
 
     public function editProfile(){
-        
+
     }
 
     public function updateProfile(Request $request, $id ){
-        
+
     }
+
+    public function showSignup()
+{
+    // هان بتكتبي اسم ملف الـ Blade تبع صفحة الـ Register
+    // مثلاً لو الملف موجود في resources/views/cms/auth/register.blade.php
+    return view('cms.auth.login');
+}
 }

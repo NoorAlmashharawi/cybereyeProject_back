@@ -19,6 +19,7 @@ class Student extends Model
         'status',
         'specialization',
         'role',
+        'user_id',
     ];
 
     protected $casts = [
@@ -35,4 +36,8 @@ class Student extends Model
     {
         return $this->belongsToMany(Course::class, 'enrollments');
     }
+    
+    public function user() {
+    return $this->hasOne(User1::class, 'actor_id', 'id')->where('actor_type', Student::class);
+}
 }

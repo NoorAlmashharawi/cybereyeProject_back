@@ -22,6 +22,10 @@ Route::prefix('cms')->group(function(){
     Route::get('logout', [UserAuthController::class, 'logout'])->name('view.logout');
 });
 
+// ====================  Student Registration (الخارجية) ====================
+Route::get('cms/register', [UserAuthController::class, 'showSignup'])->name('view.register'); // عرض صفحة التسجيل
+Route::post('cms/register', [StudentController::class, 'store'])->name('student.register'); // تنفيذ عملية التخزين
+
 // ====================  الرئيسية ====================
 Route::prefix('cms/home')->group(function(){
     Route::view('parent', 'cms.home.parent');
@@ -50,7 +54,7 @@ Route::prefix('cms/student')->group(function(){
 Route::prefix('cms/admin')->group(function(){
     Route::get('main', [AdminController::class, 'main'])->name('main');
     Route::resource('admins', AdminController::class);
-    
+
     // Categories Routes
     Route::get('categories_trashed', [CategoryController::class, 'trashed'])->name('categories.trashed');
     Route::get('categories_restore/{id}', [CategoryController::class, 'restore'])->name('categories.restore');
@@ -74,7 +78,7 @@ Route::prefix('cms/instructor')->group(function(){
     Route::get('instructors_restore/{id}', [InstructorController::class, 'restore'])->name('instructors_restore');
     Route::get('instructors_force/{id}', [InstructorController::class, 'force'])->name('instructors_force');
     Route::get('instructors_forceAll', [InstructorController::class, 'forceAll'])->name('instructors_forceAll');
-    
+
     // Materials Routes
     Route::get('materials/trashed', [MaterialController::class, 'trashed'])->name('materials.trashed');
     Route::get('materials/{id}/restore', [MaterialController::class, 'restore'])->name('materials.restore');

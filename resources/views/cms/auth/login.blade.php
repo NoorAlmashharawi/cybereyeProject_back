@@ -11,7 +11,7 @@
 
 
 @section('content')
- 
+
 
     <!-- قسم البانر -->
     <section class="login-hero">
@@ -229,10 +229,10 @@
                     </label>
                 </div>
 
-                <button type="submit" class="submit-btn signup-btn">
-                    <i class="fas fa-user-plus"></i>
-                    إنشاء حساب
-                </button>
+           <button type="button" class="submit-btn signup-btn" onclick="signup()">
+    <i class="fas fa-user-plus"></i>
+    إنشاء حساب
+</button>
             </form>
 
             <!-- استعادة كلمة المرور -->
@@ -332,7 +332,7 @@
             var guard = '{{ request('guard') ?? 'admin' }}';
             var email = document.getElementById('email').value;
             var password = document.getElementById('password').value;
-            
+
             axios.post('/cms/' + guard + '/login', {
                 email: email,
                 password: password,
@@ -349,6 +349,7 @@
                         showConfirmButton: false
                     }).then(() => {
                         window.location.href = '/cms/admin/main';
+
                     });
                 } else {
                     Swal.fire({
@@ -370,7 +371,72 @@
                 });
             });
         }
-        
-   
+
+
+document.querySelectorAll('.tab-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const tab = button.getAttribute('data-tab');
+
+        // 1. شيل اللون النشط من كل الأزرار وحطه ع اللي انضغط
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+
+        // 2. إخفاء كل الفورمات
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('signupForm').style.display = 'none';
+
+        // 3. إظهار الفورم المطلوب
+        if(tab === 'login') {
+            document.getElementById('loginForm').style.display = 'block';
+            // إذا بدك يظهر اختيار (طالب/مدرب) بس باللوجن
+            document.getElementById('userTypeSelector').style.display = 'block';
+        } else {
+            document.getElementById('signupForm').style.display = 'block';
+            // إخفاء اختيار النوع في صفحة الإنشاء إذا كنتِ بس بتسجلي طلاب
+            document.getElementById('userTypeSelector').style.display = 'none';
+        }
+    });
+});
+
+function signup() {
+    // 1. جلب القيم من المدخلات
+    let fName = document.getElementById('firstName').value;
+    let lName = document.getElementById('lastName').value;
+    let email = document.getElementById('signupEmail').value;
+    let password = document.getElementById('signupPassword').value;
+    let password_confirmation = document.getElementById('confirmPassword').value;
+
+    // 2. تجهيز البيانات (لاحظي إني ضفت username يدوي)
+    let formData = new FormData();
+    formData.append('username', fName + ' ' + lName); // هان الحل! دمجنا الاسمين في حقل واحد
+    formData.append('email', email);
+    formData.append('password', password);
+    formData.append('password_confirmation', password_confirmation);
+
+    // اختياري: إذا الكنترولر بطلب firstName و lastName كحقول منفصلة كمان
+    formData.append('firstName', fName);
+    formData.append('lastName', lName);
+
+    // 3. الإرسال
+    axios.post('{{ route('student.register') }}', formData)
+    .then(function (response) {
+        Swal.fire({
+            icon: 'success',
+            title: 'تم إنشاء الحساب بنجاح',
+            showConfirmButton: false,
+            timer: 1500
+        }).then(() => {
+            window.location.href = '{{ route('view.login', ['guard' => 'student']) }}';
+        });
+    })
+    .catch(function (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'خطأ في البيانات',
+            text: error.response.data.title || 'تأكد من تعبئة جميع الحقول بشكل صحيح'
+        });
+    });
+}
+
     </script>
     @endsection
