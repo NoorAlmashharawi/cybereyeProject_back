@@ -3,17 +3,13 @@
 @section('title', 'CyberEye - comtact')
 
 @section('styles')
-
 <link rel="stylesheet" href="{{ asset('cms/css/contact.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 <link rel="icon" type="image/x-icon" href="img/digital.jpg">
-
-
 @endsection
 
 @section('content')
 
-    <!-- قسم البانر -->
     <section class="contact-hero">
         <div class="hero-content">
             <h1>Contact us</h1>
@@ -28,14 +24,12 @@
         </div>
     </section>
 
-    <!-- قسم معلومات الاتصال -->
     <div class="contact-container">
         <div class="contact-info-section">
             <h2 class="section-title">وسائل الاتصال</h2>
             <p class="section-subtitle">اختر الوسيلة المناسبة للتواصل معنا</p>
-            
+
             <div class="contact-methods">
-                <!-- الهاتف -->
                 <div class="contact-method">
                     <div class="method-icon">
                         <i class="fas fa-phone-alt"></i>
@@ -49,7 +43,6 @@
                     </div>
                 </div>
 
-                <!-- البريد الإلكتروني -->
                 <div class="contact-method">
                     <div class="method-icon">
                         <i class="fas fa-envelope"></i>
@@ -66,10 +59,6 @@
                     </div>
                 </div>
 
-               
-   
-
-                <!-- ساعات العمل -->
                 <div class="contact-method">
                     <div class="method-icon">
                         <i class="fas fa-clock"></i>
@@ -83,7 +72,6 @@
                 </div>
             </div>
 
-            <!-- وسائل التواصل الاجتماعي -->
             <div class="social-media-section">
                 <h3> follow us</h3>
                 <div class="social-icons">
@@ -115,25 +103,34 @@
             </div>
         </div>
 
-        <!-- نموذج الاتصال -->
         <div class="contact-form-section">
             <h2 class="section-title">أرسل لنا رسالة</h2>
             <p class="section-subtitle">سنكون سعداء بالرد على استفساراتك</p>
-            
-            <form class="contact-form" id="contactForm">
+
+            {{-- إظهار رسالة النجاح إذا وجدت --}}
+            @if(session('success'))
+                <div style="background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            <form class="contact-form" id="contactForm" action="{{ route('contact.store') }}" method="POST">
+                @csrf
                 <div class="form-row">
                     <div class="form-group">
                         <label for="name">
-                            <i class="fas fa-user"></i>  full name 
+                            <i class="fas fa-user"></i>  full name
                         </label>
-                        <input type="text" id="name" name="name" required placeholder="أدخل اسمك الكامل">
+                        <input type="text" id="name" name="name" value="{{ old('name') }}" required placeholder="أدخل اسمك الكامل">
+                        @error('name') <small style="color: red;">{{ $message }}</small> @enderror
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="email">
                             <i class="fas fa-envelope"></i> email
                         </label>
-                        <input type="email" id="email" name="email" required placeholder="أدخل بريدك الإلكتروني">
+                        <input type="email" id="email" name="email" value="{{ old('email') }}" required placeholder="أدخل بريدك الإلكتروني">
+                        @error('email') <small style="color: red;">{{ $message }}</small> @enderror
                     </div>
                 </div>
 
@@ -142,21 +139,22 @@
                         <label for="phone">
                             <i class="fas fa-phone"></i> phone number
                         </label>
-                        <input type="tel" id="phone" name="phone" placeholder="أدخل رقم هاتفك">
+                        <input type="tel" id="phone" name="phone" value="{{ old('phone') }}" placeholder="أدخل رقم هاتفك">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="subject">
-                            <i class="fas fa-tag"></i> supject*
+                            <i class="fas fa-tag"></i> subject*
                         </label>
                         <select id="subject" name="subject" required>
                             <option value="">اختر الموضوع</option>
-                            <option value="support">الدعم الفني</option>
-                            <option value="courses">استفسار عن الدورات</option>
-                            <option value="partnership">شراكة وتعاون</option>
-                            <option value="feedback">مقترحات وملاحظات</option>
-                            <option value="other">موضوع آخر</option>
+                            <option value="support" {{ old('subject') == 'support' ? 'selected' : '' }}>الدعم الفني</option>
+                            <option value="courses" {{ old('subject') == 'courses' ? 'selected' : '' }}>استفسار عن الدورات</option>
+                            <option value="partnership" {{ old('subject') == 'partnership' ? 'selected' : '' }}>شراكة وتعاون</option>
+                            <option value="feedback" {{ old('subject') == 'feedback' ? 'selected' : '' }}>مقترحات وملاحظات</option>
+                            <option value="other" {{ old('subject') == 'other' ? 'selected' : '' }}>موضوع آخر</option>
                         </select>
+                        @error('subject') <small style="color: red;">{{ $message }}</small> @enderror
                     </div>
                 </div>
 
@@ -164,7 +162,8 @@
                     <label for="message">
                         <i class="fas fa-comment-alt"></i> message *
                     </label>
-                    <textarea id="message" name="message" rows="6" required placeholder="اكتب رسالتك هنا..."></textarea>
+                    <textarea id="message" name="message" rows="6" required placeholder="اكتب رسالتك هنا...">{{ old('message') }}</textarea>
+                    @error('message') <small style="color: red;">{{ $message }}</small> @enderror
                 </div>
 
                 <div class="form-group checkbox-group">
@@ -179,12 +178,11 @@
         </div>
     </div>
 
-    <!-- قسم الأسئلة الشائعة -->
     <div class="faq-section" id="faq-section">
         <div class="container">
             <h2 class="section-title">الأسئلة الشائعة</h2>
             <p class="section-subtitle">إجابات على أكثر الأسئلة تكرراً</p>
-            
+
             <div class="faq-container">
                 <div class="faq-item">
                     <div class="faq-question">
@@ -195,7 +193,7 @@
                         <p>يمكنك التسجيل في أي دورة عن طريق زيارة صفحة الدورات، اختيار الدورة المناسبة، والنقر على زر "التسجيل". ستتم عملية الدفع عبر بوابة آمنة، ثم تحصل على وصول فوري للمحتوى.</p>
                     </div>
                 </div>
-                
+
                 <div class="faq-item">
                     <div class="faq-question">
                         <span>هل تقدمون شهادات معتمدة؟</span>
@@ -205,9 +203,7 @@
                         <p>نعم، جميع دوراتنا تقدم شهادات إتمام معتمدة من CyberEye. يمكنك إضافتها إلى سيرتك الذاتية ومشاركتها على LinkedIn.</p>
                     </div>
                 </div>
-                
-             
-                
+
                 <div class="faq-item">
                     <div class="faq-question">
                         <span>كيف يمكنني التواصل مع المدرب؟</span>
@@ -221,12 +217,8 @@
         </div>
     </div>
 
-
-
 @endsection
 
 @section('scripts')
-
-<script src="{{ asset('cms/js/contact.js') }}"></script>
-
+{{-- <script src="{{ asset('cms/js/contact.js') }}"></script> --}}
 @endsection

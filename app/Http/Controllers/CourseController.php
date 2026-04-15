@@ -282,6 +282,16 @@ public function destroy($id)
 }
 
 
+public function home()
+{
+    // اجيب البيانات للهوم
+    $latestReviews = \App\Models\Review::with(['user', 'course'])->latest()->take(3)->get();
+
+    // ارجاع فيو الهوم وتمرير التعليقات اله
+    return view('cms.home.home', compact('latestReviews'));
+}
+
+
 
 
 }

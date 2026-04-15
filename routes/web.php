@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\AIChatController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\MaterialController;
@@ -30,7 +31,9 @@ Route::post('cms/register', [StudentController::class, 'store'])->name('student.
 Route::prefix('cms/home')->group(function(){
     Route::view('parent', 'cms.home.parent');
     Route::view('contact', 'cms.home.contact')->name('contact');
+    Route::post('/contact/send', [ContactMessageController::class, 'store'])->name('contact.store');
     Route::get('/', [DictionaryController::class, 'home'])->name('home');
+
 });
 
 // ==================== AI Chat ====================
@@ -48,6 +51,7 @@ Route::prefix('cms/student')->group(function(){
 
     Route::resource('students', StudentController::class);
     Route::resource('users', User1Controller::class);
+
 });
 
 // ==================== Routes admin ====================
@@ -72,6 +76,7 @@ Route::prefix('cms/instructor')->group(function(){
     Route::put('instructors_update/{id}', [InstructorController::class, 'update'])->name('instructors_update');
     Route::resource('instructors', InstructorController::class);
     Route::resource('users', User1Controller::class);
+
     Route::view('temp', 'cms.temp');
 
     Route::get('instructors_trashed', [InstructorController::class, 'trashed'])->name('instructors_trashed');
@@ -84,6 +89,11 @@ Route::prefix('cms/instructor')->group(function(){
     Route::get('materials/{id}/restore', [MaterialController::class, 'restore'])->name('materials.restore');
     Route::get('materials/{id}/force', [MaterialController::class, 'forceDelete'])->name('materials.force');
     Route::resource('materials', App\Http\Controllers\MaterialController::class);
+    Route::get('materials/trashed', [MaterialController::class, 'trashed'])->name('materials.trashed');
+    Route::get('materials/{id}/restore', [MaterialController::class, 'restore'])->name('materials.restore');
+    Route::get('materials/{id}/force', [MaterialController::class, 'forceDelete'])->name('materials.force');
+    Route::resource('materials', MaterialController::class);
+
 });
 
 // ==================== Routes للكورسات ====================
@@ -98,11 +108,22 @@ Route::prefix('cms/course')->group(function(){
     Route::resource('lessons', App\Http\Controllers\LessonController::class);
 });
 
+   
+
+
 // ==================== Routes للفيديوهات ====================
 Route::prefix('cms/video')->group(function(){
     Route::put('videos_update/{id}', [VideoController::class, 'update'])->name('videos_update');
     Route::resource('videos', VideoController::class);
 });
+
+
+
+
+// أو يمكن إضافة route منفصلة:
+// Route::get('/questions/create', [QuestionController::class, 'create'])->name('questions.create');
+// Route::post('/questions', [QuestionController::class, 'store'])->name('questions.store');
+
 
 // ==================== Routes للأسئلة ====================
 Route::prefix('cms/question')->group(function(){
@@ -124,3 +145,4 @@ Route::prefix('cms/quizz')->group(function(){
 // ==================== صفحات أخرى ====================
 Route::view('details', 'cms/courseDetails/details');
 Route::view('index', 'cms/course/video/index');
+
