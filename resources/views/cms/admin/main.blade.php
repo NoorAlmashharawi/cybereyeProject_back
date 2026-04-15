@@ -68,7 +68,7 @@
                         <i class="fas fa-graduation-cap"></i>
                     </div>
                     <div class="stat-info">
-                        <h3>47</h3>
+                        <h2>47</h2>
                         <p>الكورسات النشطة</p>
                         <div class="stat-trend trend-up">
                             <i class="fas fa-arrow-up"></i>
@@ -318,6 +318,8 @@
 @endsection
 
 @section('scripts')
+
+<script src="{{ asset('cms/js/admin.js') }}"></script>
   <!-- مكتبة Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   {{-- <script src="{{ asset('cms/js/admin.js') }}"></script> --}}
@@ -438,4 +440,120 @@
         }
     });
 </script>
+
+
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+    // بيانات من الـ Controller
+    const weeklyLabels = @json($weeklyRegistrations['labels']);
+    const weeklyStudents = @json($weeklyRegistrations['students']);
+    const weeklyInstructors = @json($weeklyRegistrations['instructors']);
+    const weeklyAdmins = @json($weeklyRegistrations['admins']);
+    
+    const monthlyLabels = @json($monthlyRegistrations['labels']);
+    const monthlyStudents = @json($monthlyRegistrations['students']);
+    const monthlyInstructors = @json($monthlyRegistrations['instructors']);
+    const monthlyAdmins = @json($monthlyRegistrations['admins']);
+    
+    let registrationsChart;
+    
+    function initChart(type = 'weekly') {
+        const ctx = document.getElementById('registrationsChart').getContext('2d');
+        
+        if (registrationsChart) {
+            registrationsChart.destroy();
+        }
+        
+        const labels = type === 'weekly' ? weeklyLabels : monthlyLabels;
+        const studentsData = type === 'weekly' ? weeklyStudents : monthlyStudents;
+        const instructorsData = type === 'weekly' ? weeklyInstructors : monthlyInstructors;
+        const adminsData = type === 'weekly' ? weeklyAdmins : monthlyAdmins;
+        
+        registrationsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'الطلاب',
+                        data: studentsData,
+                        backgroundColor: '#ff4757',  // 🔴 أحمر
+                        borderColor: '#ff4757',
+                        borderWidth: 1,
+                        borderRadius: 6
+                    },
+                    {
+                        label: 'المدربين',
+                        data: instructorsData,
+                        backgroundColor: '#2c3e50',  // 🔵 كحلي (أزرق داكن)
+                        borderColor: '#2c3e50',
+                        borderWidth: 1,
+                        borderRadius: 6
+                    },
+                    {
+                        label: 'المشرفين',
+                        data: adminsData,
+                        backgroundColor: '#2ecc71',  // 🟢 أخضر
+                        borderColor: '#2ecc71',
+                        borderWidth: 1,
+                        borderRadius: 6
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { 
+                        position: 'top', 
+                        rtl: true, 
+                        labels: { 
+                            color: '#e0e0e0',
+                            font: { size: 12, weight: 'bold' },
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        } 
+                    },
+                    tooltip: { 
+                        backgroundColor: '#1a1f2e', 
+                        titleColor: '#00ffcc', 
+                        bodyColor: '#e0e0e0',
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${context.raw} مستخدم`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: { 
+                        beginAtZero: true, 
+                        grid: { color: 'rgba(255,255,255,0.1)' }, 
+                        ticks: { color: '#e0e0e0', stepSize: 1 } 
+                    },
+                    x: { 
+                        grid: { color: 'rgba(255,255,255,0.1)' }, 
+                        ticks: { color: '#e0e0e0', font: { size: 11 } } 
+                    }
+                }
+            }
+        });
+    }
+    
+    // تبديل بين أسبوعي وشهري
+    document.querySelectorAll('.period-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            const period = this.textContent.includes('أسبوعي') ? 'weekly' : 'monthly';
+            initChart(period);
+        });
+    });
+    
+    // تهيئة الرسم البياني عند تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', () => initChart('weekly'));
+</script>
+@endsection
 @endsection
