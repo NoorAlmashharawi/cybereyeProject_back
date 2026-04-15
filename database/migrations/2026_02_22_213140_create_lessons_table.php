@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::create('lessons', function (Blueprint $table) {
             $table->id();
             $table->string('lesson_name');
-            $table->string('description');
+            $table->text('description')->nullable();
             $table->integer('duration');
+            $table->string('video_url')->nullable();
+            $table->foreignId('course_id')->constrained()->onDelete('cascade');
             $table->timestamps();
-            $table->foreignId('newsession_id')->constrained()->onDelete('cascade');
-        });
+            });
     }
 
     /**

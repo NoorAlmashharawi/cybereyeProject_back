@@ -9,6 +9,7 @@ use App\Http\Controllers\AIChatController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\QuestionController;
@@ -67,16 +68,30 @@ Route::prefix('cms/instructor')->group(function(){
     Route::put('instructors_update/{id}', [InstructorController::class, 'update'])->name('instructors_update');
     Route::resource('instructors', InstructorController::class);
     Route::resource('users', User1Controller::class);
+    Route::view('temp', 'cms.temp');
 
     Route::get('instructors_trashed', [InstructorController::class, 'trashed'])->name('instructors_trashed');
     Route::get('instructors_restore/{id}', [InstructorController::class, 'restore'])->name('instructors_restore');
     Route::get('instructors_force/{id}', [InstructorController::class, 'force'])->name('instructors_force');
     Route::get('instructors_forceAll', [InstructorController::class, 'forceAll'])->name('instructors_forceAll');
+    
+    // Materials Routes
+    Route::get('materials/trashed', [MaterialController::class, 'trashed'])->name('materials.trashed');
+    Route::get('materials/{id}/restore', [MaterialController::class, 'restore'])->name('materials.restore');
+    Route::get('materials/{id}/force', [MaterialController::class, 'forceDelete'])->name('materials.force');
+    Route::resource('materials', App\Http\Controllers\MaterialController::class);
 });
 
 // ==================== Routes للكورسات ====================
 Route::prefix('cms/course')->group(function(){
     Route::resource('courses', CourseController::class);
+    Route::get('courses/{id}/details', [CourseController::class, 'showCourseDetails'])->name('course.details');
+    Route::post('courses/{id}/enroll', [CourseController::class, 'enroll'])->name('course.enroll')->middleware('auth:student');
+    Route::post('comments', [App\Http\Controllers\CommentController::class, 'store'])->name('comments.store');
+    Route::delete('comments/{comment}', [App\Http\Controllers\CommentController::class, 'destroy'])->name('comments.destroy');
+    Route::post('reviews', [App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
+    Route::post('/course/{id}/review', [App\Http\Controllers\CourseController::class, 'storeReview'])->name('course.review.store');
+    Route::resource('lessons', App\Http\Controllers\LessonController::class);
 });
 
 // ==================== Routes للفيديوهات ====================

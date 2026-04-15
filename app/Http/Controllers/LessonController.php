@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lesson;
+use App\Models\Course;
 use Illuminate\Http\Request;
 
 class LessonController extends Controller
@@ -12,7 +13,8 @@ class LessonController extends Controller
      */
     public function index()
     {
-        //
+       $lessons = Lesson::with('course')->latest()->paginate(10);
+        return view('cms.video.index', compact('lessons'));
     }
 
     /**
@@ -20,7 +22,8 @@ class LessonController extends Controller
      */
     public function create()
     {
-        //
+        $courses = Course::all(); // عشان نختار الدرس تابع لأي كورس
+        return view('cms.video.create', compact('courses'));
     }
 
     /**
@@ -28,7 +31,19 @@ class LessonController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'course_id' => 'required|exists:courses,id',
+            'video_url' => 'required|url', // رابط الفيديو (يوتيوب مثلا)
+            'duration' => 'nullable|string',
+        ]);
+
+        $isSaved = Lesson::create($request->all());
+
+        return response()->json([
+            'icon' => $isSaved ? 'success' : 'error',
+            'title' => $isSaved ? 'تم إضافة الدرس بنجاح' : 'فشل الحفظ'
+        ], $isSaved ? 201 : 400);
     }
 
     /**
@@ -36,7 +51,7 @@ class LessonController extends Controller
      */
     public function show(Lesson $lesson)
     {
-        //
+        return view('cms.video.show', compact('lesson'));
     }
 
     /**
@@ -44,7 +59,8 @@ class LessonController extends Controller
      */
     public function edit(Lesson $lesson)
     {
-        //
+        $courses = Course::all();
+        return view('cms.video.edit', compact('lesson', 'courses'));
     }
 
     /**
@@ -52,7 +68,17 @@ class LessonController extends Controller
      */
     public function update(Request $request, Lesson $lesson)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'video_url' => 'required|url',
+        ]);
+
+        $isUpdated = $lesson->update($request->all());
+
+        return response()->json([
+            'icon' => $isUpdated ? 'success' : 'error',
+            'title' => $isUpdated ? 'تم التحديث بنجاح' : 'فشل التحديث'
+        ]);
     }
 
     /**
@@ -60,6 +86,11 @@ class LessonController extends Controller
      */
     public function destroy(Lesson $lesson)
     {
-        //
+       $isDeleted = $lesson->delete();
+        return response()->json([
+            'icon' => $isDeleted ? 'success' : 'error',
+            'title' => $isDeleted ? 'تم حذف الدرس' : 'فشل الحذف'
+        ]);
     }
+
 }

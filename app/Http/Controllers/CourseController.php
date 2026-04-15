@@ -28,7 +28,7 @@ public function index(Request $request)
     if ($request->has('category_id') && $request->category_id != '') {
         $query->where('category_id', $request->category_id);
     }
-    
+
     // 2. زر البحث
     if ($request->has('search') && $request->search != '') {
         $search = $request->search;
@@ -241,4 +241,47 @@ public function destroy($id)
         ], 400);
     }
 }
+
+
+    public function showCourseDetails($id)
+    {
+        // جلب الكورس مع كل العلاقات اللي رح نحتاجها في الصفحة مرة واحدة
+        $course = Course::with([
+            'lessons',
+            'materials',
+            'reviews.user',
+            'instructor.user1' // معلومات المدرب
+        ])->findOrFail($id);
+
+        // توجيه الطالب لصفحة العرض
+        return view('course-details', compact('course'));
+    }
+
+ public function storeReview(Request $request, $id)
+{
+    $request->validate([
+        'rating' => 'required|numeric|min:1|max:5',
+        'comment' => 'nullable|string|max:1000',
+    ]);
+
+    // نحدد الـ guard يدويا عشان نجيب الـ id صح
+    $userId = auth('student')->id();
+
+    if (!$userId) {
+        return back()->with('error', 'يجب تسجيل الدخول كطالب للتقييم');
+    }
+
+    \App\Models\Review::create([
+        'course_id' => $id,
+        'user_id'   => $userId,
+        'rating'    => $request->rating,
+        'comment'   => $request->comment,
+    ]);
+
+    return back()->with('success', 'تم إرسال تقييمك بنجاح!');
+}
+
+
+
+
 }
