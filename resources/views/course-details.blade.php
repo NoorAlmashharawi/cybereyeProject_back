@@ -83,6 +83,42 @@
                                 <button type="button" onclick="showLoginAlert()" class="btn-primary" style="margin-top: 1rem;">إرسال التقييم</button>
                             @endauth
                         </form>
+                        {{-- بداية قسم عرض التعليقات --}}
+                        <div class="reviews-list" style="margin-top: 3rem; border-top: 1px solid #edf2f7; padding-top: 2rem;">
+                            <h3 style="margin-bottom: 1.5rem; font-size: 1.3rem;">
+                                <i class="fas fa-comments" style="color: #4361ee;"></i> آراء الطلاب ({{ $course->reviews->count() }})
+                            </h3>
+
+                            @forelse($course->reviews as $review)
+                                <div class="review-item" style="background: #f8fafc; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.2rem; border: 1px solid #e2e8f0;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            {{-- عرض صورة الطالب أو أيقونة افتراضية --}}
+                                            <div style="width: 40px; height: 40px; background: #4361ee; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                                                {{ Str::upper(Str::substr($review->student->user1->username ?? 'S', 0, 1)) }}
+                                            </div>
+                                                <strong>{{ $review->user->username ?? 'طالب مجهول' }}</strong>                                        </div>
+                                        <div style="color: #ffc107; font-size: 0.9rem;">
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <i class="{{ $i <= $review->rating ? 'fas' : 'far' }} fa-star"></i>
+                                            @endfor
+                                        </div>
+                                    </div>
+                                    <p style="color: #4a5568; line-height: 1.6; margin: 0;">{{ $review->comment }}</p>
+                                    <div style="text-align: left; margin-top: 0.5rem;">
+                                        <small style="color: #94a3b8; font-size: 0.8rem;">
+                                            <i class="far fa-clock"></i> {{ $review->created_at->diffForHumans() }}
+                                        </small>
+                                    </div>
+                                </div>
+                            @empty
+                                <div style="text-align: center; padding: 2rem; color: #94a3b8;">
+                                    <i class="fas fa-comment-slash" style="font-size: 2rem; display: block; margin-bottom: 1rem;"></i>
+                                    لا توجد تقييمات لهذا الكورس بعد.
+                                </div>
+                            @endforelse
+                        </div>
+                        {{-- نهاية قسم عرض التعليقات --}}
                     </div>
                 </div>
 

@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\AIChatController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\MaterialController;
@@ -26,7 +27,9 @@ Route::prefix('cms')->group(function(){
 Route::prefix('cms/home')->group(function(){
     Route::view('parent', 'cms.home.parent');
     Route::view('contact', 'cms.home.contact')->name('contact');
+    Route::post('/contact/send', [ContactMessageController::class, 'store'])->name('contact.store');
     Route::get('/', [DictionaryController::class, 'home'])->name('home');
+
 });
 
 // ==================== AI Chat ====================
