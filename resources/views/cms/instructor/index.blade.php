@@ -32,7 +32,7 @@
 
             <button class="btn btn-primary" id="addStudentBtn" style="background-color:rgb(74, 28, 228)">
                 <a href="{{ route('instructors_trashed') }}" style="color:white; text-decoration:none;">
-                    <i class="fas fa-user-secret"></i> قديم
+                    <i class="fas fa-user-secret"></i> الارشيف
                 </a>
             </button>
         </div>

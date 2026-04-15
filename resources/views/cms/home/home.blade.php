@@ -146,27 +146,66 @@
     </div>
 </section>
 
-<!-- Cybersecurity Dictionary (من قاعدة البيانات) -->
-<div class="con" id="dictionary">
+ <!-- Cybersecurity Dictionary -->
+ <div class="con" id="dictionary">
     <h1>Cybersecurity Dictionary</h1>
-    
-    @if(isset($dictionaries) && $dictionaries->count() > 0)
-    <div class="slideshow-container">
-        @foreach ($dictionaries as $index => $item)
-            <div class="mySlides" style="{{ $index == 0 ? 'display: block;' : 'display: none;' }}">
-                @if ($item->img)
-                    <img src="{{ asset($item->img) }}" alt="{{ $item->term }}">
-                @else
-                    <img src="{{ asset('cyber/default.jpg') }}" alt="Default">
-                @endif
-                <div class="term-caption">
-                    <h3>{{ $item->term }}</h3>
-                    <p>{{ $item->definition }}</p>
-                </div>
-            </div>
-        @endforeach
+    <div class="containar">
+        <div class="mySlides">
+            <img src="../cyber/backdoor.jpg" alt="Backdoor">
+        </div>
+        <div class="mySlides">
+            <img src="../cyber/botnet.png" alt="Botnet">
+        </div>
+        <div class="mySlides">
+            <img src="../cyber/fa.jpg" alt="Firewall">
+        </div>
+        <div class="mySlides">
+            <img src="../cyber/firewall.png" alt="Firewall">
+        </div>
+        <div class="mySlides">
+            <img src="../cyber/hardening.png" alt="Hardening">
+        </div>
+        <div class="mySlides">
+            <img src="../cyber/malware.jpg" alt="Malware">
+        </div>
+        <div class="mySlides">
+            <img src="{{ asset('cms/cyber/pishing.jpg') }}" alt="Phishing">
+        </div>
+        <div class="mySlides">
+            <img src="{{ asset('cms/cyber/ransomware.jpg') }}" alt="Ransomware">
+        </div>
+        <div class="mySlides">
+            <img src="{{ asset('cms/cyber/social.jpg') }}" alt="Social Engineering">
+        </div>
+        <div class="mySlides">
+            <img src="{{ asset('cms/cyber/spyware.png') }}" alt="Spyware">
+        </div>
+        <div class="mySlides">
+            <img src="{{ asset('cms/cyber/vpn.jpg') }}" alt="VPN">
+        </div>
+        <div class="mySlides">
+            <img src="{{ asset('cms/cyber/trojan.jpg') }}" alt="Trojan">
+        </div>
+        <div class="mySlides">
+            <img src="{{ asset('cms/cyber/brute.png') }}" alt="Brute Force">
+        </div>
     </div>
-@endif
+    
+    <div style="text-align: center; margin-top: 10px;">
+        <span class="dot" onclick="enter(0)"></span>
+        <span class="dot" onclick="enter(1)"></span>
+        <span class="dot" onclick="enter(2)"></span>
+        <span class="dot" onclick="enter(3)"></span>
+        <span class="dot" onclick="enter(4)"></span>
+        <span class="dot" onclick="enter(5)"></span>
+        <span class="dot" onclick="enter(6)"></span>
+        <span class="dot" onclick="enter(7)"></span>
+        <span class="dot" onclick="enter(8)"></span>
+        <span class="dot" onclick="enter(9)"></span>
+        <span class="dot" onclick="enter(10)"></span>
+        <span class="dot" onclick="enter(11)"></span>
+        <span class="dot" onclick="enter(12)"></span>
+    </div>
 </div>
 
     <!-- Cybersecurity Roadmap -->
@@ -455,12 +494,12 @@
         startAutoSlide();
     }
     
-    // تهيئة السلايدر عند تحميل الصفحة
+ 
     document.addEventListener('DOMContentLoaded', function() {
         initSlideshow();
     });
     
-    // دالة تغيير الصورة في قسم About
+
     function changeImage(element) {
         document.getElementById('imagbox').src = element.src;
     }

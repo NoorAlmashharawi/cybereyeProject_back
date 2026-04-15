@@ -55,7 +55,7 @@
     <div class="footer-links">
         <a href="{{ route('home') }}">Home</a> 
         <a href="{{ route('contact') }}">Contact</a> 
-        {{-- <a href="{{ route('view.login') }}">Login</a> --}}
+        <a href="{{ route('view.login', ['guard' => 'student']) }}">Login</a>
     </div>
 </div>
 

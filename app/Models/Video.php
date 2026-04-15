@@ -7,16 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Video extends Model
 {
-    /** @use HasFactory<\Database\Factories\VideoFactory> */
     use HasFactory;
 
-   protected $fillable = [
-        'lesson_id',
+    protected $fillable = [
         'title',
         'description',
-        'video_url',
+        'url',
         'duration',
-        'order'
+        'lesson_id',
+        'order_number'
     ];
 
     // العلاقة مع الدرس
@@ -24,5 +23,4 @@ class Video extends Model
     {
         return $this->belongsTo(Lesson::class);
     }
-
 }
