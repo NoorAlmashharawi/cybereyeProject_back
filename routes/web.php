@@ -16,6 +16,9 @@ use App\Http\Controllers\VideoController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuizzController;
 
+use App\Http\Controllers\CertificateController;
+
+
 // ====================  login ====================
 Route::prefix('cms')->group(function(){
     Route::get('{guard}/login', [UserAuthController::class, 'showLogin'])->name('view.login');
@@ -126,4 +129,11 @@ Route::prefix('cms/quizz')->group(function(){
     Route::post('/quiz/{quiz}/save-temp', [QuizzController::class, 'saveTemp'])->name('quiz.saveTemp');
     Route::resource('quizzs', QuizzController::class);
     Route::get('/quizzs/start', [QuizzController::class, 'create'])->name('quizzs.show');
+});
+
+
+
+Route::prefix('cms/certificate')->group(function(){
+    Route::get('/{id}', [CertificateController::class, 'show'])->name('certificate.show');
+    Route::get('/{id}/download', [CertificateController::class, 'download'])->name('certificate.download');
 });
