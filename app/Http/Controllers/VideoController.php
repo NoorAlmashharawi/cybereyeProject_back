@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Lesson;
 use App\Models\Video;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class VideoController extends Controller
 {
@@ -13,9 +15,17 @@ class VideoController extends Controller
      */
     public function index()
     {
-         $videos = Video::with('lesson')->orderBy('id', 'desc')->paginate(10);
+        $videos = Video::with('lesson')->orderBy('id', 'desc')->paginate(10);
+        return view('cms.Video.index', compact('videos'));
+    }
 
-        return response()->view('cms.video.index',compact('videos'));
+    /**
+     * Display the video player page.
+     */
+    public function player()
+    {
+        $videos = Video::orderBy('created_at', 'asc')->get();
+        return view('cms.Video.player', compact('videos'));
     }
 
     /**
@@ -23,8 +33,8 @@ class VideoController extends Controller
      */
     public function create()
     {
-    $lessons = Lesson::all();
-    return view('cms.video.create', compact('lessons'));
+        $lessons = Lesson::all();
+        return view('cms.Video.create', compact('lessons'));
     }
 
     /**
@@ -32,43 +42,44 @@ class VideoController extends Controller
      */
     public function store(Request $request)
     {
- 
-    // 1. Validation
-    $request->validate([
-        'title' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'lesson_id' => 'required|exists:lessons,id',
-        'video' => 'required|file|mimes:mp4,mov,avi,webm|max:20480',
-        'duration_minutes' => 'nullable|integer',
-        'order' => 'nullable|integer',
-    ]);
+        // 1. Validation
+        $validator = Validator::make($request->all(), [
+            'title'       => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'duration'    => 'nullable|integer',
+            'url'         => 'required|file|mimes:mp4,mkv,avi,mov|max:102400',
+            'lesson_id'   => 'nullable|exists:lessons,id',
+        ]);
 
-    // 2. Upload Video
-    $file = $request->file('video');
-    $path = $file->store('videos', 'public');
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->getMessageBag()->first()
+            ], 422);
+        }
 
-    // 3. Save
-    Video::create([
-        'title' => $request->title,
-        'description' => $request->description,
-        'lesson_id' => $request->lesson_id,
-        'file_path' => $path,
-        'duration_minutes' => $request->duration_minutes,
-        'order' => $request->order ?? 1,
-    ]);
+        $data = $validator->validated();
+        $data['duration'] = $request->duration ?? 0;
 
-    // 4. Response
-    return response()->json([
-        'title' => 'تم رفع الفيديو بنجاح'
-    ]);
-}
+        if ($request->hasFile('url')) {
+            $path = $request->file('url')->store('videos', 'public');
+            $data['url'] = Storage::url($path);
+        }
+
+        $video = Video::create($data);
+
+        return response()->json([
+            'success' => true,
+            'message' => $video ? 'تم الحفظ بنجاح' : 'فشل الحفظ',
+            'video' => $video
+        ], $video ? 200 : 400);
+    }
 
     /**
      * Display the specified resource.
      */
     public function show(Video $video)
     {
-        //
+        return view('cms.Video.show', compact('video'));
     }
 
     /**
@@ -76,15 +87,51 @@ class VideoController extends Controller
      */
     public function edit(Video $video)
     {
-        //
+        return view('cms.Video.edit', compact('video'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Video $video)
+    public function update(Request $request, $id)
     {
-        //
+        $video = Video::find($id);
+        
+        if (!$video) {
+            return response()->json(['message' => 'الفيديو غير موجود'], 404);
+        }
+        
+        $validator = Validator::make($request->all(), [
+            'title'       => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'duration'    => 'nullable|integer',
+            'url'         => 'nullable|file|mimes:mp4,mkv,avi,mov|max:102400',
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->getMessageBag()->first()], 422);
+        }
+        
+        $data = $validator->validated();
+        $data['duration'] = $request->duration ?? 0;
+        
+        if ($request->hasFile('url')) {
+            if ($video->url) {
+                $oldPath = str_replace('/storage/', '', $video->url);
+                Storage::disk('public')->delete($oldPath);
+            }
+            
+            $path = $request->file('url')->store('videos', 'public');
+            $data['url'] = Storage::url($path);
+        }
+        
+        $video->update($data);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'تم التحديث بنجاح',
+            'video' => $video
+        ], 200);
     }
 
     /**
@@ -92,6 +139,12 @@ class VideoController extends Controller
      */
     public function destroy(Video $video)
     {
-        //
+        if ($video->url) {
+            $path = str_replace('/storage/', '', $video->url);
+            Storage::disk('public')->delete($path);
+        }
+        $video->delete();
+        
+        return redirect()->route('videos.index')->with('success', 'تم الحذف بنجاح');
     }
 }

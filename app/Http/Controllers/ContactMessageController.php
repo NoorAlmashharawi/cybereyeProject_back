@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\ContactMessage;
+use Illuminate\Container\Attributes\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ContactMessageController extends Controller
 {
@@ -28,7 +30,23 @@ class ContactMessageController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email',
+        'subject' => 'required',
+        'message' => 'required|string|min:10',
+    ]);
+
+    ContactMessage::create([
+    'user_name'  => $request->name,
+    'user_email' => $request->email,
+    'subject'    => $request->subject,
+    'message'    => $request->message,
+    'user_id'    => Auth::check() ? Auth::id() : null,
+]);
+
+    return back()->with('success', 'شكراً لك! تم إرسال رسالتك بنجاح وسنتواصل معك قريباً.');
     }
 
     /**

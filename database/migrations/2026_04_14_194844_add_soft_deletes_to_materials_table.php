@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('notifications', function (Blueprint $table) {
-            $table->id();
-            $table->text('message');
-            $table->timestamps();
-
-            $table->foreignId('user1_id')->constrained()->onDelete('cascade');
+        Schema::table('materials', function (Blueprint $table) {
+            $table->softDeletes();
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('notifications');
+        Schema::table('materials', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
     }
 };

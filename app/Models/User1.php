@@ -21,7 +21,7 @@ class User1 extends Authenticatable
 
     protected $table = 'user1s';
 
- 
+
 
 
 
@@ -64,6 +64,9 @@ class User1 extends Authenticatable
 // }
 
 
+public function student() {
+    return $this->hasOne(Student::class);
+}
 
 
 }

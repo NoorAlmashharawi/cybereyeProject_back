@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
-    
+
     public function index()
     {
         $students = Student::with('user1')->orderBy('id', 'desc')->withoutTrashed()->paginate(10);
@@ -52,68 +52,68 @@ class StudentController extends Controller
     }
 
     // حفظ طالب جديد
-    public function store(Request $request)
-    {
-        $validator = Validator($request->all(), [
-            'username' => 'required|string|min:3|max:20|unique:user1s,username',
-            'email'    => 'required|email|unique:user1s,email',
-            'password' => 'required|min:8|confirmed',
-            'level'    => 'required|string',
-            'status'   => 'required|string',
-        ]);
+public function store(Request $request)
+{
+    $validator = Validator($request->all(), [
+        'username' => 'required|string|min:3|max:20|unique:user1s,username',
+        'email'    => 'required|email|unique:user1s,email',
+        'password' => 'required|min:8|confirmed',
+        'level'    => 'nullable|string',
+        'status'   => 'nullable|string',
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'icon'  => 'error',
-                'title' => $validator->errors()->first(),
-            ], 400);
-        }
-
-        try {
-            DB::beginTransaction();
-
-            $student = Student::create([
-                'level'           => $request->level,
-                'status'          => $request->status,
-                'specialization'  => $request->specialization ?? 'General',
-                'progress'        => $request->progress ?? 0,
-                'enrollment_date' => $request->enrollment_date ?? now(),
-            ]);
-
-            $user1 = User1::create([
-                'username'   => $request->username,
-                'email'      => $request->email,
-                'password'   => Hash::make($request->password),
-                'role'       => 'student',
-                'actor_id'   => $student->id,
-                'actor_type' => 'App\Models\Student',
-            ]);
-
-            DB::commit();
-
-            return response()->json([
-                'icon'  => 'success',
-                'title' => 'تم إنشاء الطالب بنجاح'
-            ], 200);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'icon'  => 'error',
-                'title' => 'خطأ: ' . $e->getMessage()
-            ], 500);
-        }
+    if ($validator->fails()) {
+        return response()->json(['icon' => 'error', 'title' => $validator->errors()->first()], 400);
     }
 
+    try {
+        DB::beginTransaction();
+
+        // 1. ننشئ حساب المستخدم (User1) أولاً
+        // بنحط الـ actor_id مبدئياً 0 لأننا لسه ما أنشأنا سجل الطالب
+        $user1 = User1::create([
+            'username'   => $request->username,
+            'email'      => $request->email,
+            'password'   => Hash::make($request->password),
+            'role'       => 'student',
+            'actor_id'   => 0,
+            'actor_type' => 'App\Models\Student',
+        ]);
+
+        // 2. ننشئ سجل الطالب ونربطه بـ user_id اللي طلع من الخطوة الأولى
+        $student = Student::create([
+            'user_id'         => $user1->id, // هان حل مشكلة الـ SQL Error
+            'level'           => $request->level ?? 'beginner',
+            'status'          => $request->status ?? 'active',
+            'specialization'  => $request->specialization ?? 'General',
+            'progress'        => $request->progress ?? 0,
+            'enrollment_date' => $request->enrollment_date ?? now(),
+        ]);
+
+        // 3. نحدث سجل اليوزر بالـ actor_id الحقيقي (رقم الطالب)
+        $user1->update([
+            'actor_id' => $student->id
+        ]);
+
+        DB::commit();
+
+        return response()->json(['icon' => 'success', 'title' => 'تم التسجيل بنجاح!'], 200);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        // هان بنرجع رسالة الخطأ عشان نعرف شو صار لو فشل
+        return response()->json(['icon' => 'error', 'title' => 'حدث خطأ: ' . $e->getMessage()], 500);
+    }
+}
     // عرض تفاصيل طالب
     public function show($id)
     {
         $student = Student::withTrashed()->with('user1')->find($id);
-        
+
         if (!$student) {
             return redirect()->back()->with('error', 'الطالب غير موجود');
         }
-        
+
         return view('cms.student.show', compact('student'));
     }
 
@@ -121,11 +121,11 @@ class StudentController extends Controller
     public function edit($id)
     {
         $student = Student::with('user1')->find($id);
-        
+
         if (!$student) {
             return redirect()->back()->with('error', 'الطالب غير موجود');
         }
-        
+
         return view('cms.student.edit', compact('student'));
     }
 
@@ -133,14 +133,14 @@ class StudentController extends Controller
     public function update(Request $request, $id)
     {
         $student = Student::with('user1')->find($id);
-        
+
         if (!$student) {
             return response()->json([
                 'icon'  => 'error',
                 'title' => 'الطالب غير موجود'
             ], 404);
         }
-        
+
         $user1Id = $student->user1 ? $student->user1->id : null;
 
         $validator = Validator($request->all(), [
@@ -195,17 +195,17 @@ class StudentController extends Controller
     public function destroy($id)
     {
         $student = Student::find($id);
-        
+
         if (!$student) {
             return redirect()->back()->with('error', 'الطالب غير موجود');
         }
-        
+
         if ($student->user1) {
             $student->user1->delete();
         }
-        
+
         $student->delete();
-        
+
         return redirect()->back()->with('success', 'تم حذف الطالب مؤقتاً');
     }
 
@@ -217,7 +217,7 @@ class StudentController extends Controller
             }])
             ->orderBy('deleted_at', 'desc')
             ->get();
-        
+
         return view('cms.student.trashed', compact('students'));
     }
     // استعادة طالب من سلة المحذوفات
@@ -226,22 +226,22 @@ class StudentController extends Controller
         try {
             // البحث عن الطالب المحذوف
             $student = Student::onlyTrashed()->findOrFail($id);
-            
+
             // استعادة الطالب
             $student->restore();
-            
-          
+
+
             $user1 = User1::where('actor_id', $student->id)
                           ->where('actor_type', 'App\Models\Student')
-                          ->withTrashed() 
+                          ->withTrashed()
                           ->first();
-          
+
             if ($user1 && $user1->trashed()) {
                 $user1->restore();
             }
-            
+
             return redirect()->back()->with('success', 'تم استعادة الطالب والمستخدم بنجاح');
-            
+
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'خطأ في الاستعادة: ' . $e->getMessage());
         }
@@ -252,8 +252,8 @@ class StudentController extends Controller
     {
         $students = Student::onlyTrashed()->findOrFail($id)->forceDelete();
         return back()->with('sucess','sucess');
-    
-    
+
+
     }
 
     public function forceAll()

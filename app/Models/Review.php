@@ -10,15 +10,21 @@ class Review extends Model
     /** @use HasFactory<\Database\Factories\ReviewFactory> */
     use HasFactory;
 
-       protected $fillable = ['course_id', 'student_id', 'rating', 'comment'];
+      protected $fillable = [
+        'course_id',
+        'user_id',
+        'rating',
+        'comment'
+        ];
+
 
     public function course()
     {
         return $this->belongsTo(Course::class);
     }
 
-    public function student()
+    public function user()
     {
-        return $this->belongsTo(Student::class);
+        return $this->belongsTo(User1::class, 'user_id');
     }
 }
