@@ -24,6 +24,12 @@ Route::prefix('cms')->group(function(){
     Route::get('logout', [UserAuthController::class, 'logout'])->name('view.logout');
 });
 
+
+Route::get('/login', function () {
+    // استخدم guard افتراضي مناسب، مثلاً 'user1' أو 'admin'
+    return redirect()->route('view.login', ['guard' => 'user1']);
+})->name('login');
+
 // ====================  الرئيسية ====================
 Route::prefix('cms/home')->group(function(){
     Route::view('parent', 'cms.home.parent');
@@ -108,8 +114,6 @@ Route::prefix('cms/course')->group(function(){
 
 Route::view('details', 'cms/courseDetails/details');
 
- 
-
 
     Route::prefix('cms/video')->group(function(){
 
@@ -122,35 +126,35 @@ Route::view('details', 'cms/courseDetails/details');
 
 /////////////////////////
 
-
-Route::resource('questions', QuestionController::class)->only(['create', 'store']);
-// أو يمكن إضافة route منفصلة:
-// Route::get('/questions/create', [QuestionController::class, 'create'])->name('questions.create');
-// Route::post('/questions', [QuestionController::class, 'store'])->name('questions.store');
-
+ /////////////////Question Route //////////////////////
   Route::prefix('cms/question')->group(function(){
     Route::resource('questions', QuestionController::class);
-     Route::get('/questions/create', [QuestionController::class, 'create'])->name('questions.create');
- Route::post('/questions', [QuestionController::class, 'store'])->name('questions.store');
 
+  Route::get('questions_trashed', [QuestionController::class, 'trashed'])->name('questions_trashed');
 
+    Route::post('questions_restore/{id}', [QuestionController::class, 'restore'])->name('questions_restore');
+
+    Route::delete('questions_force/{id}', [QuestionController::class, 'forceDelete'])->name('questions_force');
 
 });
 
 
-///////////////////////////////
+//////////////// Quizz Route //////////////////////////////
   Route::prefix('cms/quizz')->group(function(){
 
+Route::get('/quizzs/{id}/start', [QuizzController::class, 'start'])->name('quiz.start');
 
-
-Route::get('/quizzs/{quiz}/start', [QuizzController::class, 'show'])->name('quiz.show');
+//Route::get('/quizzs/{quiz}/start', [QuizzController::class, 'show'])->name('quiz.show');
 Route::post('/quiz/{quiz}/submit', [QuizzController::class, 'submit'])->name('quiz.submit');
 Route::get('/quiz/{quiz}/result', [QuizzController::class, 'result'])->name('quiz.result');
 Route::post('/quiz/{quiz}/save-temp', [QuizzController::class, 'saveTemp'])->name('quiz.saveTemp');
 
     Route::resource('quizzs', QuizzController::class);
-     Route::get('/quizzs/start', [QuizzController::class, 'create'])->name('quizzs.show');
 
+    Route::get('/quiz/{quiz}/review', [QuizzController::class, 'review'])->name('quiz.review');
+    Route::get('/quiz/studentResult', [QuizzController::class, 'studentResults'])->name('quiz.studentResults');
 
-
+   Route::get('/quizzs_trashed', [QuizzController::class, 'trashed'])->name('quizzs.trashed');
+    Route::post('/quizzs_restore/{id}', [QuizzController::class, 'restore'])->name('quizzs.restore');
+    Route::delete('/quizzs_force/{id}', [QuizzController::class, 'forceDelete'])->name('quizzs.force');
 });

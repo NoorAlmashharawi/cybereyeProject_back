@@ -2,24 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\StudentAnswer;
+use App\Models\QuizResult;
 use Illuminate\Http\Request;
 
-class StudentAnswerController extends Controller
+class QuizResultController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-      public function index($studentId, $quizzId)
+    public function index()
     {
-        $answers = StudentAnswer::with('question')
-            ->where('student_id', $studentId)
-            ->where('quizz_id', $quizzId)
-            ->get();
-        return view('student.answers', compact('answers'));
+        //
     }
-
-
 
     /**
      * Show the form for creating a new resource.
@@ -40,7 +34,7 @@ class StudentAnswerController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(StudentAnswer $studentAnswer)
+    public function show(QuizResult $quizResult)
     {
         //
     }
@@ -48,7 +42,7 @@ class StudentAnswerController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(StudentAnswer $studentAnswer)
+    public function edit(QuizResult $quizResult)
     {
         //
     }
@@ -56,7 +50,7 @@ class StudentAnswerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, StudentAnswer $studentAnswer)
+    public function update(Request $request, QuizResult $quizResult)
     {
         //
     }
@@ -64,10 +58,8 @@ class StudentAnswerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(QuizResult $quizResult)
     {
-          $answer = StudentAnswer::findOrFail($id);
-        $answer->delete();
-        return back()->with('success', 'تم حذف الإجابة');
+        //
     }
 }

@@ -36,15 +36,15 @@
                     <i class="fas fa-user-secret"></i> إضافة طالب
                 </a>
 
-               
+
             </button>
             <button class="btn btn-primary" id="addStudentBtn" style="background-color:red">
                 <a href="{{ route('students_trashed') }}" style="color:white; text-decoration:none; ">
                     <i class="fas fa-user-secret"></i> قديم
                 </a>
-               
+
             </button>
-            
+
         </div>
     </div>
 
@@ -58,7 +58,7 @@
                 <p>طالب</p>
             </div>
         </div>
-        
+
         <div class="stat-card">
             <div class="stat-icon cert-icon">
                 <i class="fas fa-certificate"></i>
@@ -68,7 +68,7 @@
                 <p>شهادات معتمدة</p>
             </div>
         </div>
-        
+
         <div class="stat-card">
             <div class="stat-icon skill-icon">
                 <i class="fas fa-chart-line"></i>
@@ -96,11 +96,11 @@
             <tbody id="studentsTableBody">
                 @foreach ($students as $student)
                 <tr>
-                    <td>{{ $student->id }}</td> 
-                    <td>{{ $student->user1->username ?? 'غير محدد' }}</td>  
-                    <td>{{ $student->user1->email ?? 'غير محدد' }}</td>  
-                    <td>{{ $student->level }}</td>  
-                    <td>{{ $student->specialization }}</td>  
+                    <td>{{ $student->id }}</td>
+                    <td>{{ $student->user1->username ?? 'غير محدد' }}</td>
+                    <td>{{ $student->user1->email ?? 'غير محدد' }}</td>
+                    <td>{{ $student->level }}</td>
+                    <td>{{ $student->specialization }}</td>
                     <td>
                         @if($student->status == 'active')
                             <span class="badge bg-success">نشط</span>
@@ -135,7 +135,7 @@
         </table>
 
         {{ $students->links() }}
-        
+
         <div id="noResultsMessage" class="no-results" style="display: none;">
             <i class="fas fa-search"></i>
             <h3>لا توجد نتائج</h3>
@@ -163,22 +163,22 @@
         let searchTerm = this.value.toLowerCase();
         let tableRows = document.querySelectorAll('#studentsTable tbody tr');
         let hasResults = false;
-        
+
         tableRows.forEach(row => {
             let studentName = row.cells[1]?.textContent.toLowerCase() || '';
             let studentId = row.cells[0]?.textContent.toLowerCase() || '';
             let studentEmail = row.cells[2]?.textContent.toLowerCase() || '';
             let studentLevel = row.cells[3]?.textContent.toLowerCase() || '';
             let studentSpecialization = row.cells[4]?.textContent.toLowerCase() || '';
-            
-            if (studentName.includes(searchTerm) || 
-                studentId.includes(searchTerm) || 
+
+            if (studentName.includes(searchTerm) ||
+                studentId.includes(searchTerm) ||
                 studentEmail.includes(searchTerm) ||
                 studentLevel.includes(searchTerm) ||
                 studentSpecialization.includes(searchTerm)) {
                 row.style.display = '';
                 hasResults = true;
-                
+
                 // إضافة تأثير تمييز للنتيجة
                 row.style.backgroundColor = '#fff3cd';
                 setTimeout(() => {
@@ -188,7 +188,7 @@
                 row.style.display = 'none';
             }
         });
-        
+
         // إظهار/إخفاء رسالة عدم وجود نتائج
         let noResultsDiv = document.getElementById('noResultsMessage');
         if (!hasResults && searchTerm !== '') {
@@ -196,16 +196,16 @@
         } else {
             noResultsDiv.style.display = 'none';
         }
-        
+
         // تحديث إحصائيات البحث
         updateSearchStats(searchTerm);
     });
-    
+
     // دالة لتحديث إحصائيات البحث
     function updateSearchStats(searchTerm) {
         let visibleRows = document.querySelectorAll('#studentsTable tbody tr[style="display: "]').length;
         let totalRows = document.querySelectorAll('#studentsTable tbody tr').length;
-        
+
         // إضافة أو تحديث عداد النتائج
         let statsDiv = document.getElementById('searchStats');
         if (!statsDiv) {
@@ -214,7 +214,7 @@
             statsDiv.className = 'search-stats';
             document.querySelector('.table-container').insertBefore(statsDiv, document.getElementById('studentsTable'));
         }
-        
+
         if (searchTerm !== '') {
             statsDiv.innerHTML = `
                 <div class="search-results-info">
@@ -230,61 +230,61 @@
             statsDiv.style.display = 'none';
         }
     }
-    
+
     // دالة لمسح البحث
     function clearSearch() {
         document.getElementById('searchInput').value = '';
         document.getElementById('searchInput').dispatchEvent(new Event('keyup'));
         document.getElementById('searchStats').style.display = 'none';
     }
-    
+
     // دالة ترتيب الجدول
     function sortTable(columnIndex) {
         let table = document.getElementById('studentsTable');
         let tbody = table.getElementsByTagName('tbody')[0];
         let rows = Array.from(tbody.getElementsByTagName('tr'));
-        
+
         // تحديد اتجاه الترتيب
         let isAscending = table.querySelectorAll('th')[columnIndex].classList.contains('sort-asc');
-        
+
         // إعادة تعيين كل أعمدة الترتيب
         table.querySelectorAll('th').forEach(th => {
             th.classList.remove('sort-asc', 'sort-desc');
         });
-        
+
         // تعيين اتجاه الترتيب الجديد
         let currentTh = table.querySelectorAll('th')[columnIndex];
         currentTh.classList.add(isAscending ? 'sort-desc' : 'sort-asc');
-        
+
         // ترتيب الصفوف
         rows.sort((a, b) => {
             let aValue = a.cells[columnIndex]?.textContent.trim() || '';
             let bValue = b.cells[columnIndex]?.textContent.trim() || '';
-            
+
             // محاولة التحويل إلى رقم
             let aNum = parseFloat(aValue);
             let bNum = parseFloat(bValue);
-            
+
             if (!isNaN(aNum) && !isNaN(bNum)) {
                 return isAscending ? aNum - bNum : bNum - aNum;
             }
-            
+
             // مقارنة نصية
-            return isAscending ? 
-                aValue.localeCompare(bValue, 'ar') : 
+            return isAscending ?
+                aValue.localeCompare(bValue, 'ar') :
                 bValue.localeCompare(aValue, 'ar');
         });
-        
+
         // إعادة ترتيب الصفوف في الجدول
         rows.forEach(row => tbody.appendChild(row));
     }
-    
-  
-    
+
+
+
     // إضافة تأثيرات للبحث
     document.addEventListener('DOMContentLoaded', function() {
         let searchInput = document.getElementById('searchInput');
-        
+
         // إضافة أيقونة مسح البحث عند الكتابة
         searchInput.addEventListener('input', function() {
             let clearIcon = document.querySelector('.search-clear');

@@ -35,4 +35,15 @@ class Student extends Model
     {
         return $this->belongsToMany(Course::class, 'enrollments');
     }
+
+
+public function studentAnswers()
+{
+    return $this->hasMany(StudentAnswer::class, 'student_id');
+}
+
+public function quizResults()
+{
+    return $this->hasMany(QuizResult::class, 'student_id');
+}
 }
