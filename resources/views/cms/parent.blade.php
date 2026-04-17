@@ -62,6 +62,26 @@
                     <i class="fas fa-chalkboard-teacher"></i>
                     <span>المدربون</span>
                 </a>
+
+                <a href="{{ route('admins.index') }}" class="admin-menu-item">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span>المشرفون</span>
+                </a>
+            </div>
+
+
+            <div class="admin-menu-section">
+                <div class="menu-title">تحكم الطالب </div>
+                <a href="{{ route('student.dashboard') }}" class="admin-menu-item">
+                    <i class="fas fa-users"></i>
+                    <span>كورساتي</span>
+                </a>
+
+               
+                <a href="{{ route('student.my-certificates') }}" class="admin-menu-item">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span>شهاداتي</span>
+                </a>
             </div>
         </nav>
 
