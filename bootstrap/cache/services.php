@@ -33,7 +33,8 @@
     29 => 'Termwind\\Laravel\\TermwindServiceProvider',
     30 => 'OpenAI\\Laravel\\ServiceProvider',
     31 => 'Prism\\Prism\\PrismServiceProvider',
-    32 => 'App\\Providers\\AppServiceProvider',
+    32 => 'Spatie\\Permission\\PermissionServiceProvider',
+    33 => 'App\\Providers\\AppServiceProvider',
   ),
   'eager' => 
   array (
@@ -53,7 +54,8 @@
     13 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
     14 => 'Termwind\\Laravel\\TermwindServiceProvider',
     15 => 'Prism\\Prism\\PrismServiceProvider',
-    16 => 'App\\Providers\\AppServiceProvider',
+    16 => 'Spatie\\Permission\\PermissionServiceProvider',
+    17 => 'App\\Providers\\AppServiceProvider',
   ),
   'deferred' => 
   array (

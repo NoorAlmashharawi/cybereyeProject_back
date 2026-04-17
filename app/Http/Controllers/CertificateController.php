@@ -4,45 +4,65 @@ namespace App\Http\Controllers;
 
 use App\Models\Certificate;
 use Illuminate\Http\Request;
+use App\Models\Course;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
-class StudentDashboardController extends Controller
+class CertificateController extends Controller
 {
     /**
-     * عرض شهادات الطالب (جميع الشهادات)
+     * عرض الشهادة في المتصفح
      */
-    public function myCertificates()
+
+    public function show($id)
     {
-        $student = Auth::user()->student;
-        
-        if (!$student) {
-            return redirect()->route('login')->with('error', 'يجب تسجيل الدخول أولاً');
-        }
-        
-        // جلب جميع شهادات الطالب
-        $certificates = Certificate::where('student_id', $student->id)
-            ->with(['course', 'instructor'])
-            ->orderBy('issued_date', 'desc')
-            ->get();
-        
-        return view('cms.certificates.my-certificates', compact('certificates', 'student'));
-    }
-    
-    /**
-     * عرض شهادة واحدة محددة
-     */
-    public function showCertificate($id)
-    {
-        $student = Auth::user()->student;
-        
         $certificate = Certificate::with(['student', 'course', 'instructor'])
-            ->where('id', $id)
-            ->where('student_id', $student->id) // تأكد أن الشهادة تخص هذا الطالب
-            ->firstOrFail();
+            ->findOrFail($id);
         
         return view('cms.certificates.show', compact('certificate'));
     }
 
+    /**
+     * منح الشهادة فوراً (دون شروط)
+     */
+    public function requestNow(Request $request)
+    {
+        $student = Auth::user()->student;
+        
+        if (!$student) {
+            return response()->json([
+                'success' => false,
+                'message' => 'يجب أن تكون مسجلاً كطالب أولاً'
+            ], 403);
+        }
 
-    
+        $courseId = $request->course_id;
+        $course = Course::find($courseId);
+
+        if (!$course) {
+            return response()->json([
+                'success' => false,
+                'message' => 'الكورس غير موجود'
+            ], 404);
+        }
+
+        // منح الشهادة (أو إرجاع الموجودة)
+        $certificate = Certificate::firstOrCreate(
+            [
+                'student_id' => $student->id,
+                'course_id' => $courseId,
+            ],
+            [
+                'instructor_id' => $course->instructor_id ?? 1,
+                'certificate_number' => 'CERT-' . strtoupper(Str::random(10)) . '-' . $student->id,
+                'issued_date' => now(),
+            ]
+        );
+
+        return response()->json([
+            'success' => true,
+            'certificate_id' => $certificate->id,
+            'certificate_url' => route('certificate.show', $certificate->id),
+        ]);
+    }
 }
