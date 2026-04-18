@@ -32,13 +32,6 @@ class Course extends Model
         return $this->belongsTo(Instructor::class, 'instructor_id');
     }
 
-    // علاقة الطلاب (التي أضفتيها أنتِ)
-    public function students()
-    {
-        return $this->belongsToMany(Student::class, 'enrollments');
-    }
-
-    // علاقات إضافية (من كود براء)
     public function lessons()
     {
         return $this->hasMany(Lesson::class);
@@ -57,5 +50,15 @@ class Course extends Model
     public function enrollments()
     {
         return $this->hasMany(Enrollment::class);
+    }
+
+    public function students()
+    {
+        return $this->belongsToMany(Student::class, 'enrollments');
+    }
+
+    public function comments()
+    {
+    return $this->hasManyThrough(Comment::class, Lesson::class);
     }
 }

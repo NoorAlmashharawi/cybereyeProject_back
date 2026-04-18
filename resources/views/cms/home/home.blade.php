@@ -11,7 +11,7 @@
         background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
         text-align: center;
     }
-    
+
     .con h1 {
         font-size: 2.5rem;
         color: #1a237e;
@@ -19,7 +19,7 @@
         position: relative;
         display: inline-block;
     }
-    
+
     .con h1::after {
         content: '';
         position: absolute;
@@ -31,7 +31,7 @@
         background: linear-gradient(90deg, #1a237e, #4caf50);
         border-radius: 2px;
     }
-    
+
     .slideshow-container {
         position: relative;
         max-width: 800px;
@@ -40,23 +40,23 @@
         border-radius: 20px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
-    
+
     .mySlides {
         display: none;
         animation: fade 1.5s ease;
     }
-    
+
     .mySlides img {
         width: 100%;
         height: 400px;
         object-fit: cover;
     }
-    
+
     @keyframes fade {
         from {opacity: 0.4}
         to {opacity: 1}
     }
-    
+
     .dot {
         display: inline-block;
         width: 12px;
@@ -67,18 +67,18 @@
         cursor: pointer;
         transition: all 0.3s ease;
     }
-    
+
     .dot:hover {
         background-color: #1a237e;
         transform: scale(1.2);
     }
-    
+
     .dot.active {
         background-color: #4caf50;
         width: 30px;
         border-radius: 6px;
     }
-    
+
     .term-caption {
         position: absolute;
         bottom: 0;
@@ -89,27 +89,27 @@
         padding: 20px;
         text-align: center;
     }
-    
+
     .term-caption h3 {
         margin: 0;
         font-size: 1.5rem;
     }
-    
+
     .term-caption p {
         margin: 5px 0 0;
         font-size: 0.9rem;
         opacity: 0.8;
     }
-    
+
     @media (max-width: 768px) {
         .con h1 {
             font-size: 2rem;
         }
-        
+
         .mySlides img {
             height: 250px;
         }
-        
+
         .term-caption h3 {
             font-size: 1rem;
         }
@@ -126,19 +126,19 @@
                 <h1>Cyber <br> <span>Security</span></h1>
                 <p>Welcome to CyberEye, your ultimate guide to cybersecurity education. Learn everything from basics to advanced security techniques. Join thousands of students who have transformed their careers with our comprehensive courses and resources.</p>
             </div>
-            
+
             <div class="main-image">
                 <img src="{{ asset('cms/img/cyber.jpg') }}" alt="Cybersecurity">
             </div>
         </div>
-        
+
         <div class="social-icon">
             <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
             <a href="#"><i class="fa-brands fa-twitter"></i></a>
             <a href="#"><i class="fa-brands fa-instagram"></i></a>
             <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
         </div>
-        
+
         <div class="button">
             <a href="#">START NOW</a>
             <i class="fa-solid fa-chevron-right"></i>
@@ -146,27 +146,66 @@
     </div>
 </section>
 
-<!-- Cybersecurity Dictionary (من قاعدة البيانات) -->
-<div class="con" id="dictionary">
+ <!-- Cybersecurity Dictionary -->
+ <div class="con" id="dictionary">
     <h1>Cybersecurity Dictionary</h1>
-    
-    @if(isset($dictionaries) && $dictionaries->count() > 0)
-    <div class="slideshow-container">
-        @foreach ($dictionaries as $index => $item)
-            <div class="mySlides" style="{{ $index == 0 ? 'display: block;' : 'display: none;' }}">
-                @if ($item->img)
-                    <img src="{{ asset($item->img) }}" alt="{{ $item->term }}">
-                @else
-                    <img src="{{ asset('cyber/default.jpg') }}" alt="Default">
-                @endif
-                <div class="term-caption">
-                    <h3>{{ $item->term }}</h3>
-                    <p>{{ $item->definition }}</p>
-                </div>
-            </div>
-        @endforeach
+    <div class="containar">
+        <div class="mySlides">
+            <img src="../cyber/backdoor.jpg" alt="Backdoor">
+        </div>
+        <div class="mySlides">
+            <img src="../cyber/botnet.png" alt="Botnet">
+        </div>
+        <div class="mySlides">
+            <img src="../cyber/fa.jpg" alt="Firewall">
+        </div>
+        <div class="mySlides">
+            <img src="../cyber/firewall.png" alt="Firewall">
+        </div>
+        <div class="mySlides">
+            <img src="../cyber/hardening.png" alt="Hardening">
+        </div>
+        <div class="mySlides">
+            <img src="../cyber/malware.jpg" alt="Malware">
+        </div>
+        <div class="mySlides">
+            <img src="{{ asset('cms/cyber/pishing.jpg') }}" alt="Phishing">
+        </div>
+        <div class="mySlides">
+            <img src="{{ asset('cms/cyber/ransomware.jpg') }}" alt="Ransomware">
+        </div>
+        <div class="mySlides">
+            <img src="{{ asset('cms/cyber/social.jpg') }}" alt="Social Engineering">
+        </div>
+        <div class="mySlides">
+            <img src="{{ asset('cms/cyber/spyware.png') }}" alt="Spyware">
+        </div>
+        <div class="mySlides">
+            <img src="{{ asset('cms/cyber/vpn.jpg') }}" alt="VPN">
+        </div>
+        <div class="mySlides">
+            <img src="{{ asset('cms/cyber/trojan.jpg') }}" alt="Trojan">
+        </div>
+        <div class="mySlides">
+            <img src="{{ asset('cms/cyber/brute.png') }}" alt="Brute Force">
+        </div>
     </div>
-@endif
+
+    <div style="text-align: center; margin-top: 10px;">
+        <span class="dot" onclick="enter(0)"></span>
+        <span class="dot" onclick="enter(1)"></span>
+        <span class="dot" onclick="enter(2)"></span>
+        <span class="dot" onclick="enter(3)"></span>
+        <span class="dot" onclick="enter(4)"></span>
+        <span class="dot" onclick="enter(5)"></span>
+        <span class="dot" onclick="enter(6)"></span>
+        <span class="dot" onclick="enter(7)"></span>
+        <span class="dot" onclick="enter(8)"></span>
+        <span class="dot" onclick="enter(9)"></span>
+        <span class="dot" onclick="enter(10)"></span>
+        <span class="dot" onclick="enter(11)"></span>
+        <span class="dot" onclick="enter(12)"></span>
+    </div>
 </div>
 
     <!-- Cybersecurity Roadmap -->
@@ -182,7 +221,7 @@
                 <a href="../html/courses.html#linux" class="btn">Linux</a>
             </div>
         </div>
-        
+
         <div class="step">
             <div class="step-content">
                 <h2>Networking</h2>
@@ -192,7 +231,7 @@
                 <a href="../html/courses.html#network" class="btn">Networking</a>
             </div>
         </div>
-        
+
         <div class="step">
             <div class="step-content">
                 <h2>Programming</h2>
@@ -202,7 +241,7 @@
                 <a href="../html/courses.html#java" class="btn">Java</a>
             </div>
         </div>
-        
+
         <div class="step">
             <div class="step-content">
                 <h2>Security Fundamentals</h2>
@@ -212,7 +251,7 @@
                 <a href="../html/courses.html#security" class="btn">Security</a>
             </div>
         </div>
-        
+
         <div class="step">
             <div class="step-content">
                 <h2>Ethical Hacking</h2>
@@ -222,7 +261,7 @@
                 <a href="../html/courses.html#ethical" class="btn">Ethical Hacking</a>
             </div>
         </div>
-        
+
         <div class="step">
             <div class="step-content">
                 <h2>Penetration Testing</h2>
@@ -232,7 +271,7 @@
                 <a href="../html/courses.html#penetration" class="btn">Penetration Testing</a>
             </div>
         </div>
-        
+
         <div class="step">
             <div class="step-content">
                 <h2>Web Security</h2>
@@ -242,7 +281,7 @@
                 <a href="../html/courses.html#websec" class="btn">Web Security</a>
             </div>
         </div>
-        
+
         <div class="step">
             <div class="step-content">
                 <h2>Choose a Path</h2>
@@ -264,28 +303,28 @@
                 <p>منصة عربية لتعلم البرمجة والتصميم والمجالات التقنية مجاناً.</p>
                 <a href="https://academy.zer0s.com/" target="_blank">Visit</a>
             </div>
-            
+
             <div class="card">
                 <img src="{{ asset('cms/img/cisco.jpg') }}" alt="Cisco">
                 <h3>Cisco Networking Academy</h3>
                 <p>منصة عالمية لتعلم الشبكات والأمن السيبراني والشهادات المعتمدة.</p>
                 <a href="https://www.netacad.com/" target="_blank">Visit</a>
             </div>
-            
+
             <div class="card">
                 <img src="{{ asset('cms/img/udemy.png') }}" alt="Udemy">
                 <h3>Udemy</h3>
                 <p>أكبر منصة تعليمية عالميًا بها آلاف الدورات في كل المجالات.</p>
                 <a href="https://www.udemy.com/" target="_blank">Visit</a>
             </div>
-            
+
             <div class="card">
                 <img src="{{ asset('cms/img/coursera.png') }}" alt="Coursera">
                 <h3>Coursera</h3>
                 <p>منصة تعليمية عالمية بشهادات جامعية ودورات من أفضل الجامعات.</p>
                 <a href="https://www.coursera.org/" target="_blank">Visit</a>
             </div>
-            
+
             <div class="card">
                 <img src="{{ asset('cms/img/khan.png') }}" alt="Khan Academy">
                 <h3>Khan Academy</h3>
@@ -307,12 +346,12 @@
                 <img src="{{ asset('cms/img/image.jpg') }}" onclick="functio(this)" alt="Thumbnail 3">
                 <img src="{{ asset('cms/img/image.jpg') }}" onclick="functio(this)" alt="Thumbnail 4">
             </div>
-            
+
             <div class="image-contaner">
                 <img src="{{ asset('cms/img/NetSec.jpg') }}" id="imagbox" alt="Main Image">
             </div>
         </div>
-        
+
         <div class="about-text">
             <p>CyberEye is a comprehensive cybersecurity learning platform designed to help individuals and professionals enhance their security skills. Our mission is to make cybersecurity education accessible to everyone through structured courses, practical exercises, and real-world scenarios.</p>
             <p>We offer a wide range of courses covering fundamental to advanced topics in cybersecurity. Our experienced instructors and up-to-date curriculum ensure that you gain the skills needed in today's digital world.</p>
@@ -325,77 +364,34 @@
 <div class="review" id="Review">
     <h1>Student's <span>Review</span></h1>
     <div class="review-box">
-        <div class="review-card">
-            <div class="card-top">
-                <div class="profile">
-                    <div class="profile-image">
-                        <img src="{{asset('cms/img/student1.jpg')  }}" alt="Student">
-                    </div>
-                    <div class="name">
-                        <strong>Bara'a</strong>
-                        <div class="like">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star-half-stroke"></i>
+        @forelse($latestReviews as $review)
+            <div class="review-card">
+                <div class="card-top">
+                    <div class="profile">
+                        <div class="profile-image">
+                            {{-- عرض صورة الطالب أو افتراضية --}}
+                            <img src="{{ $review->user->profile_image ? asset('storage/' . $review->user->profile_image) : asset('cms/img/student1.jpg') }}" alt="Student">
+                        </div>
+                        <div class="name">
+                            <strong>{{ $review->user->username }}</strong>
+                            <p style="font-size: 0.7rem; color: #666; margin: 0;">Course: {{ $review->course->course_name }}</p>
+                            <div class="like">
+                                {{-- توليد النجوم بناءً على التقييم --}}
+                                @for($i = 1; $i <= 5; $i++)
+                                    <i class="{{ $i <= $review->rating ? 'fa-solid' : 'fa-regular' }} fa-star"></i>
+                                @endfor
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="comment">
-                <p>"CyberEye transformed my career! The courses are well-structured and the instructors are experts in their field. Highly recommended!"</p>
-            </div>
-        </div>
-        
-        <div class="review-card">
-            <div class="card-top">
-                <div class="profile">
-                    <div class="profile-image">
-                        <img src="{{ asset('cms/img/student2.jpg') }}" alt="Student">
-                    </div>
-                    <div class="name">
-                        <strong>Noor</strong>
-                        <div class="like">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-regular fa-star"></i>
-                        </div>
-                    </div>
+
+                <div class="comment">
+                    <p>"{{ Str::limit($review->comment, 150) }}"</p>
                 </div>
             </div>
-            
-            <div class="comment">
-                <p>"Great platform for beginners. The roadmap helped me understand what to learn next. The community is very supportive."</p>
-            </div>
-        </div>
-        
-        <div class="review-card">
-            <div class="card-top">
-                <div class="profile">
-                    <div class="profile-image">
-                        <img src="{{ asset('cms/img/student3.jpg') }}" alt="Student">
-                    </div>
-                    <div class="name">
-                        <strong>Bassmah</strong>
-                        <div class="like">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star-half-stroke"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="comment">
-                <p>"The practical exercises are amazing! I learned more here than in my university courses. The certificates helped me get a job."</p>
-            </div>
-        </div>
+        @empty
+            <p>No reviews available yet.</p>
+        @endforelse
     </div>
 </div>
 
@@ -409,38 +405,38 @@
     let slides;
     let dots;
     let slideInterval;
-    
+
     function initSlideshow() {
         slides = document.getElementsByClassName("mySlides");
         dots = document.getElementsByClassName("dot");
-        
+
         if (slides.length > 0) {
             showSlides(slideIndex);
             startAutoSlide();
         }
     }
-    
+
     function showSlides(n) {
         if (!slides || slides.length === 0) return;
-        
+
         if (n >= slides.length) { slideIndex = 0 }
         if (n < 0) { slideIndex = slides.length - 1 }
-        
+
         for (let i = 0; i < slides.length; i++) {
             slides[i].style.display = "none";
             if (dots[i]) dots[i].classList.remove('active');
         }
-        
+
         slides[slideIndex].style.display = "block";
         if (dots[slideIndex]) dots[slideIndex].classList.add('active');
     }
-    
+
     function currentSlide(n) {
         slideIndex = n;
         showSlides(slideIndex);
         resetAutoSlide();
     }
-    
+
     function startAutoSlide() {
         if (slideInterval) clearInterval(slideInterval);
         slideInterval = setInterval(function() {
@@ -449,23 +445,23 @@
             showSlides(slideIndex);
         }, 4000);
     }
-    
+
     function resetAutoSlide() {
         if (slideInterval) clearInterval(slideInterval);
         startAutoSlide();
     }
-    
-    // تهيئة السلايدر عند تحميل الصفحة
+
+
     document.addEventListener('DOMContentLoaded', function() {
         initSlideshow();
     });
-    
-    // دالة تغيير الصورة في قسم About
+
+
     function changeImage(element) {
         document.getElementById('imagbox').src = element.src;
     }
 
 
-    
+
 </script>
 @endsection

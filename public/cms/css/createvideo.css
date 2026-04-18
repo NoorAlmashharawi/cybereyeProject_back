@@ -1,0 +1,136 @@
+body {
+    background: #f4f7f6;
+    direction: rtl;
+}
+
+/* حل مشكلة الإزاحة عن السايدبار الأسود */
+.content-wrapper {
+    margin-right: 500px; /* العرض التقريبي للداشبورد */
+    padding: 40px 20px;
+    transition: all 0.3s ease;
+}
+
+/* حاوية النموذج */
+.form-container {
+    max-width: 850px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 25px;
+    padding: 40px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+}
+
+/* العناوين */
+.form-title {
+    font-weight: 800;
+    color: #1a1a2e;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.form-subtitle {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #6f42c1;
+    margin: 25px 0 15px 0;
+}
+
+/* صفوف الحقول */
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.form-group {
+    flex: 1;
+    margin-bottom: 20px;
+}
+
+/* الحقول النصية */
+.form-control {
+    width: 100%;
+    border-radius: 12px;
+    border: 1.5px solid #e0e0e0;
+    padding: 12px 15px;
+    background: #fdfdfd;
+    transition: 0.3s all;
+}
+
+.form-control:focus {
+    border-color: #6f42c1;
+    background: #fff;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(111,66,193,0.1);
+}
+
+/* صندوق الرفع الاحترافي */
+.upload-box {
+    border: 2px dashed #6f42c1;
+    background: #f9f8ff;
+    border-radius: 20px;
+    padding: 50px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.upload-box:hover {
+    background: #f1ecff;
+    border-color: #5a35a0;
+    transform: translateY(-2px);
+}
+
+.upload-box i {
+    font-size: 50px;
+    color: #6f42c1;
+    margin-bottom: 15px;
+}
+
+/* الأزرار */
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn {
+    border-radius: 12px;
+    padding: 12px 25px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #6f42c1 0%, #a06ee1 100%);
+    border: none;
+    color: white;
+}
+
+.btn-primary:hover {
+    box-shadow: 0 5px 15px rgba(111,66,193,0.3);
+    transform: scale(1.02);
+}
+
+.btn-secondary {
+    background: #f0f0f0;
+    color: #666;
+    border: none;
+}
+
+/* التجاوب مع الجوال */
+@media(max-width: 992px) {
+    .content-wrapper {
+        margin-right: 0;
+    }
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+}

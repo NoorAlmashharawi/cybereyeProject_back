@@ -9,11 +9,11 @@ use App\Models\User1;
 use Illuminate\Database\Eloquent\softDeletes;
 
 
+
+
 class Instructor extends Model
 {
-    /** @use HasFactory<\Database\Factories\InstructorFactory> */
-    use HasFactory,softDeletes;
-
+    use HasFactory, SoftDeletes;
 
    protected $fillable = [
 
@@ -26,15 +26,14 @@ class Instructor extends Model
 
 
 
-  protected $casts = [
+
+    protected $casts = [
         'enrollment_date' => 'date',
     ];
 
     // ========== العلاقات ==========
-
     public function user1()
     {
         return $this->morphOne(User1::class, 'actor');
     }
-
 }

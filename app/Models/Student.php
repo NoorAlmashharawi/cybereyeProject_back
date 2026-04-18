@@ -4,18 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\softDeletes;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Student extends Model
 {
-    /** @use HasFactory<\Database\Factories\StudentFactory> */
-    use HasFactory,softDeletes;
-
+    use HasFactory, SoftDeletes;
 
     protected $table = 'students';
 
     protected $fillable = [
-
         'enrollment_date',
         'progress',
 
@@ -26,6 +23,7 @@ class Student extends Model
 
 
 
+        'user_id',
     ];
 
     protected $casts = [
@@ -43,8 +41,12 @@ class Student extends Model
     }
 
     public function courses()
-{
-    return $this->belongsToMany(Course::class, 'enrollments');
+    {
+        return $this->belongsToMany(Course::class, 'enrollments');
+    }
+
+    public function user() {
+    return $this->hasOne(User1::class, 'actor_id', 'id')->where('actor_type', Student::class);
 }
     // protected $fillable = [
     //     'username',

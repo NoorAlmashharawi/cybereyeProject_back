@@ -6,14 +6,15 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
-    /* الحاوية الأساسية */
+    /* الحاوية الأساسية - Deep Teal (جنزاري غامق) */
     .dashboard-wrapper {
         display: flex;
         gap: 25px;
         padding: 20px;
-        background: #f8f9fe;
+        background: #050a0f;
         min-height: 90vh;
         direction: rtl;
+        font-family: 'Cairo', sans-serif;
     }
 
     /* السايد بار الجانبي */
@@ -26,19 +27,19 @@
 
     /* صندوق رفع الصورة */
     .image-upload-wrapper {
-        background: white;
+        background: #0a1b1e;
         border-radius: 20px;
         padding: 15px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.4);
         cursor: pointer;
         transition: 0.3s;
-        border: 2px dashed #d1d9e6;
+        border: 1px solid #14353a;
         text-align: center;
     }
 
     .image-upload-wrapper:hover {
-        border-color: #5e72e4;
-        background: #f6f9fc;
+        border-color: #1abc9c;
+        background: #0d2529;
     }
 
     .upload-box {
@@ -54,14 +55,13 @@
 
     .upload-box i {
         font-size: 3rem;
-        color: #5e72e4;
+        color: #1abc9c;
         margin-bottom: 15px;
     }
 
     .upload-box p {
         font-size: 0.9rem;
-        color: #8898aa;
-        font-weight: 600;
+        color: #5c7c80;
         margin: 0;
     }
 
@@ -73,21 +73,22 @@
         top: 0;
         left: 0;
         display: none;
+        border-radius: 12px;
     }
 
-    /* القائمة تحت الصورة */
+    /* القائمة الجانبية */
     .side-menu-list {
-        background: white;
+        background: #0a1b1e;
         border-radius: 20px;
         padding: 15px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+        border: 1px solid #14353a;
     }
 
     .menu-item {
         display: flex;
         align-items: center;
         padding: 12px 15px;
-        color: #525f7f;
+        color: #7da0a5;
         text-decoration: none;
         border-radius: 12px;
         margin-bottom: 8px;
@@ -95,73 +96,104 @@
         font-weight: 600;
     }
 
-    .menu-item i { margin-left: 12px; color: #5e72e4; font-size: 1.1rem; }
+    .menu-item i { margin-left: 12px; color: #1abc9c; }
 
-    .menu-item:hover, .menu-item.active {
-        background: #5e72e4;
-        color: white;
+    .menu-item:hover {
+        padding-right: 25px;
+        background: rgba(26, 188, 156, 0.05);
+        color: #1abc9c;
     }
 
-    .menu-item:hover i, .menu-item.active i { color: white; }
+    .menu-item.active {
+        background: #14353a;
+        color: #1abc9c;
+        border-right: 4px solid #1abc9c;
+    }
 
     /* منطقة الفورم */
     .main-form-content {
         flex: 1;
-        background: white;
+        background: #0a1b1e;
         border-radius: 25px;
         padding: 40px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.04);
+        box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+        border: 1px solid #14353a;
     }
 
     .form-subtitle {
-        color: #32325d;
+        color: #ffffff;
         font-weight: 800;
         margin-bottom: 35px;
         display: flex;
         align-items: center;
         gap: 15px;
         font-size: 1.5rem;
-        border-right: 5px solid #5e72e4;
+        border-right: 5px solid #1abc9c;
         padding-right: 15px;
     }
 
     .form-row { display: flex; gap: 25px; margin-bottom: 25px; flex-wrap: wrap; }
     .form-group { flex: 1; min-width: 250px; display: flex; flex-direction: column; gap: 10px; }
 
-    label { font-weight: 700; color: #525f7f; font-size: 0.95rem; }
+    label {
+        font-weight: 700;
+        color: #7da0a5;
+        font-size: 0.95rem;
+    }
 
     input, select, textarea {
         border-radius: 12px !important;
         padding: 15px !important;
-        border: 1px solid #e9ecef !important;
-        background: #fcfcfc;
+        border: 1px solid #14353a !important;
+        background: #071214 !important;
+        color: #d1e2e4 !important;
         font-size: 0.95rem;
-        transition: 0.2s;
+        transition: 0.3s;
     }
 
     input:focus, select:focus {
-        border-color: #5e72e4 !important;
-        background: #fff;
-        box-shadow: 0 0 0 4px rgba(94, 114, 228, 0.1) !important;
+        border-color: #1abc9c !important;
+        box-shadow: 0 0 8px rgba(26, 188, 156, 0.2) !important;
+        outline: none;
     }
 
+    /* زر الحفظ التفاعلي */
     .btn-save {
-        background: #5e72e4;
-        color: white;
-        border: none;
+        background: linear-gradient(135deg, #14353a 0%, #0d2529 100%);
+        color: #1abc9c;
+        border: 1px solid #1abc9c;
         padding: 16px 50px;
         border-radius: 15px;
         font-weight: 800;
         cursor: pointer;
         font-size: 1.1rem;
-        transition: 0.3s;
-        box-shadow: 0 4px 15px rgba(94, 114, 228, 0.4);
+        transition: 0.3s ease;
         display: inline-flex;
         align-items: center;
         gap: 10px;
     }
 
-    .btn-save:hover { transform: translateY(-3px); box-shadow: 0 7px 20px rgba(94, 114, 228, 0.5); }
+    .btn-save:hover {
+        transform: translateY(-2px);
+        background: #1abc9c;
+        color: #0a1b1e;
+        box-shadow: 0 5px 20px rgba(26, 188, 156, 0.3);
+    }
+
+    .btn-save:active {
+        transform: scale(0.95);
+        background: #00d4ff !important;
+        color: white !important;
+        border-color: #00d4ff !important;
+        box-shadow: 0 0 40px #00d4ff, 0 0 70px rgba(0, 212, 255, 0.5);
+    }
+
+    option { background: #0a1b1e; color: #d1e2e4; }
+
+    /* تنسيق السكرول بار */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #050a0f; }
+    ::-webkit-scrollbar-thumb { background: #14353a; border-radius: 10px; }
 </style>
 @endsection
 
@@ -206,11 +238,11 @@
                 <div class="form-group">
                     <label for="category_id">التصنيف الدراسي *</label>
                     <select id="category_id">
-                        {{-- هنا شغل نور  --}}
-                        <option value="">-- اختر التصنيف --</option>
-                        @foreach($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                        @endforeach
+                    <option value="">-- اختر المسار التعليمي --</option>
+                    @foreach($categories as $category)
+                        {{-- هنا بنعرض الـ title تبع المسارات اللي أنتِ عملتيها --}}
+                        <option value="{{ $category->id }}">{{ $category->title }}</option>
+                    @endforeach
                     </select>
                 </div>
 

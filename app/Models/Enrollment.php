@@ -10,7 +10,7 @@ class Enrollment extends Model
     /** @use HasFactory<\Database\Factories\EnrollmentFactory> */
     use HasFactory;
 
-      protected $fillable = ['course_id', 'user_id', 'enrollment_date'];
+      protected $fillable = ['course_id', 'student_id', 'enrollment_date'];
 
     public function course()
     {

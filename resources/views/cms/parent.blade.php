@@ -42,11 +42,11 @@
                     <i class="fas fa-graduation-cap"></i>
                     <span>الكورسات</span>
                 </a>
-                <a href="#" class="admin-menu-item">
+                <a href="{{ route('categories.index') }}" class="admin-menu-item">
                     <i class="fas fa-tags"></i>
                     <span>التصنيفات</span>
                 </a>
-                <a href="#" class="admin-menu-item">
+                <a href="{{ route('materials.index') }}" class="admin-menu-item">
                     <i class="fas fa-file-download"></i>
                     <span>المواد التعليمية</span>
                 </a>
@@ -88,8 +88,6 @@
     <script src="{{ asset('cms/js/admin.js') }}"></script>
     <script src="{{ asset('cms/js/crud.js') }}"></script>
 
-    <script src="{{ asset('js/chart.umd.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     @yield('scripts')
 </body>
 

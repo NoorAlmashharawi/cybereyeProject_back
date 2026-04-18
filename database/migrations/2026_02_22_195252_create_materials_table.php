@@ -13,14 +13,13 @@ return new class extends Migration
     {
         Schema::create('materials', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
             $table->string('file_path');
             $table->string('file_type');
-            $table->string('title');
-            $table->string('description');
-            $table->string('downloads_count');
-
+            $table->text('description')->nullable();
+            $table->integer('downloads_count')->default(0);
+            $table->foreignId('course_id')->constrained()->onDelete('cascade');
             $table->timestamps();
-             $table->foreignId('course_id')->constrained()->onDelete('cascade');
         });
     }
 

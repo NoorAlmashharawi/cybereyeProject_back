@@ -22,6 +22,7 @@ return new class extends Migration
 
             $table->foreignId('user1_id')->constrained('user1s')->cascadeOnDelete();
 
+         $table->foreignId('user_id')->constrained('user1s')->onDelete('cascade');
             $table->timestamp('enrollment_date')->nullable();
             $table->softDeletes();
             $table->timestamps();

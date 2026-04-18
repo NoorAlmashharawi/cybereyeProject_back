@@ -57,7 +57,7 @@ class DictionaryController extends Controller
         if ($dictionary->img) {
             Storage::disk('public')->delete($dictionary->img);
         }
-        
+
         $dictionary->delete();
 
         return redirect()->route('home.home')->with('success', 'تم حذف الصورة بنجاح');
@@ -65,10 +65,19 @@ class DictionaryController extends Controller
 
     public function home()
     {
-        // جلب كل الصور من قاعدة البيانات
+        //  جلب كل الصور والتعريفات للقاموس (الموجودة أصلا)
         $dictionaries = Dictionary::all();
-        
-        // عرض الصفحة الرئيسية مع الصور
-        return view('cms.home.home', compact('dictionaries'));
+
+        //   آخر 3 تعليقات من أي كورس (
+        // استوردنا معها 'user' و 'course'  عرض الاسم واسم الكورس
+        $latestReviews = \App\Models\Review::with(['user', 'course'])
+                            ->latest()
+                            ->take(3)
+                            ->get();
+
+        //  نمرر المتغيرين (القاموس والتعليقات) إلى صفحة الهوم
+        return view('cms.home.home', compact('dictionaries', 'latestReviews'));
     }
+
+
 }
