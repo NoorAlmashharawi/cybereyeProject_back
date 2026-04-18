@@ -567,6 +567,12 @@
                     <button class="admin-btn admin-btn-add" onclick="openAddModal()">
                         <i class="fas fa-plus"></i> إضافة فيديو جديد
                     </button>
+
+
+                    <a class="admin-btn admin-btn-add" href="{{ route('materials.index') }}" class="manage-btn">
+                        <i class="fas fa-play-circle"></i>
+                        <span> الدروس</span>
+                    </a>
                 </div>
             </div>
             <div class="videos-list" id="videosList">
@@ -612,47 +618,6 @@
         <!-- منطقة الفيديو الرئيسية -->
         <main class="main-content">
             <a href="{{ url('/') }}" class="back-link"><i class="fas fa-arrow-right"></i> العودة للرئيسية</a>
-
-            <!-- عرض تقدم الطالب -->
-            @auth
-                @php
-                    $student = Auth::user()->student;
-                    $courseId = $courseId ?? ($videos->first()->course_id ?? 0);
-                    if ($student && $courseId) {
-                        $progress = $student->getCourseProgress($courseId);
-                        $hasCertificate = $student->hasCertificateForCourse($courseId);
-                    } else {
-                        $progress = ['total' => 0, 'completed' => 0, 'percentage' => 0, 'is_completed' => false];
-                        $hasCertificate = false;
-                    }
-                @endphp
-                
-                @if($progress['total'] > 0)
-                <div class="progress-container">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span><i class="fas fa-chart-line"></i> تقدمك في الكورس</span>
-                        <span>{{ $progress['completed'] }}/{{ $progress['total'] }} فيديو ({{ $progress['percentage'] }}%)</span>
-                    </div>
-                    <div class="progress-bar-wrapper">
-                        <div class="progress-bar-fill" style="width: {{ $progress['percentage'] }}%;"></div>
-                    </div>
-                    @if($progress['is_completed'] && !$hasCertificate)
-                        <div style="text-align: center; margin-top: 10px;">
-                            <div class="alert alert-success" style="background: rgba(0, 255, 204, 0.2); padding: 10px; border-radius: 8px;">
-                                🎉 <strong>مبروك!</strong> لقد أكملت جميع فيديوهات الكورس! سيتم إنشاء شهادتك تلقائياً عند إكمال آخر فيديو.
-                            </div>
-                        </div>
-                    @endif
-                    @if($hasCertificate)
-                        <div style="text-align: center; margin-top: 10px;">
-                            <a href="{{ route('certificate.show', $courseId) }}" class="certificate-btn">
-                                <i class="fas fa-certificate"></i> 🎓 عرض شهادتي
-                            </a>
-                        </div>
-                    @endif
-                </div>
-                @endif
-            @endauth
 
             <div class="welcome-section">
                 <div class="hero-header">
