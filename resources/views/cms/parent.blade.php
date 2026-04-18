@@ -35,11 +35,29 @@
                     <span>لوحة التحكم</span>
                 </a>
             </div>
-
             <div class="admin-menu-section">
                 <div class="menu-title">إدارة المحتوى</div>
+            
+                <a href="{{ route('roles.index') }}" class="admin-menu-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>الأدوار</span>
+                </a>
+                <a href="{{ route('roles.create') }}" class="admin-menu-item">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>إضافة دور جديد</span>
+                </a>
+            
+                <a href="{{ route('permissions.index') }}" class="admin-menu-item">
+                    <i class="fas fa-key"></i>
+                    <span>الصلاحيات</span>
+                </a>
+                <a href="{{ route('permissions.create') }}" class="admin-menu-item">
+                    <i class="fas fa-plus-square"></i>
+                    <span>إضافة صلاحية</span>
+                </a>
+            
                 <a href="{{ route('courses.index') }}" class="admin-menu-item">
-                    <i class="fas fa-graduation-cap"></i>
+                    <i class="fas fa-book-open"></i>
                     <span>الكورسات</span>
                 </a>
                 <a href="{{ route('categories.index') }}" class="admin-menu-item">
@@ -51,67 +69,63 @@
                     <span>المواد التعليمية</span>
                 </a>
             </div>
-
+            
             <div class="admin-menu-section">
                 <div class="menu-title">إدارة المستخدمين</div>
                 <a href="{{ route('students.index') }}" class="admin-menu-item">
-                    <i class="fas fa-users"></i>
+                    <i class="fas fa-user-graduate"></i>
                     <span>الطلاب</span>
                 </a>
                 <a href="{{ route('instructors.index') }}" class="admin-menu-item">
                     <i class="fas fa-chalkboard-teacher"></i>
                     <span>المدربون</span>
                 </a>
-
                 <a href="{{ route('admins.index') }}" class="admin-menu-item">
-                    <i class="fas fa-chalkboard-teacher"></i>
+                    <i class="fas fa-user-cog"></i>
                     <span>المشرفون</span>
                 </a>
             </div>
-
-
+            
             <div class="admin-menu-section">
-                <div class="menu-title">تحكم الطالب </div>
+                <div class="menu-title">تحكم الطالب</div>
                 <a href="{{ route('student.dashboard') }}" class="admin-menu-item">
-                    <i class="fas fa-users"></i>
+                    <i class="fas fa-book-reader"></i>
                     <span>كورساتي</span>
                 </a>
-
-
                 <a href="{{ route('student.my-certificates') }}" class="admin-menu-item">
-                    <i class="fas fa-chalkboard-teacher"></i>
+                    <i class="fas fa-certificate"></i>
                     <span>شهاداتي</span>
                 </a>
             </div>
-
+            
             <div class="admin-menu-section">
                 <div class="menu-title">تحكم المدرب</div>
-
-            <a href="{{ route('courses.create') }}" class="admin-menu-item">
-                <i class="fas fa-plus-circle"></i>
-                <span>إنشاء كورس جديد</span>
-            </a>
-
-            <a href="{{ route('categories.create') }}" class="admin-menu-item">
-                <i class="fas fa-folder-plus"></i>
-                <span>إضافة تصنيف</span>
-            </a>
-
-            <a href="{{ route('materials.create') }}" class="admin-menu-item">
-                <i class="fas fa-file-upload"></i>
-                <span>رفع مادة تعليمية</span>
-            </a>
-
-            <a href="{{ route('videos.index') }}" class="admin-menu-item">
-                <i class="fas fa-video"></i>
-                <span>إضافة فيديو</span>
-            </a>
-
-            <a href="{{ route('quizzs.create') }}" class="admin-menu-item">
-                <i class="fas fa-file-signature"></i>
-                <span>إنشاء كويز جديد</span>
-            </a>
-        </div>
+            
+                <a href="{{ route('courses.create') }}" class="admin-menu-item">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>إنشاء كورس جديد</span>
+                </a>
+            
+                <a href="{{ route('categories.create') }}" class="admin-menu-item">
+                    <i class="fas fa-folder-plus"></i>
+                    <span>إضافة تصنيف</span>
+                </a>
+            
+                <a href="{{ route('materials.create') }}" class="admin-menu-item">
+                    <i class="fas fa-file-upload"></i>
+                    <span>رفع مادة تعليمية</span>
+                </a>
+            
+                <a href="{{ route('videos.index') }}" class="admin-menu-item">
+                    <i class="fas fa-video"></i>
+                    <span>إدارة الفيديوهات</span>
+                </a>
+            
+                <a href="{{ route('quizzs.create') }}" class="admin-menu-item">
+                    <i class="fas fa-edit"></i>
+                    <span>إنشاء كويز جديد</span>
+                </a>
+            </div>
         </nav>
 
         <div class="admin-footer">

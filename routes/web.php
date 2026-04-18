@@ -17,6 +17,8 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuizzController;
 use App\Http\Controllers\StudentVideoController;
 use App\Http\Controllers\StudentDashboardController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PermissionController;
 
 use App\Http\Controllers\CertificateController;
 
@@ -112,6 +114,14 @@ Route::prefix('cms/admin')->group(function(){
 
     Route::post('/cms/student/video-completed', [StudentVideoController::class, 'markVideoCompleted'])
     ->name('student.video.completed');
+
+    Route::resource('roles' , RoleController::class);
+    Route::post('roles-update/{id}' , [RoleController::class , 'update'])->name('roles-update');
+
+    Route::resource('permissions' , PermissionController::class);
+    Route::post('permissions-update/{id}' , [PermissionController::class , 'update'])->name('permissions-update');
+
+    Route::resource('roles.permissions' , RolePermissionController::class);
 });
 
 // ==================== Routes للمدرسين ====================
