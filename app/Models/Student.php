@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Certificate;
+use App\Models\User1;
 
 class Student extends Model
 {
@@ -28,22 +29,30 @@ class Student extends Model
     ];
 
     // ========== العلاقات ==========
+
     public function user1()
     {
         return $this->morphOne(User1::class, 'actor');
     }
 
-   public function courses()
+    public function courses()
 {
     return $this->belongsToMany(Course::class, 'course_student', 'student_id', 'course_id')
         ->withPivot('enrolled_at')
         ->withTimestamps();
 }
 
-    
-    
-    public function user() {
-    return $this->hasOne(User1::class, 'actor_id', 'id')->where('actor_type', Student::class);
+
+
+public function studentAnswers()
+{
+    return $this->hasMany(StudentAnswer::class, 'student_id');
+}
+
+
+public function quizResults()
+{
+    return $this->hasMany(QuizResult::class, 'student_id');
 }
 
 
@@ -66,7 +75,7 @@ public function markVideoCompleted($videoId, $courseId)
             'completed_at' => now(),
         ]
     );
-    
+
     return $progress;
 }
 
@@ -77,7 +86,7 @@ public function getCourseProgress($courseId)
         ->where('course_id', $courseId)
         ->where('completed', true)
         ->count();
-    
+
     return [
         'total' => $totalVideos,
         'completed' => $completedVideos,

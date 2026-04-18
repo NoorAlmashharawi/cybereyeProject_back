@@ -11,6 +11,7 @@ class Course extends Model
 
     protected $fillable = [
         'course_name',
+<<<<<<< HEAD
         'short_description',
         'level',
         'no_hours',
@@ -30,9 +31,36 @@ class Course extends Model
 
     public function category()
     {
+=======
+        'category_id',
+        'instructor_id',
+        'short_description',
+        'level',
+        'no_hours',
+        'status',
+        'course_image',
+        'rating',
+        'student_id'
+    ];
+
+    // علاقة التصنيف
+    public function category() {
+>>>>>>> fb9c55c067aa10cfad48f088973bb8efdfefd44f
         return $this->belongsTo(Category::class);
     }
 
+    // علاقة المدرب (واحدة فقط تكفي)
+    public function instructor() {
+        return $this->belongsTo(Instructor::class, 'instructor_id');
+    }
+
+    // علاقة الطلاب (التي أضفتيها أنتِ)
+    public function students()
+    {
+        return $this->belongsToMany(Student::class, 'enrollments');
+    }
+
+    // علاقات إضافية (من كود براء)
     public function lessons()
     {
         return $this->hasMany(Lesson::class);
@@ -52,6 +80,7 @@ class Course extends Model
     {
         return $this->hasMany(Enrollment::class);
     }
+<<<<<<< HEAD
 
     public function students()
     {
@@ -67,4 +96,6 @@ class Course extends Model
     {
     return $this->hasManyThrough(Comment::class, Lesson::class);
     }
+=======
+>>>>>>> fb9c55c067aa10cfad48f088973bb8efdfefd44f
 }

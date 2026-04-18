@@ -4,43 +4,39 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+ 
 
-class StudentAnswer extends Model
+class QuizResult extends Model
 {
-    /** @use HasFactory<\Database\Factories\StudentAnswerFactory> */
+    /** @use HasFactory<\Database\Factories\QuizResultFactory> */
     use HasFactory;
 
 
-    protected $table = 'student_answers';
+    protected $table = 'quiz_results';
 
     protected $fillable = [
         'student_id',
         'quizz_id',
-        'question_id',
-        'answer',
-        'is_correct',
-        'points_earned',
+        'score',
+        'total_points',
         'submitted_at',
     ];
 
     protected $casts = [
-        'is_correct' => 'boolean',
         'submitted_at' => 'datetime',
     ];
 
-    // العلاقات
+    // العلاقة مع الطالب
     public function student()
     {
-        return $this->belongsTo(User::class, 'student_id');  
+        return $this->belongsTo(User::class, 'student_id'); // أو Student::class
     }
 
+    // العلاقة مع الكويز
     public function quizz()
     {
         return $this->belongsTo(Quizz::class);
     }
-
-    public function question()
-    {
-        return $this->belongsTo(Question::class);
-    }
 }
+
+
