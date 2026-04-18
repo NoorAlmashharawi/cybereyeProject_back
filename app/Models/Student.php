@@ -15,11 +15,21 @@ class Student extends Model
     protected $fillable = [
         'enrollment_date',
         'progress',
+<<<<<<< HEAD
+=======
+
+>>>>>>> fb9c55c067aa10cfad48f088973bb8efdfefd44f
         'level',
         'status',
         'specialization',
         'role',
+<<<<<<< HEAD
         'user_id',
+=======
+
+
+
+>>>>>>> fb9c55c067aa10cfad48f088973bb8efdfefd44f
     ];
 
     protected $casts = [
@@ -27,6 +37,13 @@ class Student extends Model
     ];
 
     // ========== العلاقات ==========
+<<<<<<< HEAD
+=======
+
+
+
+
+>>>>>>> fb9c55c067aa10cfad48f088973bb8efdfefd44f
     public function user1()
     {
         return $this->morphOne(User1::class, 'actor');
@@ -43,6 +60,22 @@ public function studentAnswers()
 {
     return $this->hasMany(StudentAnswer::class, 'student_id');
 }
+<<<<<<< HEAD
+=======
+    // protected $fillable = [
+    //     'username',
+    //     'email',
+    //     'role',
+    //     'password',
+
+    // ];
+
+    // public function students(){
+
+    // }
+
+
+>>>>>>> fb9c55c067aa10cfad48f088973bb8efdfefd44f
 
 public function quizResults()
 {
