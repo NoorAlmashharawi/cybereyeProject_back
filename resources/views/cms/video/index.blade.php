@@ -279,6 +279,41 @@
             color: #888;
         }
 
+        .progress-container {
+            background: rgba(0, 255, 204, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(0, 255, 204, 0.2);
+        }
+
+        .progress-bar-wrapper {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            height: 12px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, #00ffcc, #00cc88);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .certificate-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #d4af37, #b8960c);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
         .video-wrapper {
             background: #000;
             border-radius: 16px;
@@ -527,15 +562,21 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h2><i class="fas fa-list"></i> قائمة التشغيل</h2>
-                <p style="color: #888;">{{ $videos->count() }} فيديو</p>
+                <p style="color: #888;">{{ isset($videos) ? $videos->count() : 0 }} فيديو</p>
                 <div class="admin-actions-header">
                     <button class="admin-btn admin-btn-add" onclick="openAddModal()">
                         <i class="fas fa-plus"></i> إضافة فيديو جديد
                     </button>
+
+
+                    <a class="admin-btn admin-btn-add" href="{{ route('materials.index') }}" class="manage-btn">
+                        <i class="fas fa-play-circle"></i>
+                        <span> الدروس</span>
+                    </a>
                 </div>
             </div>
             <div class="videos-list" id="videosList">
-                @foreach ($videos as $video)
+                @forelse ($videos ?? [] as $video)
                     <div class="video-item" data-id="{{ $video->id }}" data-title="{{ $video->title }}"
                         data-description="{{ $video->description }}" data-url="{{ asset($video->url) }}"
                         data-duration="{{ $video->duration }}">
@@ -566,7 +607,11 @@
                             </button>
                         </div>
                     </div>
-                @endforeach
+                @empty
+                    <div class="video-item" style="justify-content: center; opacity: 0.7;">
+                        <p style="text-align: center;">لا توجد فيديوهات حالياً</p>
+                    </div>
+                @endforelse
             </div>
         </aside>
 
@@ -585,28 +630,21 @@
                         </div>
                         <div class="stats-cards">
                             <div class="stat-card">
-                                <div class="stat-number">{{ $videos->count() }}</div>
+                                <div class="stat-number">{{ isset($videos) ? $videos->count() : 0 }}</div>
                                 <div class="stat-label">فيديو</div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-number">{{ number_format($videos->sum('duration') / 60, 0) }}</div>
+                                <div class="stat-number">{{ isset($videos) ? number_format($videos->sum('duration') / 60, 0) : 0 }}</div>
                                 <div class="stat-label">دقيقة</div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+              
             </div>
 
-            @if ($videos->isEmpty())
-                <div class="empty-player">
-                    <i class="fas fa-video-slash"></i>
-                    <h3>لا توجد فيديوهات حالياً</h3>
-                    <p>أضف فيديو جديد لبدء المشاهدة</p>
-                    <button class="admin-btn admin-btn-add" style="margin-top: 20px;" onclick="openAddModal()">
-                        <i class="fas fa-plus"></i> أضف أول فيديو
-                    </button>
-                </div>
-            @else
+            @if(isset($videos) && $videos->isNotEmpty())
                 <div id="videoPlayerArea">
                     <div class="video-wrapper" id="videoWrapper">
                         <video id="mainVideo" controls>
@@ -624,14 +662,35 @@
                                 <i class="fas fa-edit"></i> تعديل هذا الفيديو
                             </button>
                             <button class="admin-btn admin-btn-add" onclick="openAddModal()">
-                                <i class="fas fa-plus"></i> إضافة فيديو جديد
+                                <i class="fas fa-plus"></i> إضافة فيديو 
                             </button>
+
+                            <a class="admin-btn admin-btn-add"  href="   {{ route('student.my-certificates') }}">
+                                <i class="fas fa-plus"></i> الحصور على شهادة
+                             
+                            </a>
                         </div>
                     </div>
                 </div>
+               
+            @else
+                <div class="empty-player">
+                    <i class="fas fa-video-slash"></i>
+                    <h3>لا توجد فيديوهات حالياً</h3>
+                    <p>أضف فيديو جديد لبدء المشاهدة</p>
+                    <button class="admin-btn admin-btn-add" style="margin-top: 20px;" onclick="openAddModal()">
+                        <i class="fas fa-plus"></i> أضف أول فيديو
+                    </button>
+                </div>
             @endif
+
+          
         </main>
+
+      
     </div>
+
+  
 
     <!-- مودال إضافة/تعديل فيديو -->
     <div id="videoModal" class="modal">
@@ -669,8 +728,9 @@
     </div>
 
     <script>
-        let currentVideoId = {{ $videos->first()->id ?? 0 }};
+        let currentVideoId = {{ isset($videos) && $videos->first() ? $videos->first()->id : 0 }};
         let isEditMode = false;
+        let videoCompletionRecorded = false;
 
         const video = document.getElementById('mainVideo');
         
@@ -687,6 +747,49 @@
                     localStorage.setItem(`video_time_${currentVideoId}`, video.currentTime);
                 }
             });
+
+            // تسجيل إكمال الفيديو عند الانتهاء
+            video.addEventListener('ended', function() {
+                if (!videoCompletionRecorded && currentVideoId) {
+                    markVideoCompleted(currentVideoId);
+                    videoCompletionRecorded = true;
+                }
+            });
+        }
+
+        // دالة تسجيل إكمال الفيديو
+        async function markVideoCompleted(videoId) {
+            try {
+                const response = await axios.post('/cms/student/video-completed', {
+                    video_id: videoId,
+                    course_id: {{ $courseId ?? ($videos->first()->course_id ?? 0) }}
+                });
+                
+                if (response.data.course_completed) {
+                    Swal.fire({
+                        title: '🎉 مبروك!',
+                        text: 'لقد أكملت جميع فيديوهات الكورس! يمكنك الآن الحصول على شهادتك',
+                        icon: 'success',
+                        confirmButtonText: 'عرض الشهادة'
+                    }).then(() => {
+                        window.location.href = response.data.certificate_url;
+                    });
+                } else if (response.data.success) {
+                    // تحديث شريط التقدم
+                    if (response.data.progress) {
+                        const progressFill = document.querySelector('.progress-bar-fill');
+                        if (progressFill) {
+                            progressFill.style.width = response.data.progress.percentage + '%';
+                        }
+                        const progressText = document.querySelector('.progress-container > div:first-child span:last-child');
+                        if (progressText) {
+                            progressText.innerText = response.data.progress.completed + '/' + response.data.progress.total + ' فيديو (' + response.data.progress.percentage + '%)';
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error marking video completed:', error);
+            }
         }
 
         function loadVideo(videoId, title, description, url, duration) {
@@ -701,6 +804,7 @@
             }
 
             currentVideoId = videoId;
+            videoCompletionRecorded = false;
 
             document.getElementById('videoTitle').innerText = title;
             document.getElementById('videoDescription').innerHTML = description || 'لا يوجد وصف';
@@ -854,6 +958,7 @@
                 closeModal();
             }
         }
+        
     </script>
 
 </body>

@@ -15,6 +15,12 @@ use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuizzController;
+use App\Http\Controllers\StudentVideoController;
+use App\Http\Controllers\StudentDashboardController;
+
+use App\Http\Controllers\CertificateController;
+
+
 
 // ====================  login ====================
 Route::prefix('cms')->group(function(){
@@ -22,6 +28,7 @@ Route::prefix('cms')->group(function(){
     Route::post('{guard}/login', [UserAuthController::class, 'login']);
     Route::get('logout', [UserAuthController::class, 'logout'])->name('view.logout');
 });
+
 
 
 Route::get('/login', function () {
@@ -80,7 +87,22 @@ Route::resource('users', User1Controller::class);
 
     Route::resource('students', StudentController::class);
     Route::resource('users', User1Controller::class);
+
+    Route::get('/my-certificates', [StudentDashboardController::class, 'myCertificates'])->name('student.my-certificates');
 });
+
+
+
+
+// Student Dashboard Routes
+Route::middleware(['auth:student'])->prefix('cms/student')->group(function () {
+    Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('student.dashboard');
+    Route::post('/enroll', [StudentDashboardController::class, 'enroll'])->name('student.enroll');
+    Route::get('/my-courses', [StudentDashboardController::class, 'myCourses'])->name('student.my-courses');
+    Route::get('/my-certificates', [StudentDashboardController::class, 'myCertificates'])->name('student.my-certificates');
+});
+
+
 
 // ==================== Routes admin ====================
 Route::prefix('cms/admin')->group(function(){
@@ -94,8 +116,11 @@ Route::prefix('cms/admin')->group(function(){
     Route::resource('categories', CategoryController::class);
 
     // Videos Routes
-    Route::get('videos/player', [VideoController::class, 'player'])->name('videos.player');
+    // Route::get('videos/player', [VideoController::class, 'player'])->name('videos.player');
     Route::resource('videos', VideoController::class);
+
+    Route::post('/cms/student/video-completed', [StudentVideoController::class, 'markVideoCompleted'])
+    ->name('student.video.completed');
 });
 
 // ==================== Routes للمدرسين ====================
@@ -131,7 +156,7 @@ Route::prefix('cms/course')->group(function(){
     Route::delete('comments/{comment}', [App\Http\Controllers\CommentController::class, 'destroy'])->name('comments.destroy');
     Route::post('reviews', [App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
     Route::post('/course/{id}/review', [App\Http\Controllers\CourseController::class, 'storeReview'])->name('course.review.store');
-    Route::resource('lessons', App\Http\Controllers\LessonController::class);
+    // Route::resource('lessons', App\Http\Controllers\LessonController::class);
 });
 
 
@@ -183,6 +208,7 @@ Route::post('/quiz/{quiz}/save-temp', [QuizzController::class, 'saveTemp'])->nam
 
     Route::resource('quizzs', QuizzController::class);
 
+
     Route::get('/quiz/{quiz}/review', [QuizzController::class, 'review'])->name('quiz.review');
     Route::get('/quiz/studentResult', [QuizzController::class, 'studentResults'])->name('quiz.studentResults');
 
@@ -191,4 +217,15 @@ Route::post('/quiz/{quiz}/save-temp', [QuizzController::class, 'saveTemp'])->nam
     Route::delete('/quizzs_force/{id}', [QuizzController::class, 'forceDelete'])->name('quizzs.force');
 });
 
-    });
+
+
+    Route::get('/quizzs/start', [QuizzController::class, 'create'])->name('quizzs.show');
+});
+
+
+
+Route::prefix('cms/certificate')->group(function(){
+    Route::get('/{id}', [CertificateController::class, 'show'])->name('certificate.show');
+    Route::get('/{id}/download', [CertificateController::class, 'download'])->name('certificate.download');
+});
+

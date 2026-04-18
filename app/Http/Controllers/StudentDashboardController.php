@@ -1,0 +1,125 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Course;
+use App\Models\Certificate;
+use App\Models\User1;
+use App\Models\Student;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class StudentDashboardController extends Controller
+{
+    public function index()
+    {
+        $user = Auth::user();
+        
+        $student = null;
+        if ($user->actor_type === 'App\Models\Student') {
+            $student = Student::find($user->actor_id);
+        }
+        
+        // إذا ما في طالب
+        if (!$student) {
+            return redirect('/cms/student/login')->with('error', 'لم يتم العثور على بيانات الطالب');
+        }
+        
+        // الكورسات المسجل فيها الطالب
+        $enrolledCourses = $student->courses()
+        ->with(['instructor.user1'])
+        ->get();
+        
+        // جميع الكورسات المتاحة
+        $allCourses = Course::with('instructor')->get();
+        
+        // عدد الشهادات
+        $certificatesCount = Certificate::where('student_id', $student->id)->count();
+        
+        // الشهادات
+        $certificates = Certificate::where('student_id', $student->id)
+            ->with('course', 'instructor')
+            ->latest()
+            ->get();
+        
+        // تقدم الطالب في كل كورس
+        $coursesProgress = [];
+        foreach ($enrolledCourses as $course) {
+            $progress = $this->getCourseProgress($student->id, $course->id);
+            $coursesProgress[$course->id] = $progress;
+        }
+        
+        return view('cms.studentDash.dashboard', compact(
+         
+            'student', 
+            'user', 
+            'enrolledCourses', 
+            'allCourses', 
+            'certificatesCount',
+            'certificates',
+            'coursesProgress'
+        ));
+    }
+
+
+    
+    private function getCourseProgress($studentId, $courseId)
+    {
+        $totalVideos = \App\Models\Video::where('course_id', $courseId)->count();
+        $completedVideos = \App\Models\StudentVideoProgress::where('student_id', $studentId)
+            ->where('course_id', $courseId)
+            ->where('completed', true)
+            ->count();
+        
+        return [
+            'total' => $totalVideos,
+            'completed' => $completedVideos,
+            'percentage' => $totalVideos > 0 ? round(($completedVideos / $totalVideos) * 100) : 0,
+            'is_completed' => $totalVideos > 0 && $completedVideos >= $totalVideos
+        ];
+    }
+    
+    public function enroll(Request $request)
+    {
+        $user = Auth::user();
+        
+        // الحصول على الطالب
+        if ($user->actor_type === 'App\Models\Student') {
+            $student = Student::find($user->actor_id);
+            $courseId = $request->course_id;
+            $student->courses()->attach($courseId);
+        }
+        
+        return redirect()->back()->with('success', 'تم التسجيل في الكورس بنجاح');
+    }
+    
+    public function myCourses()
+    {
+        $user = Auth::user();
+        
+        if ($user->actor_type === 'App\Models\Student') {
+            $student = Student::find($user->actor_id);
+            $courses = $student->courses()->with('instructor')->get();
+            return view('cms.studentDash.my-courses', compact('courses'));
+        }
+        
+        return redirect('/cms/studentDash/dashboard');
+    }
+    
+    public function myCertificates()
+    {
+        $user = Auth::user();
+        
+        if ($user->actor_type === 'App\Models\Student') {
+            $student = Student::find($user->actor_id);
+            $certificates = Certificate::where('student_id', $student->id)
+                ->with('course', 'instructor')
+                ->latest()
+                ->get();
+            
+            return view('cms.certificates.show', compact('certificates'));
+        }
+        
+        return redirect('/cms/studentDash/dashboard');
+    }
+}

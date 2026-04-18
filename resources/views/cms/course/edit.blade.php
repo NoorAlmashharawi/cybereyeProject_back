@@ -112,20 +112,22 @@
         <div class="management-menu">
             <h5 style="font-size: 0.9rem; color: #8898aa; margin-bottom: 15px; padding-right: 10px;">إدارة المحتوى</h5>
 
-            <a href="#" class="manage-btn">
+            <a href="{{ route('materials.create') }}" class="manage-btn">
                 <i class="fas fa-play-circle"></i>
                 <span>إدارة الدروس</span>
             </a>
 
-            <a href="#" class="manage-btn">
+            <a href="{{ route('quizzs.create') }}" class="manage-btn">
                 <i class="fas fa-question-circle"></i>
                 <span>إدارة الكويزات</span>
             </a>
 
-            <a href="#" class="manage-btn">
-                <i class="fas fa-certificate"></i>
-                <span>إعدادات الشهادة</span>
+            <a href="{{ route('videos.index') }}" class="manage-btn">
+                <i class="fas fa-question-circle"></i>
+                <span>إدارة الفيديوهات</span>
             </a>
+
+        
 
             <hr style="border-top: 1px solid #f0f2f9;">
 

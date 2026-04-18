@@ -35,12 +35,13 @@ class AdminController extends Controller
     public function main()
 {
     $newStudents = Student::with('user1')->latest()->limit(10)->get();
+    $courses = Course::all();
     $totalUsers = User1::count();
     $totalCourses = Course::count();
     $weeklyRegistrations = $this->getWeeklyRegistrations();
     $monthlyRegistrations = $this->getMonthlyRegistrations();
     
-    return view('cms.admin.main', compact('newStudents', 'totalUsers', 'totalCourses', 'weeklyRegistrations', 'monthlyRegistrations'));
+    return view('cms.admin.main', compact('newStudents', 'courses','totalUsers', 'totalCourses', 'weeklyRegistrations', 'monthlyRegistrations'));
 }
 
 
