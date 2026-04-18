@@ -38,7 +38,7 @@ class VideoController extends Controller
     public function create()
     {
         $lessons = Lesson::all();
-        return view('cms.Video.create', compact('lessons'));
+        return view('cms.video.create', compact('lessons'));
     }
 
     public function store(Request $request)
@@ -155,18 +155,18 @@ class VideoController extends Controller
             ->count();
 
         $courseCompleted = ($totalVideos > 0 && $totalVideos == $completedVideos);
-        
+
         // التحقق مما إذا كان هذا هو آخر فيديو
         $isLastVideo = ($completedVideos >= $totalVideos - 1);
-        
+
         $hasCertificate = Certificate::where('student_id', $student->id)
             ->where('course_id', $courseId)
             ->exists();
 
         $percentage = $totalVideos > 0 ? round(($completedVideos / $totalVideos) * 100) : 0;
-        
+
         $certificateUrl = null;
-        
+
         if ($courseCompleted && !$hasCertificate) {
             $certificate = Certificate::create([
                 'student_id' => $student->id,

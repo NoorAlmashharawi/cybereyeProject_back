@@ -115,9 +115,7 @@ Route::prefix('cms/admin')->group(function(){
     Route::get('categories_force/{id}', [CategoryController::class, 'forceDelete'])->name('categories.force');
     Route::resource('categories', CategoryController::class);
 
-    // Videos Routes
-    // Route::get('videos/player', [VideoController::class, 'player'])->name('videos.player');
-    Route::resource('videos', VideoController::class);
+
 
     Route::post('/cms/student/video-completed', [StudentVideoController::class, 'markVideoCompleted'])
     ->name('student.video.completed');
@@ -228,4 +226,4 @@ Route::prefix('cms/certificate')->group(function(){
     Route::get('/{id}', [CertificateController::class, 'show'])->name('certificate.show');
     Route::get('/{id}/download', [CertificateController::class, 'download'])->name('certificate.download');
 });
-
+ 
