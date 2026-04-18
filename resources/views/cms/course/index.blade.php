@@ -121,7 +121,7 @@
             </div>
         </div>
     </div>
-<h1>العدد هو: {{ $activeCourses }}</h1>
+
     <div class="table-card mt-4">
         <div class="table-responsive">
             <table class="admin-table">

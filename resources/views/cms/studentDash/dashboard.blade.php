@@ -373,10 +373,10 @@
 <body>
 
     <div class="dashboard-container">
-      
+
 
         <main class="main-content">
-        
+
 
             <!-- Stats Cards -->
             <div class="stats-grid">
@@ -425,7 +425,7 @@
                             <div class="course-header">
                                 <h3>{{ $course->course_name }}</h3>
                                 <p class="course-instructor">
-                                    <i class="fas fa-chalkboard-user"></i> {{ $course->instructor->user1->username ?? 'name' }} 
+                                    <i class="fas fa-chalkboard-user"></i> {{ $course->instructor->user1->username ?? 'name' }}
                                 </p>
                             </div>
                             <div class="course-body">
@@ -458,7 +458,7 @@
 
 
 
-            
+
 
             <!-- All Courses Section -->
             <div class="section-title">
@@ -475,7 +475,7 @@
                         <div class="course-header">
                             <h3>{{ $course->course_name }}</h3>
                             <p class="course-instructor">
-                                <i class="fas fa-chalkboard-user"></i> {{ $course->instructor->user1->username ?? 'name' }} 
+                                <i class="fas fa-chalkboard-user"></i> {{ $course->instructor->user1->username ?? 'name' }}
                             </p>
                         </div>
                         <div class="course-body">

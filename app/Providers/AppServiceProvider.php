@@ -15,5 +15,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(191);
+        // السطر هاد هو اللي بيربط الموديل بالأوبسيرفر
+    \App\Models\User1::observe(\App\Observers\UserObserver::class);
     }
 }

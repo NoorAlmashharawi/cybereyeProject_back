@@ -16,7 +16,7 @@
 
 @section('content')
 
- 
+
 
 
     <!-- المحتوى الرئيسي -->
@@ -28,14 +28,30 @@
                 <p>مرحباً بعودتك، يمكنك إدارة جميع جوانب المنصة من هنا</p>
             </div>
 
+<div class="admin-notifications dropdown">
+    <button class="notification-btn dropdown-toggle" id="notificationButton" data-toggle="dropdown">
+        <i class="far fa-bell"></i>
+        @if(auth()->check() && auth()->user()->unreadNotifications->count() > 0)
+            <span class="notification-badge">{{ auth()->user()->unreadNotifications->count() }}</span>
+        @endif
+    </button>
 
-                <div class="admin-notifications">
-                    <button class="notification-btn" id="notificationButton" onclick="goToNotificatios()">
-                        <i class="far fa-bell"></i>
-                        <span class="notification-badge">3</span>
-                    </button>
-                </div>
+    <div class="dropdown-menu dropdown-menu-right">
+        <span class="dropdown-header">الإشعارات الجديدة</span>
+        <div class="dropdown-divider"></div>
 
+        @if(auth()->check())
+            @forelse(auth()->user()->unreadNotifications as $notification)
+                <a href="#" class="dropdown-item">
+                    <i class="fas fa-user-plus mr-2"></i> {{ $notification->data['message'] }}
+                    <span class="float-right text-muted text-sm">{{ $notification->created_at->diffForHumans() }}</span>
+                </a>
+            @empty
+                <a href="#" class="dropdown-item text-center">لا توجد إشعارات جديدة</a>
+            @endforelse
+        @endif
+    </div>
+</div>
   <div>
     <a href="{{ route('view.logout') }}">
     <i class="nav-icon fas fa-sign-out-alt"></i>
@@ -67,24 +83,30 @@
                     <div class="stat-icon courses">
                         <i class="fas fa-graduation-cap"></i>
                     </div>
-                    <div class="stat-info">
-                        <h2>47</h2>
-                        <p>الكورسات النشطة</p>
-                        <div class="stat-trend trend-up">
-                            <i class="fas fa-arrow-up"></i>
-                            <span>5 كورسات جديدة</span>
-                        </div>
+              <div class="col-md-3">
+        <div class="stat-card active-courses">
+            <div class="stat-content">
+                <div class="stat-icon"><i class="fas fa-graduation-cap"></i></div>
+                <div class="stat-info">
+                    <h2>{{ $activeCourses }}</h2>
+                    <p>الكورسات النشطة</p>
+                    <div class="stat-trend trend-up">
+                        <small>{{ $activeCourses }} متاح حالياً</small>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
                 </div>
             </div>
 
 
-          
+
         </div>
 
         <!-- المخططات والرسوم البيانية -->
         <div class="charts-section">
-         
+
             <!-- مخطط التسجيلات -->
             <div class="chart-card">
                 <div class="chart-header">
@@ -119,11 +141,11 @@
                     <tbody id="studentsTableBody">
                         @foreach ($newStudents as $student)
                         <tr>
-                            <td>{{ $student->id }}</td> 
-                            <td>{{ $student->user1->username ?? 'غير محدد' }}</td>  
-                            <td>{{ $student->user1->email ?? 'غير محدد' }}</td>  
-                            <td>{{ $student->level }}</td>  
-                            <td>{{ $student->specialization }}</td>  
+                            <td>{{ $student->id }}</td>
+                            <td>{{ $student->user1->username ?? 'غير محدد' }}</td>
+                            <td>{{ $student->user1->email ?? 'غير محدد' }}</td>
+                            <td>{{ $student->level }}</td>
+                            <td>{{ $student->specialization }}</td>
                             <td>
                                 @if($student->status == 'active')
                                     <span class="badge bg-success">نشط</span>
@@ -156,15 +178,16 @@
                         @endforeach
                     </tbody>
                 </table>
-        
+
                 {{-- {{ $newStudents->links() }} --}}
-                
+
                 <div id="noResultsMessage" class="no-results" style="display: none;">
                     <i class="fas fa-search"></i>
                     <h3>لا توجد نتائج</h3>
                     <p>لم يتم العثور على طلاب ينطبقون على معايير البحث الخاصة بك</p>
                 </div>
             </div>
+<<<<<<< Updated upstream
             <!-- جدول الكورسات الأكثر شعبية -->
             <div class="table-card">
                 <div class="table-header">
@@ -247,6 +270,66 @@
 
 
     
+=======
+          <div class="table-card">
+    <div class="table-header">
+        <h3>أحدث الكورسات والمستوى</h3>
+        <div class="table-actions">
+            <button class="table-action-btn" title="تحديث" onclick="location.reload();">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>اسم الكورس</th>
+                    <th>المدرب</th>
+                    <th>المستوى</th>
+                    <th>الطلاب</th>
+                    <th>الحالة</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($latestCourses as $course)
+                <tr>
+                    <td><strong>{{ $course->course_name }}</strong></td>
+
+                    <td>{{ $course->instructor->user1->username ?? 'بدون مدرب' }}</td>
+
+                    <td>
+                        @if($course->level == 'beginner')
+                            <span class="badge bg-success">مبتدئ</span>
+                        @elseif($course->level == 'intermediate')
+                            <span class="badge bg-warning text-dark">متوسط</span>
+                        @elseif($course->level == 'advanced')
+                            <span class="badge bg-danger">متقدم</span>
+                        @else
+                            <span class="badge bg-info">{{ $course->level }}</span>
+                        @endif
+                    </td>
+
+                    <td>
+                        <span class="badge badge-info">{{ $course->students_count ?? 0 }} طالب</span>
+                    </td>
+
+                    <td>
+                        <span class="badge {{ $course->status == 'active' ? 'bg-success' : 'bg-danger' }}">
+                            {{ $course->status == 'active' ? 'نشط' : 'معطل' }}
+                        </span>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="5" class="text-center">لا يوجد كورسات حالياً</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
+>>>>>>> Stashed changes
         </div>
 
      
@@ -257,7 +340,7 @@
         <i class="fas fa-robot" style="font-size: 24px; color: #4361ee;"></i>
         <h3 style="margin: 0;">المساعد الذكي</h3>
     </div>
-    
+
     <div class="chat-container" style="height: 350px; overflow-y: auto; border: 1px solid #e9ecef; border-radius: 10px; padding: 15px; margin-bottom: 15px; background: #f8f9fa;" id="chatContainer">
         <div id="chatMessages">
             <!-- رسالة ترحيب -->
@@ -273,7 +356,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="chat-input" style="display: flex; gap: 10px;">
         <input type="text" id="chatInput" placeholder="اكتب سؤالك هنا..." style="flex: 1; padding: 14px 18px; border: 2px solid #e9ecef; border-radius: 30px; font-size: 0.95rem; outline: none;">
         <button onclick="sendMessage()" style="background: #4361ee; color: white; border: none; border-radius: 30px; padding: 0 30px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px;">
@@ -287,7 +370,7 @@
 
     </main>
 
-  
+
 @endsection
 
 @section('scripts')
@@ -301,16 +384,16 @@
     function sendMessage() {
         let input = document.getElementById('chatInput');
         let message = input.value.trim();
-        
+
         if (!message) return;
-        
+
         // إضافة رسالة المستخدم
         addMessage(message, 'user');
         input.value = '';
-        
+
         // إظهار مؤشر الكتابة
         showTypingIndicator();
-        
+
         // إرسال للـ API
         fetch('{{ route("ai.chat") }}', {
             method: 'POST',
@@ -334,12 +417,12 @@
             addMessage('عذراً، حدث خطأ في الاتصال', 'error');
         });
     }
-    
+
     function addMessage(text, type) {
         let chat = document.getElementById('chatMessages');
         let messageDiv = document.createElement('div');
         messageDiv.style.marginBottom = '15px';
-        
+
         let content = '';
         if (type === 'user') {
             content = `
@@ -375,12 +458,12 @@
                 </div>
             `;
         }
-        
+
         messageDiv.innerHTML = content;
         chat.appendChild(messageDiv);
         chat.scrollTop = chat.scrollHeight;
     }
-    
+
     function showTypingIndicator() {
         let chat = document.getElementById('chatMessages');
         let typingDiv = document.createElement('div');
@@ -399,12 +482,12 @@
         chat.appendChild(typingDiv);
         chat.scrollTop = chat.scrollHeight;
     }
-    
+
     function removeTypingIndicator() {
         let indicator = document.getElementById('typingIndicator');
         if (indicator) indicator.remove();
     }
-    
+
 
     // إرسال بالضغط على Enter
     document.getElementById('chatInput').addEventListener('keypress', function(e) {
@@ -424,26 +507,26 @@
     const weeklyStudents = @json($weeklyRegistrations['students']);
     const weeklyInstructors = @json($weeklyRegistrations['instructors']);
     const weeklyAdmins = @json($weeklyRegistrations['admins']);
-    
+
     const monthlyLabels = @json($monthlyRegistrations['labels']);
     const monthlyStudents = @json($monthlyRegistrations['students']);
     const monthlyInstructors = @json($monthlyRegistrations['instructors']);
     const monthlyAdmins = @json($monthlyRegistrations['admins']);
-    
+
     let registrationsChart;
-    
+
     function initChart(type = 'weekly') {
         const ctx = document.getElementById('registrationsChart').getContext('2d');
-        
+
         if (registrationsChart) {
             registrationsChart.destroy();
         }
-        
+
         const labels = type === 'weekly' ? weeklyLabels : monthlyLabels;
         const studentsData = type === 'weekly' ? weeklyStudents : monthlyStudents;
         const instructorsData = type === 'weekly' ? weeklyInstructors : monthlyInstructors;
         const adminsData = type === 'weekly' ? weeklyAdmins : monthlyAdmins;
-        
+
         registrationsChart = new Chart(ctx, {
             type: 'bar',
             data: {
@@ -479,19 +562,19 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { 
-                        position: 'top', 
-                        rtl: true, 
-                        labels: { 
+                    legend: {
+                        position: 'top',
+                        rtl: true,
+                        labels: {
                             color: '#e0e0e0',
                             font: { size: 12, weight: 'bold' },
                             usePointStyle: true,
                             pointStyle: 'circle'
-                        } 
+                        }
                     },
-                    tooltip: { 
-                        backgroundColor: '#1a1f2e', 
-                        titleColor: '#00ffcc', 
+                    tooltip: {
+                        backgroundColor: '#1a1f2e',
+                        titleColor: '#00ffcc',
                         bodyColor: '#e0e0e0',
                         callbacks: {
                             label: function(context) {
@@ -501,20 +584,20 @@
                     }
                 },
                 scales: {
-                    y: { 
-                        beginAtZero: true, 
-                        grid: { color: 'rgba(255,255,255,0.1)' }, 
-                        ticks: { color: '#e0e0e0', stepSize: 1 } 
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(255,255,255,0.1)' },
+                        ticks: { color: '#e0e0e0', stepSize: 1 }
                     },
-                    x: { 
-                        grid: { color: 'rgba(255,255,255,0.1)' }, 
-                        ticks: { color: '#e0e0e0', font: { size: 11 } } 
+                    x: {
+                        grid: { color: 'rgba(255,255,255,0.1)' },
+                        ticks: { color: '#e0e0e0', font: { size: 11 } }
                     }
                 }
             }
         });
     }
-    
+
     // تبديل بين أسبوعي وشهري
     document.querySelectorAll('.period-btn').forEach(btn => {
         btn.addEventListener('click', function() {
@@ -524,7 +607,7 @@
             initChart(period);
         });
     });
-    
+
     // تهيئة الرسم البياني عند تحميل الصفحة
     document.addEventListener('DOMContentLoaded', () => initChart('weekly'));
 </script>

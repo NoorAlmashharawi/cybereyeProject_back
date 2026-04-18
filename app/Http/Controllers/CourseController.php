@@ -291,7 +291,14 @@ public function home()
     return view('cms.home.home', compact('latestReviews'));
 }
 
+public function manageLessons(Course $course)
+{
+    // جلب الدروس التابعة لهذا الكورس باستخدام العلاقة (lessons)
+    $lessons = $course->lessons;
 
+    // بنفتح صفحة الـ index تاعت الدروس وبنبعت الكورس والدروس
+    return view('cms.video.index', compact('course', 'lessons'));
+}
 
 
 }

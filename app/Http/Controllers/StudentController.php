@@ -54,7 +54,6 @@ class StudentController extends Controller
     // حفظ طالب جديد
 public function store(Request $request)
 {
-    // 1. التحقق من صحة البيانات المدخلة
     $validator = Validator($request->all(), [
         'username' => 'required|string|min:3|max:20|unique:user1s,username',
         'email'    => 'required|email|unique:user1s,email',
@@ -64,28 +63,26 @@ public function store(Request $request)
     ]);
 
     if ($validator->fails()) {
-        return response()->json([
-            'icon' => 'error',
-            'title' => $validator->errors()->first()
-        ], 400);
+        return response()->json(['icon' => 'error', 'title' => $validator->errors()->first()], 400);
     }
 
     try {
         DB::beginTransaction();
 
-        // 2. إنشاء حساب المستخدم في جدول user1s
+        // 1. ننشئ حساب المستخدم (User1) أولاً
+        // بنحط الـ actor_id مبدئياً 0 لأننا لسه ما أنشأنا سجل الطالب
         $user1 = User1::create([
             'username'   => $request->username,
             'email'      => $request->email,
             'password'   => Hash::make($request->password),
             'role'       => 'student',
-            'actor_id'   => 0, // قيمة مؤقتة لحين إنشاء سجل الطالب
+            'actor_id'   => 0,
             'actor_type' => 'App\Models\Student',
         ]);
 
-        // 3. إنشاء سجل الطالب في جدول students وربطه باليوزر
+        // 2. ننشئ سجل الطالب ونربطه بـ user_id اللي طلع من الخطوة الأولى
         $student = Student::create([
-            'user_id'         => $user1->id,
+            'user_id'         => $user1->id, // هان حل مشكلة الـ SQL Error
             'level'           => $request->level ?? 'beginner',
             'status'          => $request->status ?? 'active',
             'specialization'  => $request->specialization ?? 'General',
@@ -93,35 +90,19 @@ public function store(Request $request)
             'enrollment_date' => $request->enrollment_date ?? now(),
         ]);
 
-        // 4. تحديث الـ actor_id لليوزر ليربط بسجل الطالب الجديد
+        // 3. نحدث سجل اليوزر بالـ actor_id الحقيقي (رقم الطالب)
         $user1->update([
             'actor_id' => $student->id
         ]);
 
-        // ==========================================
-        //         تعديل الإشعارات (للأدمن)
-        // ==========================================
-        $admin = User1::where('role', 'admin')->first();
-
-        if ($admin) {
-            // إرسال الإشعار وتخزينه في قاعدة البيانات
-            $admin->notify(new \App\Notifications\NewStudentRegistrationNotification($user1));
-        }
-        // ==========================================
-
         DB::commit();
 
-        return response()->json([
-            'icon' => 'success',
-            'title' => 'تم التسجيل بنجاح وإشعار الإدارة!'
-        ], 200);
+        return response()->json(['icon' => 'success', 'title' => 'تم التسجيل بنجاح!'], 200);
 
     } catch (\Exception $e) {
         DB::rollBack();
-        return response()->json([
-            'icon' => 'error',
-            'title' => 'حدث خطأ: ' . $e->getMessage()
-        ], 500);
+        // هان بنرجع رسالة الخطأ عشان نعرف شو صار لو فشل
+        return response()->json(['icon' => 'error', 'title' => 'حدث خطأ: ' . $e->getMessage()], 500);
     }
 }
     // عرض تفاصيل طالب

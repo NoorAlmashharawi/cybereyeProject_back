@@ -14,8 +14,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class User1 extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\User1Factory> */
-
-
     use HasFactory, Notifiable;
     use SoftDeletes;
 

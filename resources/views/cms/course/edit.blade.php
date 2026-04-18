@@ -112,20 +112,32 @@
         <div class="management-menu">
             <h5 style="font-size: 0.9rem; color: #8898aa; margin-bottom: 15px; padding-right: 10px;">إدارة المحتوى</h5>
 
+<<<<<<< Updated upstream
             <a href="{{ route('materials.create') }}" class="manage-btn">
                 <i class="fas fa-play-circle"></i>
                 <span>إدارة الدروس</span>
             </a>
+=======
+
+            <a href="{{ route('videos.index', $course->id) }}" class="manage-btn">
+    <i class="fas fa-play-circle"></i>
+    <span>إدارة الدروس</span>
+</a>
+>>>>>>> Stashed changes
 
             <a href="{{ route('quizzs.create') }}" class="manage-btn">
                 <i class="fas fa-question-circle"></i>
                 <span>إدارة الكويزات</span>
             </a>
 
+<<<<<<< Updated upstream
             <a href="{{ route('videos.index') }}" class="manage-btn">
                 <i class="fas fa-question-circle"></i>
                 <span>إدارة الفيديوهات</span>
             </a>
+=======
+
+>>>>>>> Stashed changes
 
         
 

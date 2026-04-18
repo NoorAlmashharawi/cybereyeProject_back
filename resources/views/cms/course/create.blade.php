@@ -217,10 +217,7 @@
             <a href="#" class="menu-item active">
                 <i class="fas fa-plus-circle"></i> إضافة كورس جديد
             </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-chart-line"></i> تقارير التسجيل
-            </a>
-        </div>
+
     </aside>
 
     <main class="main-form-content">
