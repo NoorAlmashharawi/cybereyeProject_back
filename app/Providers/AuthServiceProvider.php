@@ -1,6 +1,18 @@
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Pagination\Paginator;
 use App\Models\Admin;
 use App\Models\Instructor;
 use App\Models\Student;
+
+
+
+class AuthServiceProvider extends ServiceProvider
+{
 
 public function boot()
 {
@@ -15,4 +27,15 @@ public function boot()
     Auth::provider('students', function ($app, array $config) {
         return new EloquentUserProvider($app['hash'], Student::class);
     });
+
+
+
+    
 }
+}
+
+
+
+
+
+

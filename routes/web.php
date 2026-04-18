@@ -17,6 +17,12 @@ use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuizzController;
+use App\Http\Controllers\StudentVideoController;
+use App\Http\Controllers\StudentDashboardController;
+
+use App\Http\Controllers\CertificateController;
+
+
 
 //الصفحة الؤئيسية
 
@@ -32,9 +38,10 @@ Route::prefix('cms')->group(function(){
     Route::get('logout', [UserAuthController::class, 'logout'])->name('view.logout');
 });
 
+
 // ====================  Student Registration (الخارجية) ====================
-Route::get('cms/register', [UserAuthController::class, 'showSignup'])->name('view.register'); // عرض صفحة التسجيل
-Route::post('cms/register', [StudentController::class, 'store'])->name('student.register'); // تنفيذ عملية التخزين
+Route::get('cms/register', [UserAuthController::class, 'showSignup'])->name('view.register');
+Route::post('cms/register', [StudentController::class, 'store'])->name('student.register');
 
 // ====================  الرئيسية ====================
 Route::prefix('cms/home')->group(function(){
@@ -42,7 +49,6 @@ Route::prefix('cms/home')->group(function(){
     Route::view('contact', 'cms.home.contact')->name('contact');
     Route::post('/contact/send', [ContactMessageController::class, 'store'])->name('contact.store');
     Route::get('/', [DictionaryController::class, 'home'])->name('home');
-
 });
 
 // ==================== AI Chat ====================
@@ -51,6 +57,7 @@ Route::post('/cms/ai/chat', [AIChatController::class, 'chat'])->name('ai.chat');
 // ==================== Routes للطلاب ====================
 Route::prefix('cms/student')->group(function(){
     Route::view('/', 'cms.parent');
+    Route::view('temp', 'cms.temp');
 
 Route::view('temp', 'cms.temp');
 Route::put('students_update/{id}', [StudentController::class, 'update'])->name('students_update');
@@ -78,7 +85,21 @@ Route::resource('users', User1sController::class);
     Route::resource('students', StudentController::class);
     Route::resource('users', User1Controller::class);
 
+    Route::get('/my-certificates', [StudentDashboardController::class, 'myCertificates'])->name('student.my-certificates');
 });
+
+
+
+
+// Student Dashboard Routes
+Route::middleware(['auth:student'])->prefix('cms/student')->group(function () {
+    Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('student.dashboard');
+    Route::post('/enroll', [StudentDashboardController::class, 'enroll'])->name('student.enroll');
+    Route::get('/my-courses', [StudentDashboardController::class, 'myCourses'])->name('student.my-courses');
+    Route::get('/my-certificates', [StudentDashboardController::class, 'myCertificates'])->name('student.my-certificates');
+});
+
+
 
 // ==================== Routes admin ====================
 Route::prefix('cms/admin')->group(function(){
@@ -92,18 +113,21 @@ Route::prefix('cms/admin')->group(function(){
     Route::resource('categories', CategoryController::class);
 
     // Videos Routes
-    Route::get('videos/player', [VideoController::class, 'player'])->name('videos.player');
+    // Route::get('videos/player', [VideoController::class, 'player'])->name('videos.player');
     Route::resource('videos', VideoController::class);
+
+    Route::post('/cms/student/video-completed', [StudentVideoController::class, 'markVideoCompleted'])
+    ->name('student.video.completed');
 });
 
 // ==================== Routes للمدرسين ====================
 Route::prefix('cms/instructor')->group(function(){
     Route::view('/', 'cms.parent');
+    Route::view('temp', 'cms.temp');
+
     Route::put('instructors_update/{id}', [InstructorController::class, 'update'])->name('instructors_update');
     Route::resource('instructors', InstructorController::class);
     Route::resource('users', User1Controller::class);
-
-    Route::view('temp', 'cms.temp');
 
     Route::get('instructors_trashed', [InstructorController::class, 'trashed'])->name('instructors_trashed');
     Route::get('instructors_restore/{id}', [InstructorController::class, 'restore'])->name('instructors_restore');
@@ -119,12 +143,7 @@ Route::prefix('cms/instructor')->group(function(){
     Route::get('materials/trashed', [MaterialController::class, 'trashed'])->name('materials.trashed');
     Route::get('materials/{id}/restore', [MaterialController::class, 'restore'])->name('materials.restore');
     Route::get('materials/{id}/force', [MaterialController::class, 'forceDelete'])->name('materials.force');
-    Route::resource('materials', App\Http\Controllers\MaterialController::class);
-    Route::get('materials/trashed', [MaterialController::class, 'trashed'])->name('materials.trashed');
-    Route::get('materials/{id}/restore', [MaterialController::class, 'restore'])->name('materials.restore');
-    Route::get('materials/{id}/force', [MaterialController::class, 'forceDelete'])->name('materials.force');
     Route::resource('materials', MaterialController::class);
-
 });
 
 // ==================== Routes للكورسات ====================
@@ -136,7 +155,7 @@ Route::prefix('cms/course')->group(function(){
     Route::delete('comments/{comment}', [App\Http\Controllers\CommentController::class, 'destroy'])->name('comments.destroy');
     Route::post('reviews', [App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
     Route::post('/course/{id}/review', [App\Http\Controllers\CourseController::class, 'storeReview'])->name('course.review.store');
-    Route::resource('lessons', App\Http\Controllers\LessonController::class);
+    // Route::resource('lessons', App\Http\Controllers\LessonController::class);
 });
 
 // Route::put('instructors_update/{id}', [InstructorController::class, 'update'])->name('courses_update');
@@ -152,13 +171,8 @@ Route::prefix('cms/video')->group(function(){
     Route::resource('videos', VideoController::class);
 });
 
-
-
-
-// أو يمكن إضافة route منفصلة:
-// Route::get('/questions/create', [QuestionController::class, 'create'])->name('questions.create');
-// Route::post('/questions', [QuestionController::class, 'store'])->name('questions.store');
-
+Route::view('details', 'cms/courseDetails/details');
+Route::view('index', 'cms/course/video/index');
 
 // ==================== Routes للأسئلة ====================
 Route::prefix('cms/question')->group(function(){
@@ -177,7 +191,9 @@ Route::prefix('cms/quizz')->group(function(){
     Route::get('/quizzs/start', [QuizzController::class, 'create'])->name('quizzs.show');
 });
 
-// ==================== صفحات أخرى ====================
-Route::view('details', 'cms/courseDetails/details');
-Route::view('index', 'cms/course/video/index');
 
+
+Route::prefix('cms/certificate')->group(function(){
+    Route::get('/{id}', [CertificateController::class, 'show'])->name('certificate.show');
+    Route::get('/{id}/download', [CertificateController::class, 'download'])->name('certificate.download');
+});

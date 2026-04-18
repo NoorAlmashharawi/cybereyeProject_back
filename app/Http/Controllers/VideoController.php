@@ -4,56 +4,57 @@ namespace App\Http\Controllers;
 
 use App\Models\Lesson;
 use App\Models\Video;
+use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use App\Models\StudentVideoProgress;
+use App\Models\Certificate;
+use Illuminate\Support\Str;
 
 class VideoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $videos = Video::with('lesson')->orderBy('id', 'desc')->paginate(10);
         return view('cms.Video.index', compact('videos'));
     }
 
-    /**
-     * Display the video player page.
-     */
-    public function player()
+    public function player($courseId = null)
     {
-        $videos = Video::orderBy('created_at', 'asc')->get();
-        return view('cms.Video.player', compact('videos'));
+        $query = Video::orderBy('created_at', 'asc');
+
+        if ($courseId) {
+            $query->where('course_id', $courseId);
+        }
+
+        $videos = $query->get();
+        $course = $courseId ? Course::find($courseId) : null;
+
+        return view('cms.Video.player', compact('videos', 'course', 'courseId'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $lessons = Lesson::all();
         return view('cms.Video.create', compact('lessons'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        // 1. Validation
         $validator = Validator::make($request->all(), [
             'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
             'duration'    => 'nullable|integer',
             'url'         => 'required|file|mimes:mp4,mkv,avi,mov|max:102400',
             'lesson_id'   => 'nullable|exists:lessons,id',
+            'course_id'   => 'nullable|exists:courses,id',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => $validator->getMessageBag()->first()
+                'message' => $validator->errors()->first()
             ], 422);
         }
 
@@ -62,89 +63,136 @@ class VideoController extends Controller
 
         if ($request->hasFile('url')) {
             $path = $request->file('url')->store('videos', 'public');
-            $data['url'] = Storage::url($path);
+            $data['url'] = 'storage/' . $path;
         }
 
         $video = Video::create($data);
 
         return response()->json([
             'success' => true,
-            'message' => $video ? 'تم الحفظ بنجاح' : 'فشل الحفظ',
             'video' => $video
-        ], $video ? 200 : 400);
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Video $video)
-    {
-        return view('cms.Video.show', compact('video'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Video $video)
-    {
-        return view('cms.Video.edit', compact('video'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
-        $video = Video::find($id);
-        
-        if (!$video) {
-            return response()->json(['message' => 'الفيديو غير موجود'], 404);
-        }
-        
+        $video = Video::findOrFail($id);
+
         $validator = Validator::make($request->all(), [
             'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
             'duration'    => 'nullable|integer',
             'url'         => 'nullable|file|mimes:mp4,mkv,avi,mov|max:102400',
         ]);
-        
+
         if ($validator->fails()) {
-            return response()->json(['message' => $validator->getMessageBag()->first()], 422);
+            return response()->json([
+                'message' => $validator->errors()->first()
+            ], 422);
         }
-        
+
         $data = $validator->validated();
         $data['duration'] = $request->duration ?? 0;
-        
+
         if ($request->hasFile('url')) {
+
             if ($video->url) {
-                $oldPath = str_replace('/storage/', '', $video->url);
-                Storage::disk('public')->delete($oldPath);
+                $old = str_replace('storage/', '', $video->url);
+                Storage::disk('public')->delete($old);
             }
-            
+
             $path = $request->file('url')->store('videos', 'public');
-            $data['url'] = Storage::url($path);
+            $data['url'] = 'storage/' . $path;
         }
-        
+
         $video->update($data);
-        
+
         return response()->json([
             'success' => true,
-            'message' => 'تم التحديث بنجاح',
             'video' => $video
-        ], 200);
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Video $video)
     {
         if ($video->url) {
-            $path = str_replace('/storage/', '', $video->url);
+            $path = str_replace('storage/', '', $video->url);
             Storage::disk('public')->delete($path);
         }
+
         $video->delete();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function videoCompleted(Request $request)
+    {
+        $student = Auth::user()->student;
+
+        if (!$student) {
+            return response()->json([
+                'success' => false,
+                'message' => 'الطالب غير موجود'
+            ], 403);
+        }
+
+        $videoId = $request->video_id;
+        $courseId = $request->course_id;
+
+        // تسجيل إكمال الفيديو
+        StudentVideoProgress::updateOrCreate([
+            'student_id' => $student->id,
+            'video_id'   => $videoId,
+            'course_id'  => $courseId,
+        ], [
+            'completed' => true,
+        ]);
+
+        $totalVideos = Video::where('course_id', $courseId)->count();
+        $completedVideos = StudentVideoProgress::where('student_id', $student->id)
+            ->where('course_id', $courseId)
+            ->where('completed', true)
+            ->count();
+
+        $courseCompleted = ($totalVideos > 0 && $totalVideos == $completedVideos);
         
-        return redirect()->route('videos.index')->with('success', 'تم الحذف بنجاح');
+        // التحقق مما إذا كان هذا هو آخر فيديو
+        $isLastVideo = ($completedVideos >= $totalVideos - 1);
+        
+        $hasCertificate = Certificate::where('student_id', $student->id)
+            ->where('course_id', $courseId)
+            ->exists();
+
+        $percentage = $totalVideos > 0 ? round(($completedVideos / $totalVideos) * 100) : 0;
+        
+        $certificateUrl = null;
+        
+        if ($courseCompleted && !$hasCertificate) {
+            $certificate = Certificate::create([
+                'student_id' => $student->id,
+                'course_id' => $courseId,
+                'instructor_id' => Course::find($courseId)->instructor_id ?? 1,
+                'certificate_number' => 'CERT-' . strtoupper(Str::random(10)),
+                'issued_date' => now(),
+            ]);
+            $certificateUrl = route('certificate.show', $certificate->id);
+        } elseif ($hasCertificate) {
+            $cert = Certificate::where('student_id', $student->id)->where('course_id', $courseId)->first();
+            $certificateUrl = $cert ? route('certificate.show', $cert->id) : null;
+        }
+
+        return response()->json([
+            'success' => true,
+            'course_completed' => $courseCompleted,
+            'is_last_video' => $isLastVideo,
+            'has_certificate' => $hasCertificate,
+            'certificate_url' => $certificateUrl,
+            'progress' => [
+                'total' => $totalVideos,
+                'completed' => $completedVideos,
+                'percentage' => $percentage,
+                'is_completed' => $courseCompleted
+            ]
+        ]);
     }
 }
