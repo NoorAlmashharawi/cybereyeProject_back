@@ -77,12 +77,41 @@
                     <span>كورساتي</span>
                 </a>
 
-               
+
                 <a href="{{ route('student.my-certificates') }}" class="admin-menu-item">
                     <i class="fas fa-chalkboard-teacher"></i>
                     <span>شهاداتي</span>
                 </a>
             </div>
+
+            <div class="admin-menu-section">
+                <div class="menu-title">تحكم المدرب</div>
+
+            <a href="{{ route('courses.create') }}" class="admin-menu-item">
+                <i class="fas fa-plus-circle"></i>
+                <span>إنشاء كورس جديد</span>
+            </a>
+
+            <a href="{{ route('categories.create') }}" class="admin-menu-item">
+                <i class="fas fa-folder-plus"></i>
+                <span>إضافة تصنيف</span>
+            </a>
+
+            <a href="{{ route('materials.create') }}" class="admin-menu-item">
+                <i class="fas fa-file-upload"></i>
+                <span>رفع مادة تعليمية</span>
+            </a>
+
+            <a href="{{ route('videos.index') }}" class="admin-menu-item">
+                <i class="fas fa-video"></i>
+                <span>إضافة فيديو</span>
+            </a>
+
+            <a href="{{ route('quizzs.create') }}" class="admin-menu-item">
+                <i class="fas fa-file-signature"></i>
+                <span>إنشاء كويز جديد</span>
+            </a>
+        </div>
         </nav>
 
         <div class="admin-footer">
