@@ -97,4 +97,20 @@ public function hasCertificateForCourse($courseId)
         ->where('course_id', $courseId)
         ->exists();
 }
+
+
+
+// العلاقة مع الكورسات المسجل فيها الطالب
+public function enrolledCourses()
+{
+    return $this->belongsToMany(Course::class, 'course_student', 'student_id', 'course_id');
+}
+
+// العلاقة مع الدروس عبر الكورسات المسجل فيها
+public function lessons()
+{
+    return Lesson::whereHas('course.enrollments', function($query) {
+        $query->where('student_id', $this->id);
+    });
+}
 }
