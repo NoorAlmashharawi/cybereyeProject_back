@@ -104,6 +104,7 @@
         <div class="tables-section">
             <div class="table-container">
                 <table id="studentsTable">
+                    <h3> الطلبة المنضمين حديثا </h3>
                     <thead>
                         <tr>
                             <th onclick="sortTable(0)"><i class="fas fa-sort"></i> المعرف</th>
@@ -177,106 +178,78 @@
                 <div class="table-responsive">
                     <table class="admin-table">
                         <thead>
-                            <tr>
-                                <th>اسم الكورس</th>
-                                <th>المدرب</th>
-                                <th>المشتركين</th>
-                                <th>التقييم</th>
-                                <th>الإيرادات</th>
-                            </tr>
+
+
+                     
+                                <tr>
+                                    <th>اسم الكورس</th>
+                                    <th>المدرب</th>
+                                    <th>التصنيف</th>
+                                    <th>عدد الطلاب</th>
+                                    <th>المستوى</th>
+                                    <th>الحالة</th>
+                                    <th>الاجراء</th>
+                                </tr>
+                        
+
+                  
                         </thead>
                         <tbody>
+
+                            @foreach ($courses as $course)
                             <tr>
-                                <td>أساسيات الأمن السيبراني</td>
-                                <td>د. أحمد محمد</td>
-                                <td>450</td>
-                                <td>★★★★★ (4.9)</td>
-                                <td>$8,500</td>
+                                <td>{{ $course->course_name }}</td>
+                                <td>{{ $course->instructor->user1->username ?? 'بدون مدرب' }}</td>
+                                <td>
+                                    <span class="badge bg-secondary">{{ $course->category->title ?? 'غير مصنف' }}</span>
+                                </td>
+                                <td>
+                                    {{-- هنا عدد الطلاب المسجلين بالكورس خليها هيك حاليا هرجعلها --}}
+                                    <span class="badge badge-info">{{ $course->students_count }} طالب</span>
+                                </td>
+        
+                               <td>
+                                    @if($course->level == 'beginner')
+                                     <span class="badge bg-success">مبتدئ</span>
+                                   @elseif($course->level == 'intermediate')
+                                        <span class="badge bg-warning text-dark">متوسط</span>
+                                    @elseif($course->level == 'advanced')
+                                        <span class="badge bg-danger">متقدم</span>
+                                    @else
+                                        <span class="badge bg-info">{{ $course->level }}</span>
+                                    @endif
+        </td>
+                                <td>
+                                    <span class="badge {{ $course->status == 'active' ? 'bg-success' : 'bg-danger' }}">
+                                        {{ $course->status == 'active' ? 'نشط' : 'معطل' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a href="{{ route('courses.show', $course->id) }}" style="color: #17a2b8; margin-right: 10px;">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ route('courses.edit', $course->id) }}" class="action-btn edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" onclick="confirmDelete('{{ $course->id }}', this)" class="action-btn delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
                             </tr>
-                            <tr>
-                                <td>برمجة جافا للأمن</td>
-                                <td>م. سامي علي</td>
-                                <td>320</td>
-                                <td>★★★★☆ (4.7)</td>
-                                <td>$6,200</td>
-                            </tr>
-                            <tr>
-                                <td>أمن تطبيقات الويب</td>
-                                <td>أ. نورا سعيد</td>
-                                <td>280</td>
-                                <td>★★★★★ (4.8)</td>
-                                <td>$5,800</td>
-                            </tr>
-                            <tr>
-                                <td>تحليل الثغرات الأمنية</td>
-                                <td>د. خالد حسن</td>
-                                <td>190</td>
-                                <td>★★★★☆ (4.6)</td>
-                                <td>$4,500</td>
-                            </tr>
+                            @endforeach
+                       
                         </tbody>
                     </table>
                 </div>
             </div>
+
+
+    
         </div>
 
-        <!-- النشاطات الأخيرة -->
-        <div class="activity-section">
-            <h3 style="margin-bottom: 1rem;">النشاطات الأخيرة</h3>
-            <ul class="activity-list">
-                <li class="activity-item">
-                    <div class="activity-icon">
-                        <i class="fas fa-user-plus"></i>
-                    </div>
-                    <div class="activity-content">
-                        <div class="activity-title">تسجيل مستخدم جديد</div>
-                        <div class="activity-desc">محمد أحمد سجل في المنصة</div>
-                    </div>
-                    <div class="activity-time">منذ 5 دقائق</div>
-                </li>
-                <li class="activity-item">
-                    <div class="activity-icon">
-                        <i class="fas fa-shopping-cart"></i>
-                    </div>
-                    <div class="activity-content">
-                        <div class="activity-title">شراء كورس جديد</div>
-                        <div class="activity-desc">سارة محمد اشترت كورس الأمن السيبراني المتقدم</div>
-                    </div>
-                    <div class="activity-time">منذ ساعة</div>
-                </li>
-                <li class="activity-item">
-                    <div class="activity-icon">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <div class="activity-content">
-                        <div class="activity-title">إكمال كورس</div>
-                        <div class="activity-desc">أحمد خالد أكمل كورس أساسيات جافا</div>
-                    </div>
-                    <div class="activity-time">منذ 3 ساعات</div>
-                </li>
-                <li class="activity-item">
-                    <div class="activity-icon">
-                        <i class="fas fa-comment-alt"></i>
-                    </div>
-                    <div class="activity-content">
-                        <div class="activity-title">تقييم جديد</div>
-                        <div class="activity-desc">فاطمة علي قيمت كورس أمن الشبكات بـ 5 نجوم</div>
-                    </div>
-                    <div class="activity-time">منذ 5 ساعات</div>
-                </li>
-                <li class="activity-item">
-                    <div class="activity-icon">
-                        <i class="fas fa-exclamation-triangle"></i>
-                    </div>
-                    <div class="activity-content">
-                        <div class="activity-title">بلاغ عن مشكلة</div>
-                        <div class="activity-desc">تم الإبلاغ عن مشكلة في فيديو الدرس 3</div>
-                    </div>
-                    <div class="activity-time">منذ يوم</div>
-                </li>
-            </ul>
-        </div>
-
+     
 
         <!-- AI Assistant Chat -->
 <div class="ai-assistant-card" style="margin-top: 30px; background: white; border-radius: 15px; padding: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.08);">

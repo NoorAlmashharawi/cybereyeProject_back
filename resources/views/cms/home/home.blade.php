@@ -341,10 +341,11 @@
     <div class="about-main">
         <div class="about-image">
             <div class="about-small-image">
-                <img src="{{ asset('cms/img/image.jpg') }}" onclick="functio(this)" alt="Thumbnail 1">
-                <img src="{{ asset('cms/img/image.jpg') }}" onclick="functio(this)" alt="Thumbnail 2">
-                <img src="{{ asset('cms/img/image.jpg') }}" onclick="functio(this)" alt="Thumbnail 3">
-                <img src="{{ asset('cms/img/image.jpg') }}" onclick="functio(this)" alt="Thumbnail 4">
+                <img src="{{ asset('cms/admins/baraa.jpg') }}" onclick="functio(this)" alt="Thumbnail 1">
+                <img src="{{ asset('cms/admins/noor.jpg') }}" onclick="functio(this)" alt="Thumbnail 2">
+                <img src="{{ asset('cms/admins/saja.jpg') }}" onclick="functio(this)" alt="Thumbnail 3">
+                <img src="{{ asset('cms/admins/bassmah.jpg') }}" onclick="functio(this)" alt="Thumbnail 4">
+                <img src="{{ asset('cms/admins/safa.jpg') }}" onclick="functio(this)" alt="Thumbnail 5">
             </div>
 
             <div class="image-contaner">
