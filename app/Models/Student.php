@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Certificate;
+use App\Models\User1;
 
 class Student extends Model
 {
@@ -68,6 +69,20 @@ class Student extends Model
     return $this->belongsToMany(Course::class, 'course_student', 'student_id', 'course_id')
         ->withPivot('enrolled_at')
         ->withTimestamps();
+
+}
+
+
+
+public function studentAnswers()
+{
+    return $this->hasMany(StudentAnswer::class, 'student_id');
+}
+
+
+public function quizResults()
+{
+    return $this->hasMany(QuizResult::class, 'student_id');
 }
 
 

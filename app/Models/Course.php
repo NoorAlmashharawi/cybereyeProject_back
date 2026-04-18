@@ -32,6 +32,12 @@ class Course extends Model
         return $this->belongsTo(Instructor::class, 'instructor_id');
     }
 
+
+
+
+    // العلاقات
+
+
     public function lessons()
     {
         return $this->hasMany(Lesson::class);
@@ -55,15 +61,13 @@ class Course extends Model
     public function students()
     {
         return $this->belongsToMany(Student::class, 'enrollments','course_id', 'student_id') ->withPivot('enrolled_at')
-        ->withTimestamps();;
+        ->withTimestamps();
     }
-
-
-
 
 
     public function comments()
     {
     return $this->hasManyThrough(Comment::class, Lesson::class);
     }
+
 }

@@ -2,168 +2,369 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Quizz;
+use App\Models\Course;
+use App\Models\QuizResult;
+use App\Models\StudentAnswer;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session as FacadesSession;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Illuminate\Support\Facades\Validator;
 
 class QuizzController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * عرض قائمة الكويزات.
      */
     public function index()
     {
-         $quizzes = Quizz::latest()->paginate(10);
-    return view('cms.quizz.index', compact('quizzes'));
+        $quizzs = Quizz::with('course')->latest()->paginate(10);
+        return view('cms.quizz.index', compact('quizzs'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * عرض نموذج إنشاء كويز جديد.
      */
     public function create()
     {
-
-         return view('cms.quizz.create');
+        $courses = Course::all();
+        return view('cms.quizz.create', compact('courses'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * عرض صفحة كويز معين (للمعاينة).
+     */
+    public function show($id)
+    {
+        $quizz = Quizz::with('questions')->findOrFail($id);
+        $questions = $quizz->questions;
+        return view('cms.quizz.show', compact('quizz', 'questions'));
+    }
+
+    /**
+     * حفظ كويز جديد في قاعدة البيانات.
      */
     public function store(Request $request)
     {
-               $request->validate([
-           'title' => 'required|string|max:255',
-           'description' => 'nullable|string',
-           'duration_minutes' => 'nullable|integer|min:1',
-           'total_marks' => 'nullable|string',
-           'course_id' => 'required|exists:courses,id',
-       ]);
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'duration_minutes' => 'nullable|integer|min:1',
+            'total_marks' => 'nullable|string',
+            'course_id' => 'required|exists:courses,id',
+        ]);
 
-       Quizz::create($request->all());
-       return redirect()->route('quizzs.index')->with('success', 'تم إنشاء الكويز بنجاح');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show($quizzId)
-    {
-
-        $quiz = Quizz::with('questions')->findOrFail($quizzId);
-        $questions = $quiz->questions;
-        $tempAnswers = FacadesSession::get("quiz_{$quizzId}_temp_answers", []);
-
-        return view('cms.quizz.start', compact('quiz', 'questions', 'tempAnswers'));
-
-    }
-
-
-    // تقديم الكويز وحساب النتيجة بدون تخزين
-    public function submit(Request $request, $quizzId)
-    {
-        $quiz = Quizz::with('questions')->findOrFail($quizzId);
-        $questions = $quiz->questions;
-
-        $submittedAnswers = $request->input('answers', []);
-        $totalPoints = 0;
-        $earnedPoints = 0;
-        $results = [];
-
-        foreach ($questions as $question) {
-            $totalPoints += $question->points;
-            $userAnswer = $submittedAnswers[$question->id] ?? null;
-            $isCorrect = ($userAnswer === $question->correct_answer);
-            if ($isCorrect) {
-                $earnedPoints += $question->points;
-            }
-            $results[] = [
-                'question' => $question,
-                'user_answer' => $userAnswer,
-                'is_correct' => $isCorrect,
-                'correct_answer' => $question->correct_answer,
-            ];
+        if ($validator->fails()) {
+            return response()->json([
+                'icon' => 'error',
+                'title' => $validator->errors()->first(),
+            ], 400);
         }
 
+        try {
+            Quizz::create($request->all());
+            return response()->json([
+                'icon' => 'success',
+                'title' => 'تم إنشاء الكويز بنجاح',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'icon' => 'error',
+                'title' => 'حدث خطأ: ' . $e->getMessage(),
+            ], 500);
+        }
     }
-
-
-    // حفظ الإجابات مؤقتاً عبر AJAX (اختياري لتحسين التجربة)
-    public function saveTemp(Request $request, $quizzId)
-    {
-       // Session::put("quiz_{$quizzId}_temp_answers", $request->input('answers', []));
-       // return response()->json(['status' => 'saved']);
-    }
-
-
-
-
-        // تخزين المحاولة
-//        $attempt = QuizAttempt::create([
-  //          'quizz_id' => $quiz->id,
-    //        'student_name' => $request->input('student_name', 'Guest'),
-     //       'answers' => $submittedAnswers,
-      //      'score' => $earnedPoints,
-       //     'total_points' => $totalPoints,
-       //     'submitted_at' => now(),
-      //  ]);
-
-      //  Session::forget("quiz_{$quizzId}_temp_answers");
-      //  Session::flash('quiz_result', [
-      //      'score' => $earnedPoints,
-      //      'total' => $totalPoints,
-      //      'total_marks' => $quiz->total_marks, // من جدول quizzs
-      //  ]);
-
-      //  return redirect()->route('quiz.result', $quizzId);
-   // }
-
-    // عرض النتيجة
-   // public function result($quizzId)
-   // {
-     //   $quiz = Quizz::findOrFail($quizzId);
-      //  $result = ContractsSession::get('quiz_result');
-      //  if (!$result) {
-        //    return redirect()->route('quiz.show', $quizzId)->with('error', 'لم يتم العثور على نتيجة.');
-       // }
-      //  return view('result', compact('quiz', 'result'));
-   // }
-
-    // حفظ مؤقت (Ajax)
-   // public function saveTemp(Request $request, $quizzId)
-   // {
-    //    Session::put("quiz_{$quizzId}_temp_answers", $request->input('answers', []));
-     //   return response()->json(['status' => 'saved']);
-   // }
-
-
 
     /**
-     * Show the form for editing the specified resource.
+     * عرض نموذج تعديل كويز.
      */
     public function edit(Quizz $quizz)
     {
-        //
+        $courses = Course::all();
+        return view('cms.quizz.edit', compact('quizz', 'courses'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * تحديث بيانات كويز في قاعدة البيانات.
      */
     public function update(Request $request, Quizz $quizz)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'duration_minutes' => 'nullable|integer|min:1',
+            'total_marks' => 'nullable|string',
+            'course_id' => 'required|exists:courses,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'icon' => 'error',
+                'title' => $validator->errors()->first(),
+            ], 400);
+        }
+
+        try {
+            $quizz->update($request->all());
+            return response()->json([
+                'icon' => 'success',
+                'title' => 'تم تحديث الكويز بنجاح',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'icon' => 'error',
+                'title' => 'حدث خطأ: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
+
+ public function destroy(Quizz $quizz)
+{
+    // أرشفة جميع الأسئلة المرتبطة
+    $quizz->questions()->delete();
+
+    // أرشفة الكويز
+    $quizz->delete();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'تم نقل الكويز وأسئلته إلى الأرشيف'
+    ]);
+}
+
+
+public function restore($id)
+{
+    $quizz = Quizz::onlyTrashed()->findOrFail($id);
+
+    $quizz->questions()->restore();
+
+    $quizz->restore();
+
+    return response()->json(['success' => true, 'message' => 'تم استعادة الكويز وأسئلته']);
+}
+
+
+public function forceDelete($id)
+{
+    $quizz = Quizz::onlyTrashed()->findOrFail($id);
+
+    $quizz->questions()->forceDelete();
+
+    $quizz->forceDelete();
+
+    return response()->json(['success' => true, 'message' => 'تم حذف الكويز وأسئلته نهائياً']);
+}
+
+
+    public function trashed()
+    {
+        $quizzs = Quizz::onlyTrashed()->with('course')->get();
+        return view('cms.quizz.trashed', compact('quizzs'));
+    }
+
+    public function force($id)
+    {
+        $quizz = Quizz::onlyTrashed()->findOrFail($id);
+        $quizz->forceDelete();
+        return back()->with('success', 'تم حذف الكويز نهائياً');
+    }
+
+
+
+    public function start($quizzId)
+    {
+        $quizz = Quizz::with('questions')->findOrFail($quizzId);
+        $questions = $quizz->questions->shuffle();
+        $tempAnswers = session()->get("quiz_{$quizzId}_temp_answers", []);
+        return view('cms.quizz.start', compact('quizz', 'questions', 'tempAnswers'));
+
+
+    // التحقق من وجود الكويز
+    $quizz = Quizz::find($quizzId);
+    if (!$quizz) {
+        return redirect()->route('quizzs.index')->with('error', 'هذا الكويز غير موجود');
+    }
+
+    // التحقق من وجود أسئلة مرتبطة
+    $questions = $quizz->questions;
+    if ($questions->count() == 0) {
+        return redirect()->route('quizzs.index')->with('error', 'هذا الكويز غير متاح حالياً (لا توجد أسئلة)');
+    }
     }
 
     /**
-     * Remove the specified resource from storage.
+     * حفظ إجابات الطالب والنتيجة – بدون تسجيل دخول (يستخدم student_id = 1).
      */
-    public function destroy(Quizz $quizz)
+    public function submit(Request $request, $quizzId)
     {
+        // استخدام معرف ثابت للتجربة
+        $studentId = 1; // يمكن تغييره حسب الحاجة
 
-    $quizz->delete();
-    if (request()->ajax()) {
-        return response()->json(['success' => true]);
+        $quiz = Quizz::with('questions')->findOrFail($quizzId);
+        $answers = $request->input('answers', []);
+
+        DB::beginTransaction();
+        try {
+            $totalPoints = 0;
+            $earnedPoints = 0;
+
+            foreach ($quiz->questions as $question) {
+                $userAnswer = $answers[$question->id] ?? null;
+                $isCorrect = ($userAnswer === $question->correct_answer);
+                $pointsEarned = $isCorrect ? $question->points : 0;
+                $totalPoints += $question->points;
+                $earnedPoints += $pointsEarned;
+
+                StudentAnswer::updateOrCreate(
+                    [
+                        'student_id' => $studentId,
+                        'quizz_id' => $quiz->id,
+                        'question_id' => $question->id,
+                    ],
+                    [
+                        'answer' => $userAnswer,
+                        'is_correct' => $isCorrect,
+                        'points_earned' => $pointsEarned,
+                        'submitted_at' => now(),
+                    ]
+                );
+            }
+
+            QuizResult::updateOrCreate(
+                [
+                    'student_id' => $studentId,
+                    'quizz_id' => $quiz->id,
+                ],
+                [
+                    'score' => $earnedPoints,
+                    'total_points' => $totalPoints,
+                    'submitted_at' => now(),
+                ]
+            );
+
+            DB::commit();
+
+            session()->flash('quiz_result', [
+                'score' => $earnedPoints,
+                'total' => $totalPoints,
+                'quiz_id' => $quiz->id,
+            ]);
+
+            return redirect()->route('quiz.result', $quiz->id);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'حدث خطأ أثناء حفظ الإجابات: ' . $e->getMessage());
+        }
     }
-    return redirect()->route('quizzs.index')->with('success', 'تم حذف الكويز بنجاح');
+
+
+
+
+
+      public function result($quizId)
+{
+
+           $studentId = 1; // نفس المعرف المستخدم في التقديم
+        $quiz = Quizz::findOrFail($quizId);
+        $result = QuizResult::where('student_id', $studentId)
+            ->where('quizz_id', $quizId)
+            ->first();
+
+        if (!$result) {
+            return redirect()->route('quiz.start', $quizId)->with('error', 'لا توجد نتيجة لهذا الامتحان');
+        }
+
+        return view('cms.quizz.result', compact('quiz', 'result'));
+
+    // التحقق من وجود الكويز
+    $quiz = Quizz::find($quizId);
+    if (!$quiz) {
+        return redirect()->route('quizzs.index')->with('error', 'الكويز المطلوب غير موجود');
     }
+
+    // التحقق من وجود أسئلة للكويز (اختياري، قد لا يكون ضرورياً في صفحة النتيجة)
+    if ($quiz->questions->count() == 0) {
+        return redirect()->route('quizzs.index')->with('error', 'هذا الكويز لا يحتوي على أسئلة لعرض النتيجة');
+    }
+
+    $studentId = 1; // نفس المعرف المستخدم في التقديم (يمكن تعديله لاحقاً)
+
+    $result = QuizResult::where('student_id', $studentId)
+        ->where('quizz_id', $quizId)
+        ->first();
+
+    if (!$result) {
+        return redirect()->route('quiz.start', $quizId)->with('error', 'لا توجد نتيجة لهذا الامتحان. يرجى تقديم الامتحان أولاً.');
+    }
+}
+    public function review($quizId)
+    {
+        $studentId = 1;
+        $quiz = Quizz::with('questions')->findOrFail($quizId);
+        $answers = StudentAnswer::where('student_id', $studentId)
+            ->where('quizz_id', $quizId)
+            ->get()
+            ->keyBy('question_id');
+
+        $questions = $quiz->questions;
+        $tempAnswers = [];
+
+        return view('cms.quizz.review', compact('quiz', 'questions', 'answers', 'tempAnswers'));
+    }
+
+    /**
+     * حفظ الإجابات مؤقتاً أثناء التنقل بين الأسئلة.
+     */
+    public function saveTemp(Request $request, $quizzId)
+    {
+        $answers = $request->input('answers', []);
+        session()->put("quiz_{$quizzId}_temp_answers", $answers);
+        return response()->json(['status' => 'saved']);
+    }
+
+
+public function studentResults()
+{
+    // استعلام يجمع البيانات من QuizResult مع ربط أسماء الطلاب والكويزات
+    $results = QuizResult::with(['student', 'quizz'])
+        ->orderBy('submitted_at', 'desc')
+        ->paginate(15);
+
+    // تحويل البيانات إلى شكل مناسب للـ view
+    $formattedResults = $results->map(function ($item) {
+        return (object)[
+            'student_id' => $item->student_id,
+            'student_name' => $item->student->name ?? $item->student->username ?? 'غير محدد',
+            'quiz_id' => $item->quizz_id,
+            'quiz_title' => $item->quizz->title ?? 'غير محدد',
+            'score' => $item->score,
+            'total_points' => $item->total_points,
+            'submitted_at' => $item->submitted_at,
+        ];
+    });
+
+    // إحصائيات
+      $avgScore = QuizResult::selectRaw('AVG((score / total_points) * 100) as avg')->first()->avg ?? 0;
+    $highestScore = QuizResult::selectRaw('MAX((score / total_points) * 100) as max')->first()->max ?? 0;
+$totalStudents = QuizResult::distinct('student_id')->count('student_id');
+$averageScore = round($avgScore, 2);
+$highestScore = round($highestScore, 2) . '%';
+
+    $paginatedResults = $results;
+    $paginatedResults->getCollection()->transform(function ($item) use ($formattedResults) {
+        return $formattedResults->firstWhere('student_id', $item->student_id);
+    });
+
+    return view('cms.quizz.studentResult', [
+        'results' => $paginatedResults,
+        'totalStudents' => $totalStudents,
+        'averageScore' => $averageScore,
+        'highestScore' => $highestScore,
+    ]);
+}
+
+
 }

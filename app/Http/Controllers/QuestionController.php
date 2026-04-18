@@ -3,114 +3,155 @@
 namespace App\Http\Controllers;
 
 use App\Models\Question;
-
+use App\Models\Quizz;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class QuestionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-
-        $questions = Question::latest()->paginate(10);
+        $questions = Question::with('quizz')->latest()->paginate(10);
         return view('cms.question.index', compact('questions'));
-
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-         return view('cms.question.create');
+        $quizzes = Quizz::with('course')->get();
+        return view('cms.question.create', compact('quizzes'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-           $request->validate([
-             'quizz_id' => 'required|exists:quizzs,id',
+        $validator = Validator::make($request->all(), [
+            'quizz_id' => 'required|exists:quizzs,id',
             'title' => 'required|string',
-            'type' => 'required|in:mc,tf',
-            'options' => 'required_if:type,mc|array|min:2',
+            'options' => 'required|array|min:2',
             'options.*' => 'string|distinct',
             'correct_answer' => 'required|string',
             'points' => 'required|integer|min:1',
         ]);
 
-        Question::create([
-            'quizz_id' => $request->quizz_id,
-            'title' => $request->title,
-            'type' => $request->type,
-            'options' => $request->type == 'mc' ? json_encode($request->options) : null,
-            'correct_answer' => $request->correct_answer,
-            'points' => $request->points,
-        ]);
-
-        return redirect()->route('questions.index')->with('success', 'تم إضافة السؤال بنجاح');
-
-
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Question $question)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Question $question)
-    {
-         return view('cms.question.edit', compact('question'));
-
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Question $question)
-    {
-
-        $request->validate([
-            'title' => 'required|string',
-            'type' => 'required|in:mc,tf',
-            'options' => 'required_if:type,mc|array|min:2',
-            'options.*' => 'string|distinct',
-            'correct_answer' => 'required|string',
-            'points' => 'integer|min:1',
-        ]);
-
-        $data = $request->except('options');
-        if ($request->type === 'mc') {
-            $data['options'] = json_encode($request->options);
-        } else {
-            $data['options'] = null;
+        if ($validator->fails()) {
+            return response()->json([
+                'icon' => 'error',
+                'title' => $validator->errors()->first(),
+            ], 400);
         }
 
-        $question->update($data);
-        return redirect()->route('questions.index')->with('success', 'تم تحديث السؤال بنجاح');
+        try {
+            DB::beginTransaction();
+
+            $question = Question::create([
+                'quizz_id' => $request->quizz_id,
+                'title' => $request->title,
+                'type' => 'mc',
+                'options' => json_encode($request->options),
+                'correct_answer' => $request->correct_answer,
+                'points' => $request->points,
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'icon' => 'success',
+                'title' => 'تم إنشاء السؤال بنجاح'
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'icon' => 'error',
+                'title' => 'خطأ: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Question $question)
+    public function edit($id)
     {
+         $question = Question::findOrFail($id);
+    $quizzes = Quizz::with('course')->get();
+    return view('cms.question.edit', compact('question', 'quizzes'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'quizz_id' => 'required|exists:quizzs,id',
+            'title' => 'required|string',
+            'options' => 'required|array|min:2',
+            'options.*' => 'string|distinct',
+            'correct_answer' => 'required|string',
+            'points' => 'required|integer|min:1',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'icon' => 'error',
+                'title' => $validator->errors()->first(),
+            ], 400);
+        }
+
+        try {
+            $question = Question::findOrFail($id);
+            $question->update([
+                'quizz_id' => $request->quizz_id,
+                'title' => $request->title,
+                'options' => json_encode($request->options),
+                'correct_answer' => $request->correct_answer,
+                'points' => $request->points,
+            ]);
+
+            return response()->json([
+                'icon' => 'success',
+                'title' => 'تم تحديث السؤال بنجاح'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'icon' => 'error',
+                'title' => 'خطأ: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 
 
-        $question->delete();
-    if (request()->ajax()) {
-        return response()->json(['success' => true]);
+////////////////////
+ public function trashed()
+{
+    $questions = Question::onlyTrashed()->with('quizz')->get();
+    return view('cms.question.trashed', compact('questions'));
+}
+
+ public function restore($id)
+{
+    $question = Question::onlyTrashed()->findOrFail($id);
+    $question->restore();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'تم استعادة السؤال بنجاح'
+    ]);
+}
+ public function forceDelete($id)
+{
+    $question = Question::onlyTrashed()->findOrFail($id);
+    $question->forceDelete();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'تم حذف السؤال نهائياً'
+    ]);
+}
+
+public function destroy($id)
+{
+    $question = Question::find($id);
+    if (!$question) {
+        return response()->json(['success' => false, 'message' => 'السؤال غير موجود'], 404);
     }
-    return redirect()->route('questions.index')->with('success', 'تم حذف السؤال بنجاح');
-    }
+    $question->delete();
+    return response()->json(['success' => true, 'message' => 'تم نقل السؤال إلى الأرشيف']);
+}
+
+
 }

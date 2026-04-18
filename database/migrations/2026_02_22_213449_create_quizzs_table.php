@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
              $table->string('title');
             $table->text('description')->nullable();
-            $table->integer('duration_minutes')->nullable(); // مدة الامتحان بالدقائق
+            $table->integer('duration_minutes')->nullable();
             $table->string('total_marks');
             $table->foreignId('course_id')->constrained()->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

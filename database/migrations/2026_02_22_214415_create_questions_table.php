@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('correct_answer');          // الإجابة الصحيحة (نص)
             $table->integer('points')->default(1);     // درجة السؤال
             $table->timestamps();
+            $table->softDeletes();
             $table->foreignId('quizz_id')->constrained()->onDelete('cascade');
         });
     }

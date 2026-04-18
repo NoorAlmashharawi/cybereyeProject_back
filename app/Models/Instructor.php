@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\User1;
 
-use Illuminate\Database\Eloquent\softDeletes;
 
 
 
@@ -27,7 +27,11 @@ class Instructor extends Model
 
 
 
-    protected $casts = [
+
+ 
+
+
+  protected $casts = [
         'enrollment_date' => 'date',
     ];
 
