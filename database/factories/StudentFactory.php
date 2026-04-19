@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Student>
  */
 class StudentFactory extends Factory
-
 {
     /**
      * Define the model's default state.
@@ -20,16 +19,19 @@ class StudentFactory extends Factory
         return [
             'username' => $this->faker->unique()->username(),
 
-          'email' => $this-> faker->email(),
-          'progress' =>$this-> faker->numberBetween(0,100),
-           'level' => $this-> faker->randomElement([
-            'خبير','متوسط','مبتدئ'
-           ]),
-            'specialization' =>$this-> faker->word,
+            'email' => $this->faker->email(),
+            'progress' => $this->faker->numberBetween(0, 100),
+            'level' => $this->faker->randomElement([
+                'خبير',
+                'متوسط',
+                'مبتدئ'
+            ]),
+            'specialization' => $this->faker->word,
             'status' => $this->faker->randomElement([
-                'غير نشط','نشط'
-               ]),
-     
+                'غير نشط',
+                'نشط'
+            ]),
+
 
         ];
     }

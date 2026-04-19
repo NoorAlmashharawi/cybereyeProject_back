@@ -19,6 +19,7 @@ use App\Http\Controllers\StudentVideoController;
 use App\Http\Controllers\StudentDashboardController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RolePermissionController;
 
 use App\Http\Controllers\CertificateController;
 
