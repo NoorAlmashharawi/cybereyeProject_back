@@ -573,6 +573,11 @@
                         <i class="fas fa-play-circle"></i>
                         <span> الدروس</span>
                     </a>
+
+                    <a class="admin-btn admin-btn-add" href="{{ route('materials.index') }}" class="manage-btn">
+                        <i class="fas fa-play-circle"></i>
+                        <span>اختبار</span>
+                    </a>
                 </div>
             </div>
             <div class="videos-list" id="videosList">
