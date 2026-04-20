@@ -6,12 +6,9 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\AIChatController;
-<<<<<<< Updated upstream
-use App\Http\Controllers\DictionaryController;
+
 use App\Http\Controllers\LessonController;
 
-=======
->>>>>>> Stashed changes
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\DictionaryController;
@@ -23,6 +20,9 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuizzController;
 use App\Http\Controllers\StudentVideoController;
 use App\Http\Controllers\StudentDashboardController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RolePermissionController;
 
 use App\Http\Controllers\CertificateController;
 
@@ -63,11 +63,12 @@ Route::prefix('cms/student')->group(function(){
     Route::view('/', 'cms.parent');
     Route::view('temp', 'cms.temp');
 
-<<<<<<< Updated upstream
 Route::view('temp', 'cms.temp');
 Route::put('students_update/{id}', [StudentController::class, 'update'])->name('students_update');
 Route::resource('students', StudentController::class);
 Route::resource('users', User1Controller::class);
+    Route::get('/my-certificates', [StudentDashboardController::class, 'myCertificates'])->name('student.my-certificates');
+
 
 });
 
@@ -81,8 +82,6 @@ Route::resource('users', User1Controller::class);
 
     Route::view('temp', 'cms.temp');
 
-=======
->>>>>>> Stashed changes
     Route::put('students_update/{id}', [StudentController::class, 'update'])->name('students_update');
     Route::get('students_trashed', [StudentController::class, 'trashed'])->name('students_trashed');
     Route::get('students_restore/{id}', [StudentController::class, 'restore'])->name('students_restore');
@@ -92,7 +91,6 @@ Route::resource('users', User1Controller::class);
     Route::resource('students', StudentController::class);
     Route::resource('users', User1Controller::class);
 
-    Route::get('/my-certificates', [StudentDashboardController::class, 'myCertificates'])->name('student.my-certificates');
 });
 
 
@@ -123,6 +121,14 @@ Route::prefix('cms/admin')->group(function(){
 
     Route::post('/cms/student/video-completed', [StudentVideoController::class, 'markVideoCompleted'])
     ->name('student.video.completed');
+
+    Route::resource('roles' , RoleController::class);
+    Route::post('roles-update/{id}' , [RoleController::class , 'update'])->name('roles-update');
+
+    Route::resource('permissions' , PermissionController::class);
+    Route::post('permissions-update/{id}' , [PermissionController::class , 'update'])->name('permissions-update');
+
+    Route::resource('roles.permissions' , RolePermissionController::class);
 });
 
 // ==================== Routes للمدرسين ====================
@@ -160,7 +166,6 @@ Route::prefix('cms/course')->group(function(){
     Route::get('cms/admin/courses/{course}/lessons', [CourseController::class, 'manageLessons'])->name('video.index');
 });
 
-<<<<<<< Updated upstream
 // Route::put('instructors_update/{id}', [InstructorController::class, 'update'])->name('courses_update');
 Route::resource('courses', CourseController::class);
 // Route::resource('users', User1sController::class);
@@ -171,8 +176,6 @@ Route::view('details', 'cms/courseDetails/details');
 
 
 
-=======
->>>>>>> Stashed changes
 // ==================== Routes للفيديوهات ====================
 Route::prefix('cms/video')->group(function(){
 

@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Certificate;
 use App\Models\User1;
+use Spatie\Permission\Traits\HasRoles;
 
 class Student extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasRoles;
 
     protected $table = 'students';
 
@@ -73,71 +74,77 @@ class Student extends Model
 }
 
 
+    public function studentAnswers()
+    {
+        return $this->hasMany(StudentAnswer::class, 'student_id');
+    }
 
-public function studentAnswers()
-{
-    return $this->hasMany(StudentAnswer::class, 'student_id');
-}
+    public function quizResults()
+    {
+        return $this->hasMany(QuizResult::class, 'student_id');
+    }
 
+    public function videoProgress()
+    {
+        return $this->hasMany(StudentVideoProgress::class);
+    }
 
-public function quizResults()
-{
-    return $this->hasMany(QuizResult::class, 'student_id');
-}
+    public function markVideoCompleted($videoId, $courseId)
+    {
+        $progress = StudentVideoProgress::updateOrCreate(
+            [
+                'student_id' => $this->id,
+                'video_id' => $videoId,
+            ],
+            [
+                'course_id' => $courseId,
+                'completed' => true,
+                'completed_at' => now(),
+            ]
+        );
 
+        return $progress;
+    }
 
+    public function getCourseProgress($courseId)
+    {
+        $totalVideos = Video::where('course_id', $courseId)->count();
+        $completedVideos = StudentVideoProgress::where('student_id', $this->id)
+            ->where('course_id', $courseId)
+            ->where('completed', true)
+            ->count();
 
+        return [
+            'total' => $totalVideos,
+            'completed' => $completedVideos,
+            'percentage' => $totalVideos > 0 ? round(($completedVideos / $totalVideos) * 100) : 0,
+            'is_completed' => $totalVideos > 0 && $completedVideos >= $totalVideos
+        ];
+    }
 
+    public function certificates()
+    {
+        return $this->hasMany(Certificate::class);
+    }
 
+    public function hasCertificateForCourse($courseId)
+    {
+        return $this->certificates()
+            ->where('course_id', $courseId)
+            ->exists();
+    }
 
+    // ========== العلاقة مع الكورسات المسجل فيها الطالب ==========
+    public function enrolledCourses()
+    {
+        return $this->belongsToMany(Course::class, 'course_student', 'student_id', 'course_id');
+    }
 
-public function videoProgress()
-{
-    return $this->hasMany(StudentVideoProgress::class);
-}
-
-public function markVideoCompleted($videoId, $courseId)
-{
-    $progress = StudentVideoProgress::updateOrCreate(
-        [
-            'student_id' => $this->id,
-            'video_id' => $videoId,
-        ],
-        [
-            'course_id' => $courseId,
-            'completed' => true,
-            'completed_at' => now(),
-        ]
-    );
-
-    return $progress;
-}
-
-public function getCourseProgress($courseId)
-{
-    $totalVideos = Video::where('course_id', $courseId)->count();
-    $completedVideos = StudentVideoProgress::where('student_id', $this->id)
-        ->where('course_id', $courseId)
-        ->where('completed', true)
-        ->count();
-
-    return [
-        'total' => $totalVideos,
-        'completed' => $completedVideos,
-        'percentage' => $totalVideos > 0 ? round(($completedVideos / $totalVideos) * 100) : 0,
-        'is_completed' => $totalVideos > 0 && $completedVideos >= $totalVideos
-    ];
-}
-
-public function certificates()
-{
-    return $this->hasMany(Certificate::class);
-}
-
-public function hasCertificateForCourse($courseId)
-{
-    return $this->certificates()
-        ->where('course_id', $courseId)
-        ->exists();
-}
+    // ========== العلاقة مع الدروس عبر الكورسات المسجل فيها ==========
+    public function lessons()
+    {
+        return Lesson::whereHas('course.enrollments', function($query) {
+            $query->where('student_id', $this->id);
+        });
+    }
 }

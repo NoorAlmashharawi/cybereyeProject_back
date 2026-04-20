@@ -10,7 +10,7 @@ use App\http\Controllers\StudentController;
 use App\Models\Student;
 use App\Models\Course;
 use App\Models\Instructor;
-
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User1;
@@ -158,6 +158,8 @@ private function getArabicDayName($dayOfWeek)
 
     public function create()
     {
+        // $roles = Role::where('guard_name' , 'admin')->get();
+        // $this->authorize('create' , Admin::class);
         return response()->view('cms.admin.create');
 
     }
@@ -198,6 +200,11 @@ private function getArabicDayName($dayOfWeek)
 
 
 
+
+
+
+            $roles = Role::findOrFail($request->get('role_id'));
+            $admin ->assignRole($roles->name);
 
             return response()->json([
                 'icon'  => 'success',

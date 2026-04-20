@@ -95,7 +95,7 @@ class StudentDashboardController extends Controller
     
     public function myCourses()
     {
-        $user = Auth::user();
+        $user = Auth::user();//////1111111111111
         
         if ($user->actor_type === 'App\Models\Student') {
             $student = Student::find($user->actor_id);
@@ -108,7 +108,7 @@ class StudentDashboardController extends Controller
     
     public function myCertificates()
     {
-        $user = Auth::user();
+        $user = Auth::user(); ///11111111111
         
         if ($user->actor_type === 'App\Models\Student') {
             $student = Student::find($user->actor_id);

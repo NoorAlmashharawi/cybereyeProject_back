@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
-
+use Spatie\Permission\Models\Role;
 class StudentController extends Controller
 {
 
@@ -48,6 +48,8 @@ class StudentController extends Controller
     // عرض صفحة إنشاء طالب جديد
     public function create()
     {
+        // $roles = Role::where('guard_name' , 'admin')->get();
+        // $this->authorize('create' , Student::class);
         return view('cms.student.create');
     }
 
@@ -69,8 +71,6 @@ public function store(Request $request)
     try {
         DB::beginTransaction();
 
-        // 1. ننشئ حساب المستخدم (User1) أولاً
-        // بنحط الـ actor_id مبدئياً 0 لأننا لسه ما أنشأنا سجل الطالب
         $user1 = User1::create([
             'username'   => $request->username,
             'email'      => $request->email,
@@ -80,9 +80,8 @@ public function store(Request $request)
             'actor_type' => 'App\Models\Student',
         ]);
 
-        // 2. ننشئ سجل الطالب ونربطه بـ user_id اللي طلع من الخطوة الأولى
         $student = Student::create([
-            'user_id'         => $user1->id, // هان حل مشكلة الـ SQL Error
+            'user_id'         => $user1->id, 
             'level'           => $request->level ?? 'beginner',
             'status'          => $request->status ?? 'active',
             'specialization'  => $request->specialization ?? 'General',
@@ -90,11 +89,13 @@ public function store(Request $request)
             'enrollment_date' => $request->enrollment_date ?? now(),
         ]);
 
-        // 3. نحدث سجل اليوزر بالـ actor_id الحقيقي (رقم الطالب)
+       
         $user1->update([
             'actor_id' => $student->id
         ]);
 
+        // $roles = Role::findOrFail($request->get('role_id'));
+        // $student ->assignRole($roles->name);
         DB::commit();
 
         return response()->json(['icon' => 'success', 'title' => 'تم التسجيل بنجاح!'], 200);

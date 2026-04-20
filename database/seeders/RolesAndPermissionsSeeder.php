@@ -61,7 +61,7 @@ class RolesAndPermissionsSeeder extends Seeder
             $adminUser->assignRole('admin');
         }
         
-        $this->command->info('✅ Roles and permissions seeded successfully!');
+        $this->command->info(' Roles and permissions seeded successfully!');
         $this->command->info('Created roles: admin, instructor, student');
         $this->command->info('Created permissions: ' . implode(', ', $permissions));
     }
