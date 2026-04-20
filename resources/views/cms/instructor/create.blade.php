@@ -23,6 +23,17 @@
 
 <div class="form-row">
 
+    {{-- <div class="form-group">
+        <label>Role NAme</label>
+        <select class="form-control select2" id="role_id" name="role_id"  style="width: 100%;">
+          @foreach ($roles as $role)
+          <option value="{{ $role->id }}">{{ $role->name }}</option>
+
+          @endforeach
+      
+        </select>
+      </div> --}}
+
 <div class="form-group">
 <label>اسم المستخدم</label>
 <input type="text" id="username" placeholder="اسم المستخدم">
@@ -111,53 +122,45 @@
 
 @section('scripts')
 
+)
 <script>
 
 function performStore(){
-
-let formData = new FormData();
-
-formData.append('username',username.value);
-formData.append('email',email.value);
-formData.append('password',password.value);
-formData.append('password_confirmation',password_confirmation.value);
-
-formData.append('specialization',specialization.value);
-formData.append('experience_years',experience_years.value);
-formData.append('rating',rating.value);
-formData.append('bio',bio.value);
-formData.append('enrollment_date',enrollment_date.value);
-
-
-axios.post('{{ route('instructors.store') }}',formData)
-
-.then(function(response){
-
-Swal.fire({
-icon:'success',
-title:response.data.title,
-timer:1500,
-showConfirmButton:false
-})
-
-.then(()=>{
-window.location.href='{{ route('instructors.index') }}'
-})
-
-})
-
-.catch(function(error){
-
-Swal.fire({
-icon:'error',
-title:'خطأ',
-text:error.response.data.title
-})
-
-})
-
+    let formData = new FormData();
+    
+    formData.append('username', document.getElementById('username').value);
+    formData.append('email', document.getElementById('email').value);
+    formData.append('password', document.getElementById('password').value);
+    formData.append('password_confirmation', document.getElementById('password_confirmation').value);
+    
+    formData.append('specialization', document.getElementById('specialization').value);
+    formData.append('experience_years', document.getElementById('experience_years').value);
+    formData.append('rating', document.getElementById('rating').value);
+    formData.append('bio', document.getElementById('bio').value);
+    formData.append('enrollment_date', document.getElementById('enrollment_date').value);
+    
+    // إضافة الـ axios.post بشكل صحيح
+    axios.post('{{ route('instructors.store') }}', formData)
+    .then(function(response){
+        Swal.fire({
+            icon: 'success',
+            title: response.data.title,
+            timer: 1500,
+            showConfirmButton: false
+        }).then(() => {
+            window.location.href = '{{ route('instructors.index') }}'
+        });
+    })
+    .catch(function(error){
+        Swal.fire({
+            icon: 'error',
+            title: 'خطأ',
+            text: error.response?.data?.title || 'حدث خطأ ما'
+        });
+    });
 }
 
 </script>
-
 @endsection
+
+

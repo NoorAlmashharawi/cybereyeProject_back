@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-
+use Spatie\Permission\Models\Role;
 
 class InstructorController extends Controller
 {
@@ -45,7 +45,11 @@ class InstructorController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
+     {
+
+    //     $roles = Role::where('guard_name' , 'admin')->get();
+    //     $this->authorize('create' , Instructor::class);
+      
          return response()->view('cms.instructor.create');
     }
 
@@ -93,9 +97,11 @@ class InstructorController extends Controller
                  'password'   => Hash::make($request->password),
                  'role'       => 'instructor',
                  'actor_id'   => $instructor->id,
-                 'actor_type' => 'App\Models\instructor',
+                 'actor_type' => 'App\Models\Instructor',
              ]);
  
+            //  $roles = Role::findOrFail($request->get('role_id'));
+            //  $instructor ->assignRole($roles->name);
              DB::commit();
  
              return response()->json([

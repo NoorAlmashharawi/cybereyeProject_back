@@ -10,10 +10,16 @@ class StudentAnswerController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+      public function index($studentId, $quizzId)
     {
-        //
+        $answers = StudentAnswer::with('question')
+            ->where('student_id', $studentId)
+            ->where('quizz_id', $quizzId)
+            ->get();
+        return view('student.answers', compact('answers'));
     }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -58,8 +64,10 @@ class StudentAnswerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(StudentAnswer $studentAnswer)
+    public function destroy($id)
     {
-        //
+          $answer = StudentAnswer::findOrFail($id);
+        $answer->delete();
+        return back()->with('success', 'تم حذف الإجابة');
     }
 }

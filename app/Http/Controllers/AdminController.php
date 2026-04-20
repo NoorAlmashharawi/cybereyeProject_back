@@ -9,6 +9,7 @@ use IlluminateHttpFacadesDB;
 use App\http\Controllers\StudentController;
 use App\Models\Student;
 use App\Models\Course;
+use Spatie\Permission\Models\Role;
 use App\Models\Instructor;  
 
 use Illuminate\Support\Facades\Validator;
@@ -150,6 +151,8 @@ private function getArabicDayName($dayOfWeek)
 
     public function create()
     {
+        // $roles = Role::where('guard_name' , 'admin')->get();
+        // $this->authorize('create' , Admin::class);
         return response()->view('cms.admin.create');
 
     }
@@ -189,8 +192,10 @@ private function getArabicDayName($dayOfWeek)
             ]);
     
       
-          
-    
+        
+            $roles = Role::findOrFail($request->get('role_id'));
+            $admin ->assignRole($roles->name);
+
             return response()->json([
                 'icon'  => 'success',
                 'title' => 'تم إنشاء المسؤول بنجاح'

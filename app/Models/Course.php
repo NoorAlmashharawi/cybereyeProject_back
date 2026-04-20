@@ -22,16 +22,16 @@ class Course extends Model
         'course_image'
     ];
 
+    public function category() {
+        return $this->belongsTo(Category::class);
+    }
+
     // العلاقات
     public function instructor()
     {
         return $this->belongsTo(Instructor::class, 'instructor_id');
     }
 
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
-    }
 
     public function lessons()
     {
@@ -56,15 +56,13 @@ class Course extends Model
     public function students()
     {
         return $this->belongsToMany(Student::class, 'enrollments','course_id', 'student_id') ->withPivot('enrolled_at')
-        ->withTimestamps();;
+        ->withTimestamps();
     }
-
-
-
 
 
     public function comments()
     {
     return $this->hasManyThrough(Comment::class, Lesson::class);
     }
+
 }

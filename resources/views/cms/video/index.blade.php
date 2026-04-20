@@ -82,6 +82,7 @@
             margin-top: 15px;
             padding-top: 15px;
             border-top: 1px solid rgba(0, 255, 255, 0.2);
+            flex-wrap: wrap;
         }
 
         .admin-btn {
@@ -388,6 +389,7 @@
             margin-top: 20px;
             padding-top: 20px;
             border-top: 1px solid rgba(0, 255, 204, 0.2);
+            flex-wrap: wrap;
         }
 
         .back-link {
@@ -568,15 +570,14 @@
                         <i class="fas fa-plus"></i> إضافة فيديو جديد
                     </button>
 
-
-                    <a class="admin-btn admin-btn-add" href="{{ route('materials.index') }}" class="manage-btn">
-                        <i class="fas fa-play-circle"></i>
+                    <a class="admin-btn admin-btn-add" href="{{ route('materials.index') }}">
+                        <i class="fas fa-book-open"></i>
                         <span> الدروس</span>
                     </a>
 
-                    <a class="admin-btn admin-btn-add" href="{{ route('materials.index') }}" class="manage-btn">
-                        <i class="fas fa-play-circle"></i>
-                        <span>اختبار</span>
+                    <a class="admin-btn admin-btn-add" href="{{ route('quizzs.index') }}">
+                        <i class="fas fa-question-circle"></i>
+                        <span> اختبار</span>
                     </a>
                 </div>
             </div>
@@ -645,8 +646,6 @@
                         </div>
                     </div>
                 </div>
-
-              
             </div>
 
             @if(isset($videos) && $videos->isNotEmpty())
@@ -670,14 +669,12 @@
                                 <i class="fas fa-plus"></i> إضافة فيديو 
                             </button>
 
-                            <a class="admin-btn admin-btn-add"  href="   {{ route('student.my-certificates') }}">
-                                <i class="fas fa-plus"></i> الحصور على شهادة
-                             
+                            <a class="admin-btn admin-btn-add" href="{{ route('student.my-certificates') }}">
+                                <i class="fas fa-certificate"></i> الحصول على شهادة
                             </a>
                         </div>
                     </div>
                 </div>
-               
             @else
                 <div class="empty-player">
                     <i class="fas fa-video-slash"></i>
@@ -688,14 +685,8 @@
                     </button>
                 </div>
             @endif
-
-          
         </main>
-
-      
     </div>
-
-  
 
     <!-- مودال إضافة/تعديل فيديو -->
     <div id="videoModal" class="modal">

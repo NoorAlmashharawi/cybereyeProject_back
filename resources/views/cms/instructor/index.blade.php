@@ -23,6 +23,7 @@
 <div class="container">
 
     <div class="controls">
+
         <div class="action-buttons">
             <button class="btn btn-primary">
                 <a href="{{ route('instructors.create') }}" style="color:white;">
@@ -34,6 +35,7 @@
                 <a href="{{ route('instructors_trashed') }}" style="color:white; text-decoration:none;">
                     <i class="fas fa-user-secret"></i> الارشيف
                 </a>
+
             </button>
         </div>
     </div>
@@ -140,4 +142,6 @@
 @section('scripts')
 <script src="{{ asset('cms/js/rating.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+ 
 @endsection
+

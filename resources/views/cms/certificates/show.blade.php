@@ -111,18 +111,18 @@
 
         <p>بأن</p>
         <div class="student-name">
-            {{ $certificate->student->name ?? $certificate->student->username ?? Auth::user()->name ?? 'طالب' }}
+            {{ $certificate->student->username ?? $certificate->student->username ?? Auth::user()->username ?? 'طالب' }}
         </div>
 
         <p>قد أتم بنجاح كورس</p>
         <div class="course-name">
-            {{ $certificate->course->course_name ?? $certificate->course->name ?? 'كورس' }}
+            {{ $certificate->course->course_name ?? $certificate->course->course_name ?? 'كورس' }}
         </div>
-
+{{-- 
         <p>بتقديم المدرب</p>
         <div class="instructor-name">
-            {{ $certificate->instructor->name ?? $certificate->instructor->username ?? $certificate->course->instructor->name ?? 'مدرب' }}
-        </div>
+            {{ $certificate->instructor->username ?? $certificate->instructor->username ?? $certificate->course->instructor->username ?? 'مدرب' }}
+        </div> --}}
 
         <div class="certificate-number">
             <i class="fas fa-hashtag"></i> {{ $certificate->certificate_number ?? '---' }}
