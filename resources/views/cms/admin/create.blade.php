@@ -14,8 +14,17 @@
     <form id="create-form" method="POST" action="{{ route('admins.store') }}">
         @csrf
         
-        {{-- بيانات User1 --}}
-        <h3 class="form-subtitle">بيانات الدخول</h3>
+        <div class="form-group">
+            <label>Role NAme</label>
+            <select class="form-control select2" id="role_id" name="role_id"  style="width: 100%;">
+              @foreach ($roles as $role)
+              <option value="{{ $role->id }}">{{ $role->name }}</option>
+
+              @endforeach
+          
+            </select>
+          </div>
+  
         <div class="form-row">
             <div class="form-group">
                 <label for="username">اسم المستخدم *</label>
@@ -70,6 +79,7 @@ function performStore() {
     formData.append('email', document.getElementById('email').value);
     formData.append('password', document.getElementById('password').value);
     formData.append('password_confirmation', document.getElementById('password_confirmation').value);
+    formData.append('role_id', document.getElementById('role_id').value);
 
     axios.post('{{ route('admins.store') }}', formData)
         .then(function (response) {

@@ -25,16 +25,18 @@ class Certificate extends Model
     
     public function student()
     {
-        return $this->belongsTo(Student::class);
+        return $this->belongsTo(User1::class, 'student_id');
     }
 
+    // علاقة الشهادة مع الكورس
     public function course()
     {
-        return $this->belongsTo(Course::class);
+        return $this->belongsTo(Course::class, 'course_id');
     }
 
+    // علاقة الشهادة مع المدرب
     public function instructor()
     {
-        return $this->belongsTo(Instructor::class);
+        return $this->belongsTo(User1::class, 'instructor_id');
     }
 }
