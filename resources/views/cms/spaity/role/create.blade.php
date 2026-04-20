@@ -510,7 +510,7 @@ section.content::before {
 /* Smooth Scroll */
 html {
     scroll-behavior: smooth;
-}
+} 
 </style>
 
 @endsection

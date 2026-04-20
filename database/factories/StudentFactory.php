@@ -17,9 +17,9 @@ class StudentFactory extends Factory
     public function definition(): array
     {
         return [
-            'username' => $this->faker->unique()->username(),
+            // 'username' => $this->faker->unique()->username(),
 
-            'email' => $this->faker->email(),
+            // 'email' => $this->faker->email(),
             'progress' => $this->faker->numberBetween(0, 100),
             'level' => $this->faker->randomElement([
                 'خبير',
@@ -31,6 +31,7 @@ class StudentFactory extends Factory
                 'غير نشط',
                 'نشط'
             ]),
+            'user_id' => $this->faker->numberBetween(0, 100),
 
 
         ];

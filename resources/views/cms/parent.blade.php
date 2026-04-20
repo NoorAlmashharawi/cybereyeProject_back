@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link href="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.css" rel="stylesheet">
     <style>
-        /* ========== الخلفية والتصميم السيبراني ========== */
         body {
             background: #0a0e27;
             background-image: 
@@ -20,7 +19,6 @@
             background-size: 30px 30px;
         }
         
-        /* ========== القائمة الجانبية السيبرانية ========== */
         .admin-menu {
             padding: 20px;
             background: linear-gradient(135deg, #0a0f1e 0%, #0d1428 100%);
@@ -439,7 +437,6 @@
             </div>
         </div>
 
-       <!-- ========== القائمة الجانبية الكاملة ========== -->
 <nav class="admin-menu">
     <!-- قسم الرئيسية -->
     <div class="admin-menu-section">
@@ -491,15 +488,20 @@
             </span>
             <i class="fas fa-chevron-down arrow"></i>
         </button>
+
         <div class="dropdown-content">
+            {{-- @can('index-course') --}}
             <a href="{{ route('courses.index') }}">
                 <i class="fas fa-list"></i>
                 <span>جميع الكورسات</span>
             </a>
+            {{-- @endcan --}}
+            {{-- @can('create-course') --}}
             <a href="{{ route('courses.create') }}">
                 <i class="fas fa-plus-circle"></i>
                 <span>إضافة كورس جديد</span>
             </a>
+            {{-- @endcan --}}
         </div>
     </div>
 
@@ -513,14 +515,19 @@
             <i class="fas fa-chevron-down arrow"></i>
         </button>
         <div class="dropdown-content">
+{{-- 
+            @can('index-category') --}}
             <a href="{{ route('categories.index') }}">
                 <i class="fas fa-list"></i>
                 <span>جميع التصنيفات</span>
             </a>
+            {{-- @endcan --}}
+            {{-- @can('create-category') --}}
             <a href="{{ route('categories.create') }}">
                 <i class="fas fa-plus-circle"></i>
                 <span>إضافة تصنيف جديد</span>
             </a>
+            {{-- @endcan --}}
         </div>
     </div>
 
@@ -534,14 +541,18 @@
             <i class="fas fa-chevron-down arrow"></i>
         </button>
         <div class="dropdown-content">
+            {{-- @can('index-material') --}}
             <a href="{{ route('materials.index') }}">
                 <i class="fas fa-list"></i>
                 <span>جميع المواد</span>
             </a>
+            {{-- @endcan --}}
+            {{-- @can('create-material') --}}
             <a href="{{ route('materials.create') }}">
                 <i class="fas fa-plus-circle"></i>
                 <span>رفع مادة جديدة</span>
             </a>
+            {{-- @endcan --}}
         </div>
     </div>
 
@@ -558,14 +569,18 @@
             <i class="fas fa-chevron-down arrow"></i>
         </button>
         <div class="dropdown-content">
+            {{-- @can('index-student') --}}
             <a href="{{ route('students.index') }}">
                 <i class="fas fa-list"></i>
                 <span>جميع الطلاب</span>
             </a>
+            {{-- @endcan --}}
+            {{-- @can('create-student') --}}
             <a href="{{ route('students.create') }}">
                 <i class="fas fa-plus-circle"></i>
                 <span>إضافة طالب جديد</span>
             </a>
+            {{-- @endcan --}}
         </div>
     </div>
 
@@ -579,14 +594,18 @@
             <i class="fas fa-chevron-down arrow"></i>
         </button>
         <div class="dropdown-content">
+            {{-- @can('index-instuctor') --}}
             <a href="{{ route('instructors.index') }}">
                 <i class="fas fa-list"></i>
                 <span>جميع المدربين</span>
             </a>
+            {{-- @endcan --}}
+            {{-- @can('create-instuctor') --}}
             <a href="{{ route('instructors.create') }}">
                 <i class="fas fa-plus-circle"></i>
                 <span>إضافة مدرب جديد</span>
             </a>
+            {{-- @endcan --}}
         </div>
     </div>
 
@@ -600,54 +619,62 @@
             <i class="fas fa-chevron-down arrow"></i>
         </button>
         <div class="dropdown-content">
+            {{-- @can('index-admin') --}}
             <a href="{{ route('admins.index') }}">
                 <i class="fas fa-list"></i>
                 <span>جميع المشرفين</span>
             </a>
+            {{-- @endcan --}}
+            {{-- @can('create-admin') --}}
             <a href="{{ route('admins.create') }}">
                 <i class="fas fa-plus-circle"></i>
                 <span>إضافة مشرف جديد</span>
             </a>
+            {{-- @endcan --}}
         </div>
     </div>
 
     <!-- قسم تحكم الطالب -->
-    <div class="menu-title">تحكم الطالب</div>
+ 
+<div class="menu-title">تحكم الطالب</div>
 
-    <div class="dropdown-menu-item">
-        <button class="dropdown-btn" onclick="toggleDropdown(this)">
-            <span>
-                <i class="fas fa-book-reader"></i>
-                <span>كورساتي</span>
-            </span>
-            <i class="fas fa-chevron-down arrow"></i>
-        </button>
-        <div class="dropdown-content">
-            <a href="{{ route('student.dashboard') }}">
-                <i class="fas fa-tachometer-alt"></i>
-                <span>كورساتي</span>
-            </a>
+<div class="dropdown-menu-item">
+    <button class="dropdown-btn" onclick="toggleDropdown(this)">
+        <span>
+            <i class="fas fa-book-reader"></i>
+            <span>كورساتي</span>
+        </span>
+        <i class="fas fa-chevron-down arrow"></i>
+    </button>
+    <div class="dropdown-content">
+        {{-- @can('index-course') --}}
+        <a href="{{ route('student.dashboard') }}">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>كورساتي</span>
+        </a>
+        {{-- @endcan --}}
+    </div>
+</div>
+
+
+ 
+        <span>
+            <a href="{{ route('student.my-certificates') }}">
+            <i class="fas fa-certificate"></i>
+            <span>شهاداتي</span>
+        </span>
         
-        </div>
-    </div>
 
-    <div class="dropdown-menu-item">
-        <button class="dropdown-btn" onclick="toggleDropdown(this)">
-            <span>
-                <i class="fas fa-certificate"></i>
-                <span>شهاداتي</span>
-            </span>
-            <i class="fas fa-chevron-down arrow"></i>
-        </button>
+ 
 
-        </div>
-    </div>
 
+   
     <!-- قسم تحكم المدرب -->
     <div class="menu-title">تحكم المدرب</div>
-
+  
     <div class="dropdown-menu-item">
-        <button class="dropdown-btn" onclick="toggleDropdown(this)">
+      
+                   <button class="dropdown-btn" onclick="toggleDropdown(this)">
             <span>
                 <i class="fas fa-chalkboard-teacher"></i>
                 <span>إدارة الكورسات</span>
@@ -655,13 +682,15 @@
             <i class="fas fa-chevron-down arrow"></i>
         </button>
         <div class="dropdown-content">
+            {{-- @can('create-course') --}}
             <a href="{{ route('courses.create') }}">
                 <i class="fas fa-plus-circle"></i>
                 <span>إنشاء كورس جديد</span>
             </a>
-      
+            {{-- @endcan --}}
         </div>
     </div>
+  
 
     <div class="dropdown-menu-item">
         <button class="dropdown-btn" onclick="toggleDropdown(this)">
@@ -672,14 +701,18 @@
             <i class="fas fa-chevron-down arrow"></i>
         </button>
         <div class="dropdown-content">
+            {{-- @can('create-category') --}}
             <a href="{{ route('categories.create') }}">
                 <i class="fas fa-folder-plus"></i>
                 <span>إضافة تصنيف</span>
             </a>
+            {{-- @endcan --}}
+            {{-- @can('index-category') --}}
             <a href="{{ route('categories.index') }}">
                 <i class="fas fa-list"></i>
                 <span>جميع التصنيفات</span>
             </a>
+            {{-- @endcan --}}
         </div>
     </div>
 
@@ -692,14 +725,18 @@
             <i class="fas fa-chevron-down arrow"></i>
         </button>
         <div class="dropdown-content">
+            {{-- @can('create-material') --}}
             <a href="{{ route('materials.create') }}">
                 <i class="fas fa-plus-circle"></i>
                 <span>رفع مادة تعليمية</span>
             </a>
+            {{-- @endcan
+            @can('index-material') --}}
             <a href="{{ route('materials.index') }}">
                 <i class="fas fa-list"></i>
                 <span>جميع المواد</span>
             </a>
+            {{-- @endcan --}}
         </div>
     </div>
 
@@ -716,10 +753,12 @@
                 <i class="fas fa-list"></i>
                 <span>إدارة الفيديوهات</span>
             </a>
+            {{-- @can('create-video') --}}
             <a href="{{ route('videos.create') }}">
                 <i class="fas fa-plus-circle"></i>
                 <span>إضافة فيديو جديد</span>
             </a>
+            {{-- @endcan --}}
         </div>
     </div>
 
@@ -732,14 +771,18 @@
             <i class="fas fa-chevron-down arrow"></i>
         </button>
         <div class="dropdown-content">
+            {{-- @can('create-quiz') --}}
             <a href="{{ route('quizzs.create') }}">
                 <i class="fas fa-plus-circle"></i>
                 <span>إنشاء كويز جديد</span>
             </a>
+            {{-- @endcan
+            @can('index-quiz') --}}
             <a href="{{ route('quizzs.index') }}">
                 <i class="fas fa-list"></i>
                 <span>جميع الكويزات</span>
             </a>
+            {{-- @endcan --}}
         </div>
     </div>
 </nav>

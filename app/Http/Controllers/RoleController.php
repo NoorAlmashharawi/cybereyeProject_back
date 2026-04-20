@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
+use Illuminate\Http\Response, Illuminate\Http\JsonResponse ;
 
 class RoleController extends Controller
 {

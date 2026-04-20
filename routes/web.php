@@ -62,6 +62,8 @@ Route::view('temp', 'cms.temp');
 Route::put('students_update/{id}', [StudentController::class, 'update'])->name('students_update');
 Route::resource('students', StudentController::class);
 Route::resource('users', User1Controller::class);
+    Route::get('/my-certificates', [StudentDashboardController::class, 'myCertificates'])->name('student.my-certificates');
+
 
 });
 
@@ -84,7 +86,6 @@ Route::resource('users', User1Controller::class);
     Route::resource('students', StudentController::class);
     Route::resource('users', User1Controller::class);
 
-    Route::get('/my-certificates', [StudentDashboardController::class, 'myCertificates'])->name('student.my-certificates');
 });
 
 

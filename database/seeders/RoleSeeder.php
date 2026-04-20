@@ -33,6 +33,10 @@ class RoleSeeder extends Seeder
           Permission::create(['name' => 'index-instuctor', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
           Permission::create(['name' => 'delete-instuctor', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
 
+          Permission::create(['name' => 'create-category', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
+          Permission::create(['name' => 'index-category', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
+          Permission::create(['name' => 'delete-category', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
+
         
           Permission::create(['name' => 'index-quiz', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
           Permission::create(['name' => 'index-question', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
@@ -49,6 +53,7 @@ class RoleSeeder extends Seeder
           Permission::create(['name' => 'index-material', 'guard_name' => 'student', 'created_at' => now(), 'updated_at' => now()]);
           Permission::create(['name' => 'index-video', 'guard_name' => 'student', 'created_at' => now(), 'updated_at' => now()]);
           Permission::create(['name' => 'index-course', 'guard_name' => 'student', 'created_at' => now(), 'updated_at' => now()]);
+          Permission::create(['name' => 'index-certificate', 'guard_name' => 'student', 'created_at' => now(), 'updated_at' => now()]);
 
 
           // permission for instuctor
@@ -76,6 +81,9 @@ class RoleSeeder extends Seeder
 
 
 
+          Permission::create(['name' => 'create-category', 'guard_name' => 'instuctor', 'created_at' => now(), 'updated_at' => now()]);
+          Permission::create(['name' => 'index-category', 'guard_name' => 'instuctor', 'created_at' => now(), 'updated_at' => now()]);
+          Permission::create(['name' => 'delete-category', 'guard_name' => 'instuctor', 'created_at' => now(), 'updated_at' => now()]);
 
 
     }
