@@ -13,15 +13,11 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
-
             $table->string('progress')->default('0');
             $table->string('level');
             $table->string('specialization')->default('General');
             $table->string('role')->default('student');
             $table->string('status');
-
-
-
          $table->foreignId('user_id')->constrained('user1s')->onDelete('cascade');
 
 

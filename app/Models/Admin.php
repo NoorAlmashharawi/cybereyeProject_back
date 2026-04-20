@@ -5,20 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\softDeletes;
-
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
+
 
 class Admin extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\AdminFactory> */
-    use HasFactory, HasRoles;
-
+    use HasFactory;
+use Notifiable;
     protected $fillable = [
-        
-       
+
+
     ];
-    
+
 
 
     public function user1()
@@ -26,4 +27,4 @@ class Admin extends Authenticatable
         return $this->morphOne(User1::class, 'actor');
     }
 
-} 
+}

@@ -33,25 +33,35 @@ class AdminController extends Controller
 
 
 
-    public function main()
+public function main()
 {
     $newStudents = Student::with('user1')->latest()->limit(10)->get();
-    $courses = Course::all();
+    $courses = Course::all(); // هاد المتغير موجود
     $totalUsers = User1::count();
     $totalCourses = Course::count();
     $weeklyRegistrations = $this->getWeeklyRegistrations();
     $monthlyRegistrations = $this->getMonthlyRegistrations();
 
-    //انا سجا ضفت هدول
-$activeCourses = Course::where('status', 'active')->count();
-$latestCourses = Course::with(['instructor.user1', 'category'])
-        ->withCount('students') // هادي بتعطيكِ تلقائياً متغير اسمه students_count
-        ->latest()
-        ->limit(5)
-        ->get();
-    return view('cms.admin.main', compact('newStudents', 'totalUsers', 'totalCourses', 'weeklyRegistrations', 'monthlyRegistrations','activeCourses','latestCourses'));
-}
+    // شغل سجا العسل
+    $activeCourses = Course::where('status', 'active')->count();
+    $latestCourses = Course::with(['instructor.user1', 'category'])
+            ->withCount('students')
+            ->latest()
+            ->limit(5)
+            ->get();
 
+    // التعديل هون: ضفنا 'courses' و 'latestCourses' (تأكدي إنك باعتة التنين لو بتستخدميهم)
+    return view('cms.admin.main', compact(
+        'newStudents',
+        'totalUsers',
+        'totalCourses',
+        'weeklyRegistrations',
+        'monthlyRegistrations',
+        'activeCourses',
+        'latestCourses',
+        'courses'
+    ));
+}
 
 /**
  * تحويل رقم اليوم إلى اسم عربي

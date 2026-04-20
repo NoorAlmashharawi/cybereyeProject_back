@@ -18,10 +18,8 @@ return new class extends Migration
             $table->string('password');
             $table->enum('role',['Admin','instructor','student'])->default('student');
             $table->morphs('actor');
-
             $table->softDeletes();
            // $table->nullableMorphs('userable');
-
            // $table->rememberToken();
             $table->timestamps();
 

@@ -6,12 +6,12 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\AIChatController;
-
+use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\LessonController;
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactMessageController;
-use App\Http\Controllers\DictionaryController;
+
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\UserAuthController;
@@ -61,25 +61,6 @@ Route::post('/cms/ai/chat', [AIChatController::class, 'chat'])->name('ai.chat');
 // ==================== Routes للطلاب ====================
 Route::prefix('cms/student')->group(function(){
     Route::view('/', 'cms.parent');
-    Route::view('temp', 'cms.temp');
-
-Route::view('temp', 'cms.temp');
-Route::put('students_update/{id}', [StudentController::class, 'update'])->name('students_update');
-Route::resource('students', StudentController::class);
-Route::resource('users', User1Controller::class);
-    Route::get('/my-certificates', [StudentDashboardController::class, 'myCertificates'])->name('student.my-certificates');
-
-
-});
-
-Route::prefix('cms/instructor')->group(function(){
-Route::view('/', 'cms.parent');
-Route::view('temp', 'cms.temp');
-Route::put('instructors_update/{id}', [InstructorController::class, 'update'])->name('instructors_update');
-Route::resource('instructors', InstructorController::class);
-Route::resource('users', User1Controller::class);
-
-
     Route::view('temp', 'cms.temp');
 
     Route::put('students_update/{id}', [StudentController::class, 'update'])->name('students_update');
@@ -172,7 +153,6 @@ Route::resource('courses', CourseController::class);
  Route::view('details','cms/courseDetails/details');
 
 
-Route::view('details', 'cms/courseDetails/details');
 
 
 
@@ -234,4 +214,17 @@ Route::prefix('cms/certificate')->group(function(){
     Route::post('/quizzs_restore/{id}', [QuizzController::class, 'restore'])->name('quizzs.restore');
     Route::delete('/quizzs_force/{id}', [QuizzController::class, 'forceDelete'])->name('quizzs.force');
 
+// 1. راوت تصفير الرقم (البادج) عند فتح الجرس - POST
+Route::post('/mark-notification-read', function () {
+    if(auth('admin')->check()){
+        auth('admin')->user()->unreadNotifications->markAsRead();
+        return response()->json(['success' => true]);
+    }
+})->name('markNotificationRead');
 
+// 2. راوت فتح الإشعار وتحويلك لصفحة الطالب - GET
+Route::get('/notification/{id}/view', function ($id) {
+    $notification = auth('admin')->user()->notifications()->findOrFail($id);
+    $notification->markAsRead(); // للتأكيد
+    return redirect($notification->data['url']);
+})->name('openNotification');

@@ -28,30 +28,53 @@
                 <p>مرحباً بعودتك، يمكنك إدارة جميع جوانب المنصة من هنا</p>
             </div>
 
-<div class="admin-notifications dropdown">
-    <button class="notification-btn dropdown-toggle" id="notificationButton" data-toggle="dropdown">
-        <i class="far fa-bell"></i>
-        @if(auth()->check() && auth()->user()->unreadNotifications->count() > 0)
-            <span class="notification-badge">{{ auth()->user()->unreadNotifications->count() }}</span>
+<div class="admin-notifications dropdown" style="position: relative;">
+    <button class="notification-btn dropdown-toggle" id="notificationButton" style="background: none; border: none; cursor: pointer; position: relative;">
+        <i class="far fa-bell" style="font-size: 1.5rem; color: #4361ee;"></i>
+        @if(auth('admin')->check() && auth('admin')->user()->unreadNotifications->count() > 0)
+            <span class="badge badge-danger navbar-badge" style="position: absolute; top: -5px; right: -5px; font-size: 10px; background: red; color: white; border-radius: 50%; padding: 2px 5px;">
+                {{ auth('admin')->user()->unreadNotifications->count() }}
+            </span>
         @endif
     </button>
 
-    <div class="dropdown-menu dropdown-menu-right">
-        <span class="dropdown-header">الإشعارات الجديدة</span>
-        <div class="dropdown-divider"></div>
+    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" id="notificationMenu"
+         style="display: none; position: absolute; left: 0; top: 40px; min-width: 300px; background: white; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 9999;">
 
-        @if(auth()->check())
-            @forelse(auth()->user()->unreadNotifications as $notification)
-                <a href="#" class="dropdown-item">
-                    <i class="fas fa-user-plus mr-2"></i> {{ $notification->data['message'] }}
-                    <span class="float-right text-muted text-sm">{{ $notification->created_at->diffForHumans() }}</span>
-                </a>
-            @empty
-                <a href="#" class="dropdown-item text-center">لا توجد إشعارات جديدة</a>
-            @endforelse
-        @endif
+        <span class="dropdown-header font-weight-bold" style="display: block; padding: 10px; border-bottom: 1px solid #eee;">الإشعارات الجديدة</span>
+
+        <div style="max-height: 350px; overflow-y: auto;">
+            @if(auth('admin')->check())
+                @forelse(auth('admin')->user()->unreadNotifications->take(10) as $notification)
+
+                    {{-- ملاحظة: هذا الرابط يعمل لكل أنواع الإشعارات (Contact أو Students) --}}
+                    {{-- لارايفل سيعرف نوع الإشعار ويستخدم الـ URL المناسب من كلاس الإشعار الخاص به --}}
+
+                    <a href="{{ route('openNotification', $notification->id) }}" class="dropdown-item d-flex align-items-center" style="display: flex; padding: 10px; border-bottom: 1px solid #eee; text-decoration: none; color: #333; gap: 10px;">
+
+                        <div class="icon-circle text-white p-2" style="border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; background: {{ isset($notification->data['contact_id']) ? '#28a745' : '#4361ee' }}; color: white;">
+                            <i class="{{ $notification->data['icon'] ?? 'fas fa-bell' }}"></i>
+                        </div>
+
+                        <div style="flex: 1;">
+                            <div class="small text-muted" style="font-size: 0.75rem; color: #888;">{{ $notification->created_at->diffForHumans() }}</div>
+
+                            <span class="font-weight-bold d-block" style="font-weight: bold; display: block;">{{ $notification->data['title'] ?? 'إشعار جديد' }}</span>
+
+                            <p class="mb-0 text-sm text-gray-600" style="margin: 0; font-size: 0.85rem; color: #666;">{{ $notification->data['message'] ?? '' }}</p>
+                        </div>
+                    </a>
+
+                @empty
+                    <div class="dropdown-item text-center text-muted py-3" style="padding: 20px; text-align: center; color: #999;">
+                        لا توجد إشعارات غير مقروءة
+                    </div>
+                @endforelse
+            @endif
+        </div>
     </div>
 </div>
+
   <div>
     <a href="{{ route('view.logout') }}">
     <i class="nav-icon fas fa-sign-out-alt"></i>
@@ -187,7 +210,6 @@
                     <p>لم يتم العثور على طلاب ينطبقون على معايير البحث الخاصة بك</p>
                 </div>
             </div>
-<<<<<<< Updated upstream
             <!-- جدول الكورسات الأكثر شعبية -->
             <div class="table-card">
                 <div class="table-header">
@@ -203,7 +225,7 @@
                         <thead>
 
 
-                     
+
                                 <tr>
                                     <th>اسم الكورس</th>
                                     <th>المدرب</th>
@@ -213,9 +235,9 @@
                                     <th>الحالة</th>
                                     <th>الاجراء</th>
                                 </tr>
-                        
 
-                  
+
+
                         </thead>
                         <tbody>
 
@@ -230,7 +252,7 @@
                                     {{-- هنا عدد الطلاب المسجلين بالكورس خليها هيك حاليا هرجعلها --}}
                                     <span class="badge badge-info">{{ $course->students_count }} طالب</span>
                                 </td>
-        
+
                                <td>
                                     @if($course->level == 'beginner')
                                      <span class="badge bg-success">مبتدئ</span>
@@ -262,77 +284,17 @@
                                 </td>
                             </tr>
                             @endforeach
-                       
+
                         </tbody>
                     </table>
                 </div>
             </div>
 
 
-    
-=======
-          <div class="table-card">
-    <div class="table-header">
-        <h3>أحدث الكورسات والمستوى</h3>
-        <div class="table-actions">
-            <button class="table-action-btn" title="تحديث" onclick="location.reload();">
-                <i class="fas fa-sync-alt"></i>
-            </button>
-        </div>
-    </div>
-    <div class="table-responsive">
-        <table class="admin-table">
-            <thead>
-                <tr>
-                    <th>اسم الكورس</th>
-                    <th>المدرب</th>
-                    <th>المستوى</th>
-                    <th>الطلاب</th>
-                    <th>الحالة</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($latestCourses as $course)
-                <tr>
-                    <td><strong>{{ $course->course_name }}</strong></td>
 
-                    <td>{{ $course->instructor->user1->username ?? 'بدون مدرب' }}</td>
-
-                    <td>
-                        @if($course->level == 'beginner')
-                            <span class="badge bg-success">مبتدئ</span>
-                        @elseif($course->level == 'intermediate')
-                            <span class="badge bg-warning text-dark">متوسط</span>
-                        @elseif($course->level == 'advanced')
-                            <span class="badge bg-danger">متقدم</span>
-                        @else
-                            <span class="badge bg-info">{{ $course->level }}</span>
-                        @endif
-                    </td>
-
-                    <td>
-                        <span class="badge badge-info">{{ $course->students_count ?? 0 }} طالب</span>
-                    </td>
-
-                    <td>
-                        <span class="badge {{ $course->status == 'active' ? 'bg-success' : 'bg-danger' }}">
-                            {{ $course->status == 'active' ? 'نشط' : 'معطل' }}
-                        </span>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="5" class="text-center">لا يوجد كورسات حالياً</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
-</div>
->>>>>>> Stashed changes
         </div>
 
-     
+
 
         <!-- AI Assistant Chat -->
 <div class="ai-assistant-card" style="margin-top: 30px; background: white; border-radius: 15px; padding: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.08);">
@@ -610,6 +572,48 @@
 
     // تهيئة الرسم البياني عند تحميل الصفحة
     document.addEventListener('DOMContentLoaded', () => initChart('weekly'));
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.getElementById('notificationButton');
+    const menu = document.getElementById('notificationMenu');
+    const badge = btn.querySelector('.navbar-badge');
+
+    if (btn && menu) {
+        btn.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (menu.style.display === 'none' || menu.style.display === '') {
+                menu.style.display = 'block';
+
+                if (badge) {
+                    badge.style.display = 'none'; // إخفاء الرقم فوراً
+
+                    fetch('{{ route("markNotificationRead") }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .catch(error => console.error('Error:', error));
+                }
+            } else {
+                menu.style.display = 'none';
+            }
+        };
+
+        document.onclick = function(e) {
+            if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                menu.style.display = 'none';
+            }
+        };
+    }
+});
 </script>
 @endsection
 @endsection

@@ -24,14 +24,16 @@ class NewStudentRegistrationNotification extends Notification
     }
 
     // 3. نحدد شكل البيانات اللي حتتخزن في جدول notifications
-    public function toArray(object $notifiable): array
-    {
-        return [
-            'title' => 'تسجيل طالب جديد',
-            'message' => 'قام الطالب ' . $this->student->firstName . ' ' . $this->student->lastName . ' بإنشاء حساب جديد.',
-            'student_id' => $this->student->id,
-            'email' => $this->student->email,
-        ];
-        
-    }
+ public function toArray(object $notifiable): array
+{
+    return [
+        'title' => 'تسجيل طالب جديد',
+        'message' => 'قام الطالب ' . $this->student->firstName . ' ' . $this->student->lastName . ' بإنشاء حساب جديد.',
+        'student_id' => $this->student->id,
+        'email' => $this->student->email,
+        // السطر المعدل:
+        'url' => route('students.show', $this->student->id),
+        'icon' => 'fas fa-user-plus',
+    ];
+}
 }

@@ -30,12 +30,13 @@ class ContactMessageController extends Controller
      */
     public function store(Request $request)
     {
-        
+
     $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|email',
         'subject' => 'required',
         'message' => 'required|string|min:10',
+        // 'user_id' =>'required'
     ]);
 
     ContactMessage::create([
