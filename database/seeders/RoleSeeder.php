@@ -36,16 +36,12 @@ class RoleSeeder extends Seeder
           Permission::create(['name' => 'create-category', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
           Permission::create(['name' => 'index-category', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
           Permission::create(['name' => 'delete-category', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
-
         
           Permission::create(['name' => 'index-quiz', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
           Permission::create(['name' => 'index-question', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
           Permission::create(['name' => 'index-material', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
           Permission::create(['name' => 'index-video', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
           Permission::create(['name' => 'index-course', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
-
-
-
 
           // permission for student
           Permission::create(['name' => 'index-quiz', 'guard_name' => 'student', 'created_at' => now(), 'updated_at' => now()]);
@@ -70,7 +66,6 @@ class RoleSeeder extends Seeder
           Permission::create(['name' => 'index-material', 'guard_name' => 'instuctor', 'created_at' => now(), 'updated_at' => now()]);
           Permission::create(['name' => 'delete-material', 'guard_name' => 'instuctor', 'created_at' => now(), 'updated_at' => now()]);
 
-
           Permission::create(['name' => 'create-video', 'guard_name' => 'instuctor', 'created_at' => now(), 'updated_at' => now()]);
           Permission::create(['name' => 'index-video', 'guard_name' => 'instuctor', 'created_at' => now(), 'updated_at' => now()]);
           Permission::create(['name' => 'delete-video', 'guard_name' => 'instuctor', 'created_at' => now(), 'updated_at' => now()]);
@@ -78,8 +73,6 @@ class RoleSeeder extends Seeder
           Permission::create(['name' => 'create-course', 'guard_name' => 'instuctor', 'created_at' => now(), 'updated_at' => now()]);
           Permission::create(['name' => 'index-course', 'guard_name' => 'instuctor', 'created_at' => now(), 'updated_at' => now()]);
           Permission::create(['name' => 'delete-course', 'guard_name' => 'instuctor', 'created_at' => now(), 'updated_at' => now()]);
-
-
 
           Permission::create(['name' => 'create-category', 'guard_name' => 'instuctor', 'created_at' => now(), 'updated_at' => now()]);
           Permission::create(['name' => 'index-category', 'guard_name' => 'instuctor', 'created_at' => now(), 'updated_at' => now()]);
