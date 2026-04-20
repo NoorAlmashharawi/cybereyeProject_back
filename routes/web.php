@@ -49,6 +49,7 @@ Route::prefix('cms/home')->group(function(){
     Route::view('contact', 'cms.home.contact')->name('contact');
     Route::post('/contact/send', [ContactMessageController::class, 'store'])->name('contact.store');
     Route::get('/', [DictionaryController::class, 'home'])->name('home');
+
 });
 
 
@@ -148,6 +149,7 @@ Route::prefix('cms/instructor')->group(function(){
 
 // ==================== Routes للكورسات ====================
 
+
 Route::prefix('cms/course')->group(function(){
     Route::resource('courses', CourseController::class);
     Route::get('courses/{id}/details', [CourseController::class, 'showCourseDetails'])->name('course.details');
@@ -216,11 +218,13 @@ Route::prefix('cms/certificate')->group(function(){
     Route::get('/{id}/download', [CertificateController::class, 'download'])->name('certificate.download');
 });
 
+ 
     Route::get('/quiz/{quiz}/review', [QuizzController::class, 'review'])->name('quiz.review');
     Route::get('/quiz/studentResult', [QuizzController::class, 'studentResults'])->name('quiz.studentResults');
 
    Route::get('/quizzs_trashed', [QuizzController::class, 'trashed'])->name('quizzs.trashed');
     Route::post('/quizzs_restore/{id}', [QuizzController::class, 'restore'])->name('quizzs.restore');
     Route::delete('/quizzs_force/{id}', [QuizzController::class, 'forceDelete'])->name('quizzs.force');
+
 
 
