@@ -13,21 +13,27 @@ use Illuminate\Support\Facades\Validator;
 
 class QuizzController extends Controller
 {
-
+    /**
+     * عرض قائمة الكويزات.
+     */
     public function index()
     {
         $quizzs = Quizz::with('course')->latest()->paginate(10);
         return view('cms.quizz.index', compact('quizzs'));
     }
 
-
+    /**
+     * عرض نموذج إنشاء كويز جديد.
+     */
     public function create()
     {
         $courses = Course::all();
         return view('cms.quizz.create', compact('courses'));
     }
 
-
+    /**
+     * عرض صفحة كويز معين (للمعاينة).
+     */
     public function show($id)
     {
         $quizz = Quizz::with('questions')->findOrFail($id);
@@ -35,7 +41,9 @@ class QuizzController extends Controller
         return view('cms.quizz.show', compact('quizz', 'questions'));
     }
 
-
+    /**
+     * حفظ كويز جديد في قاعدة البيانات.
+     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -67,13 +75,18 @@ class QuizzController extends Controller
         }
     }
 
+    /**
+     * عرض نموذج تعديل كويز.
+     */
     public function edit(Quizz $quizz)
     {
         $courses = Course::all();
         return view('cms.quizz.edit', compact('quizz', 'courses'));
     }
 
-
+    /**
+     * تحديث بيانات كويز في قاعدة البيانات.
+     */
     public function update(Request $request, Quizz $quizz)
     {
         $validator = Validator::make($request->all(), [

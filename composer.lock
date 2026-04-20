@@ -4902,11 +4902,7 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-<<<<<<< HEAD
-            "version": "v1.34.0",
-=======
             "version": "v1.36.0",
->>>>>>> origin/baraaqanoa
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
@@ -4965,11 +4961,7 @@
                 "portable"
             ],
             "support": {
-<<<<<<< HEAD
-                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.34.0"
-=======
                 "source": "https://github.com/symfony/polyfill-ctype/tree/v1.36.0"
->>>>>>> origin/baraaqanoa
             },
             "funding": [
                 {
@@ -4993,11 +4985,7 @@
         },
         {
             "name": "symfony/polyfill-intl-grapheme",
-<<<<<<< HEAD
-            "version": "v1.34.0",
-=======
             "version": "v1.36.0",
->>>>>>> origin/baraaqanoa
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-grapheme.git",
@@ -5055,11 +5043,7 @@
                 "shim"
             ],
             "support": {
-<<<<<<< HEAD
-                "source": "https://github.com/symfony/polyfill-intl-grapheme/tree/v1.34.0"
-=======
                 "source": "https://github.com/symfony/polyfill-intl-grapheme/tree/v1.36.0"
->>>>>>> origin/baraaqanoa
             },
             "funding": [
                 {
@@ -5083,11 +5067,7 @@
         },
         {
             "name": "symfony/polyfill-intl-idn",
-<<<<<<< HEAD
-            "version": "v1.34.0",
-=======
             "version": "v1.36.0",
->>>>>>> origin/baraaqanoa
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-idn.git",
@@ -5150,11 +5130,7 @@
                 "shim"
             ],
             "support": {
-<<<<<<< HEAD
-                "source": "https://github.com/symfony/polyfill-intl-idn/tree/v1.34.0"
-=======
                 "source": "https://github.com/symfony/polyfill-intl-idn/tree/v1.36.0"
->>>>>>> origin/baraaqanoa
             },
             "funding": [
                 {
@@ -5178,11 +5154,7 @@
         },
         {
             "name": "symfony/polyfill-intl-normalizer",
-<<<<<<< HEAD
-            "version": "v1.34.0",
-=======
             "version": "v1.36.0",
->>>>>>> origin/baraaqanoa
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-normalizer.git",
@@ -5243,11 +5215,7 @@
                 "shim"
             ],
             "support": {
-<<<<<<< HEAD
-                "source": "https://github.com/symfony/polyfill-intl-normalizer/tree/v1.34.0"
-=======
                 "source": "https://github.com/symfony/polyfill-intl-normalizer/tree/v1.36.0"
->>>>>>> origin/baraaqanoa
             },
             "funding": [
                 {
@@ -5271,11 +5239,7 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-<<<<<<< HEAD
-            "version": "v1.34.0",
-=======
             "version": "v1.36.0",
->>>>>>> origin/baraaqanoa
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
@@ -5336,11 +5300,7 @@
                 "shim"
             ],
             "support": {
-<<<<<<< HEAD
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.34.0"
-=======
                 "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.36.0"
->>>>>>> origin/baraaqanoa
             },
             "funding": [
                 {
@@ -5364,11 +5324,7 @@
         },
         {
             "name": "symfony/polyfill-php80",
-<<<<<<< HEAD
-            "version": "v1.34.0",
-=======
             "version": "v1.36.0",
->>>>>>> origin/baraaqanoa
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
@@ -5428,11 +5384,7 @@
                 "shim"
             ],
             "support": {
-<<<<<<< HEAD
-                "source": "https://github.com/symfony/polyfill-php80/tree/v1.34.0"
-=======
                 "source": "https://github.com/symfony/polyfill-php80/tree/v1.36.0"
->>>>>>> origin/baraaqanoa
             },
             "funding": [
                 {
@@ -5456,11 +5408,7 @@
         },
         {
             "name": "symfony/polyfill-php83",
-<<<<<<< HEAD
-            "version": "v1.34.0",
-=======
             "version": "v1.36.0",
->>>>>>> origin/baraaqanoa
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php83.git",
@@ -5516,11 +5464,7 @@
                 "shim"
             ],
             "support": {
-<<<<<<< HEAD
-                "source": "https://github.com/symfony/polyfill-php83/tree/v1.34.0"
-=======
                 "source": "https://github.com/symfony/polyfill-php83/tree/v1.36.0"
->>>>>>> origin/baraaqanoa
             },
             "funding": [
                 {
@@ -5544,11 +5488,7 @@
         },
         {
             "name": "symfony/polyfill-php84",
-<<<<<<< HEAD
-            "version": "v1.34.0",
-=======
             "version": "v1.36.0",
->>>>>>> origin/baraaqanoa
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php84.git",
@@ -5604,11 +5544,7 @@
                 "shim"
             ],
             "support": {
-<<<<<<< HEAD
-                "source": "https://github.com/symfony/polyfill-php84/tree/v1.34.0"
-=======
                 "source": "https://github.com/symfony/polyfill-php84/tree/v1.36.0"
->>>>>>> origin/baraaqanoa
             },
             "funding": [
                 {
@@ -5632,11 +5568,7 @@
         },
         {
             "name": "symfony/polyfill-php85",
-<<<<<<< HEAD
-            "version": "v1.34.0",
-=======
             "version": "v1.36.0",
->>>>>>> origin/baraaqanoa
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php85.git",
@@ -5692,11 +5624,7 @@
                 "shim"
             ],
             "support": {
-<<<<<<< HEAD
-                "source": "https://github.com/symfony/polyfill-php85/tree/v1.34.0"
-=======
                 "source": "https://github.com/symfony/polyfill-php85/tree/v1.36.0"
->>>>>>> origin/baraaqanoa
             },
             "funding": [
                 {
@@ -5720,11 +5648,7 @@
         },
         {
             "name": "symfony/polyfill-uuid",
-<<<<<<< HEAD
-            "version": "v1.34.0",
-=======
             "version": "v1.36.0",
->>>>>>> origin/baraaqanoa
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-uuid.git",
@@ -5783,11 +5707,7 @@
                 "uuid"
             ],
             "support": {
-<<<<<<< HEAD
-                "source": "https://github.com/symfony/polyfill-uuid/tree/v1.34.0"
-=======
                 "source": "https://github.com/symfony/polyfill-uuid/tree/v1.36.0"
->>>>>>> origin/baraaqanoa
             },
             "funding": [
                 {
