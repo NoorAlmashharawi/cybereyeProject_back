@@ -15,11 +15,19 @@ use Illuminate\Support\Str;
 
 class VideoController extends Controller
 {
-    public function index()
-    {
-        $videos = Video::with('lesson')->orderBy('id', 'desc')->paginate(10);
-        return view('cms.Video.index', compact('videos'));
-    }
+    
+    public function index(Request $request)
+{
+    // بناخد الـ material_id من الرابط (مثلاً: cms/video?material_id=2)
+    $materialId = $request->query('material_id');
+
+    // بنجيب الفيديوهات اللي تابعة لهاد الماتيريال بس
+    $videos = Video::where('material_id', $materialId)
+                   ->orderBy('order_number', 'asc')
+                   ->get();
+
+    return view('cms.Video.index', compact('videos', 'materialId'));
+}
 
     public function player($courseId = null)
     {

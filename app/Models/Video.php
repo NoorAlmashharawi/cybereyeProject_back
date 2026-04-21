@@ -23,4 +23,7 @@ class Video extends Model
     {
         return $this->belongsTo(Lesson::class);
     }
+    public function material() {
+    return $this->belongsTo(Material::class);
+}
 }

@@ -28,27 +28,36 @@ class ContactMessageController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
 
+public function store(Request $request)
+{
+    // 1. التحقق من البيانات
     $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|email',
         'subject' => 'required',
         'message' => 'required|string|min:10',
-        // 'user_id' =>'required'
     ]);
 
-    ContactMessage::create([
+ // 1. تخزين الرسالة
+$contact = \App\Models\ContactMessage::create([
     'user_name'  => $request->name,
     'user_email' => $request->email,
     'subject'    => $request->subject,
     'message'    => $request->message,
-    'user_id'    => Auth::check() ? Auth::id() : null,
+    'user_id'    => auth()->check() ? auth()->id() : null,
 ]);
 
+// 2. إرسال الإشعار لمستخدمي جدول User1 اللي نوعهم Admin
+$admins = \App\Models\User1::where('role', 'Admin')->get();
+
+foreach ($admins as $admin) {
+    // تأكدي إن اسم الكلاس NewContactMessage صح (حسب ما هو مكتوب عندك)
+    $admin->notify(new \App\Notifications\NewContactMessage($contact));
+}
+
     return back()->with('success', 'شكراً لك! تم إرسال رسالتك بنجاح وسنتواصل معك قريباً.');
-    }
+}
 
     /**
      * Display the specified resource.

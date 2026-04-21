@@ -24,6 +24,11 @@ class Material extends Model
         public function course() {
             return $this->belongsTo(Course::class);
         }
+
+
+public function videos() {
+    return $this->hasMany(Video::class);
+}
 }
 
 

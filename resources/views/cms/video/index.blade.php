@@ -31,7 +31,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
+            background:
                 linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(0deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
             background-size: 40px 40px;
@@ -666,7 +666,7 @@
                                 <i class="fas fa-edit"></i> تعديل هذا الفيديو
                             </button>
                             <button class="admin-btn admin-btn-add" onclick="openAddModal()">
-                                <i class="fas fa-plus"></i> إضافة فيديو 
+                                <i class="fas fa-plus"></i> إضافة فيديو
                             </button>
 
                             <a class="admin-btn admin-btn-add" href="{{ route('student.my-certificates') }}">
@@ -698,6 +698,8 @@
             <form id="videoForm" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" id="videoId" name="videoId">
+                <input type="hidden" name="material_id" value="{{ $materialId }}">
+  
                 <div class="form-group">
                     <label>عنوان الفيديو *</label>
                     <input type="text" id="title" name="title" required>
@@ -729,7 +731,7 @@
         let videoCompletionRecorded = false;
 
         const video = document.getElementById('mainVideo');
-        
+
         if (video) {
             if (currentVideoId) {
                 const savedTime = localStorage.getItem(`video_time_${currentVideoId}`);
@@ -760,7 +762,7 @@
                     video_id: videoId,
                     course_id: {{ $courseId ?? ($videos->first()->course_id ?? 0) }}
                 });
-                
+
                 if (response.data.course_completed) {
                     Swal.fire({
                         title: '🎉 مبروك!',
@@ -791,7 +793,7 @@
         function loadVideo(videoId, title, description, url, duration) {
             const videoEl = document.getElementById('mainVideo');
             if (!videoEl) return;
-            
+
             const wasPlaying = !videoEl.paused;
             const currentTime = videoEl.currentTime;
 
@@ -901,6 +903,9 @@
             formData.append('description', description);
             formData.append('duration', duration);
 
+            // السطر الجديد هون: عشان يبعت رقم المادة للكنترولر
+formData.append('material_id', document.querySelector('input[name="material_id"]').value);
+
             if (videoFile) {
                 formData.append('url', videoFile);
             }
@@ -954,7 +959,7 @@
                 closeModal();
             }
         }
-        
+
     </script>
 
 </body>

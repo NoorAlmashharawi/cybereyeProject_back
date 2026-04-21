@@ -37,7 +37,7 @@ class NewContactMessage extends Notification
             'message' => 'قام ' . $this->contact->user_name . ' بإرسال رسالة تواصل جديدة.',
             'contact_id' => $this->contact->id,
 
-            // 'url' => route('homes.contact', $this->contact->id),
+   'url' => route('contact'),
             'icon' => 'fas fa-envelope text-success', // أيقونة مغلف أخضر
         ];
     }

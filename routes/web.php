@@ -91,7 +91,8 @@ Route::middleware(['auth:student'])->prefix('cms/student')->group(function () {
 Route::prefix('cms/admin')->group(function(){
     Route::get('main', [AdminController::class, 'main'])->name('main');
     Route::resource('admins', AdminController::class);
-
+// راوت لعرض رسالة واحدة محددة
+Route::get('/admin/contacts/{id}', [ContactMessageController::class, 'show'])->name('admin.contacts.show');
     // Categories Routes
     Route::get('categories_trashed', [CategoryController::class, 'trashed'])->name('categories.trashed');
     Route::get('categories_restore/{id}', [CategoryController::class, 'restore'])->name('categories.restore');
@@ -225,6 +226,11 @@ Route::post('/mark-notification-read', function () {
 // 2. راوت فتح الإشعار وتحويلك لصفحة الطالب - GET
 Route::get('/notification/{id}/view', function ($id) {
     $notification = auth('admin')->user()->notifications()->findOrFail($id);
-    $notification->markAsRead(); // للتأكيد
-    return redirect($notification->data['url']);
+
+    $notification->markAsRead(); // تحديد كـ مقروء
+
+    // التعديل هون: بنشيك إذا الـ url موجود، إذا مش موجود بنرجعه عالرئيسية أو صفحة الكنتاكت
+    $url = isset($notification->data['url']) ? $notification->data['url'] : route('contact');
+
+    return redirect($url);
 })->name('openNotification');
