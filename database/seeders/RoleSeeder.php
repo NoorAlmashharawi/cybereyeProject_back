@@ -25,8 +25,7 @@ class RoleSeeder extends Seeder
         $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'admin']);
         $instructorRole = Role::create(['name' => 'instructor', 'guard_name' => 'instructor']);
         $studentRole = Role::create(['name' => 'طالب', 'guard_name' => 'student']);
-
-       
+   
         $adminPerms = [
             'create-admin', 'index-admin', 'edit-admin', 'delete-admin',
             'create-student', 'index-student', 'edit-student', 'delete-student',

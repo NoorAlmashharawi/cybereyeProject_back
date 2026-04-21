@@ -330,18 +330,7 @@
 
         <nav class="admin-menu">
 
-            {{-- للتشخيص فقط - امسحه بعد الإصلاح --}}
-@if(auth('instructor')->check())
-<div style="background: #00ff0033; padding: 10px; margin: 10px; border-radius: 10px; color: #0f0;">
-    ✅ أنت مسجل كـ: مدرب<br>
-    الصلاحيات المتوفرة: 
-    @php
-        $user = auth('instructor')->user();
-        $permissions = $user->getPermissionNames();
-        echo $permissions->isEmpty() ? 'لا توجد صلاحيات!' : implode(', ', $permissions->toArray());
-    @endphp
-</div>
-@endif
+
             <!-- ========== الأدمن فقط ========== -->
             @if(auth('admin')->check())
                 @php $user = auth('admin')->user(); @endphp
@@ -458,107 +447,81 @@
         
             <!-- ========== المدرب فقط ========== -->
             @if(auth('instructor')->check())
-            @php $user = auth('instructor')->user(); @endphp
-            
-            <div class="admin-menu-section">
-                <div class="menu-title">الرئيسية</div>
-                <a href="{{ route('main') }}" class="admin-menu-item">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>لوحة التحكم</span>
-                </a>
-            </div>
-        
-            <div class="menu-title">لوحة المدرب</div>
-            
-            <!-- الكورسات -->
-            @canany(['index-course', 'create-course'])
+
+            {{-- 1. قسم الكورسات --}}
+            @if(auth('instructor')->user()->can('index-course', 'instructor'))
             <div class="dropdown-menu-item">
                 <button class="dropdown-btn" onclick="toggleDropdown(this)">
-                    <span><i class="fas fa-book-open"></i><span>الكورسات</span></span>
+                    <span><i class="fas fa-graduation-cap"></i><span>إدارة الكورسات</span></span>
                     <i class="fas fa-chevron-down arrow"></i>
                 </button>
                 <div class="dropdown-content">
-                    @can('index-course')
-                        <a href="{{ route('courses.index') }}"><i class="fas fa-list"></i><span>جميع الكورسات</span></a>
-                    @endcan
-                    @can('create-course')
+                    <a href="{{ route('courses.index') }}"><i class="fas fa-list"></i><span>عرض الكورسات</span></a>
+                    @if(auth('instructor')->user()->can('create-course', 'instructor'))
                         <a href="{{ route('courses.create') }}"><i class="fas fa-plus-circle"></i><span>إضافة كورس</span></a>
-                    @endcan
+                    @endif
+                    @if(auth('instructor')->user()->can('index-category', 'instructor'))
+                        <a href="{{ route('categories.index') }}"><i class="fas fa-tags"></i><span>التصنيفات</span></a>
+                    @endif
                 </div>
             </div>
-            @endcanany
+            @endif
         
-            <!-- الكويزات -->
-            @canany(['index-quiz', 'create-quiz'])
+            {{-- 2. قسم الكويزات والأسئلة --}}
+            @if(auth('instructor')->user()->can('index-quiz', 'instructor'))
             <div class="dropdown-menu-item">
                 <button class="dropdown-btn" onclick="toggleDropdown(this)">
-                    <span><i class="fas fa-edit"></i><span>الكويزات</span></span>
+                    <span><i class="fas fa-question-circle"></i><span>الاختبارات (Quizzes)</span></span>
                     <i class="fas fa-chevron-down arrow"></i>
                 </button>
                 <div class="dropdown-content">
-                    @can('index-quiz')
-                        <a href="{{ route('quizzs.index') }}"><i class="fas fa-list"></i><span>جميع الكويزات</span></a>
-                    @endcan
-                    @can('create-quiz')
-                        <a href="{{ route('quizzs.create') }}"><i class="fas fa-plus-circle"></i><span>إنشاء كويز</span></a>
-                    @endcan
+                    <a href="{{ route('quizzs.index') }}"><i class="fas fa-tasks"></i><span>عرض الكويزات</span></a>
+                    @if(auth('instructor')->user()->can('create-quiz', 'instructor'))
+                        <a href="{{ route('quizzs.create') }}"><i class="fas fa-plus"></i><span>إضافة كويز</span></a>
+                    @endif
+                    @if(auth('instructor')->user()->can('index-question', 'instructor'))
+                        <hr>
+                        <a href="{{ route('questions.index') }}"><i class="fas fa-list-ol"></i><span>بنك الأسئلة</span></a>
+                    @endif
+                    @if(auth('instructor')->user()->can('create-question', 'instructor'))
+                        <a href="{{ route('questions.create') }}"><i class="fas fa-plus-square"></i><span>إضافة سؤال</span></a>
+                    @endif
                 </div>
             </div>
-            @endcanany
+            @endif
         
-            <!-- المواد التعليمية -->
-            @canany(['index-material', 'create-material'])
+            {{-- 3. قسم المواد التعليمية (Materials) --}}
+            @if(auth('instructor')->user()->can('index-material', 'instructor'))
             <div class="dropdown-menu-item">
                 <button class="dropdown-btn" onclick="toggleDropdown(this)">
-                    <span><i class="fas fa-file-download"></i><span>المواد التعليمية</span></span>
+                    <span><i class="fas fa-file-alt"></i><span>المواد الدراسية</span></span>
                     <i class="fas fa-chevron-down arrow"></i>
                 </button>
                 <div class="dropdown-content">
-                    @can('index-material')
-                        <a href="{{ route('materials.index') }}"><i class="fas fa-list"></i><span>جميع المواد</span></a>
-                    @endcan
-                    @can('create-material')
-                        <a href="{{ route('materials.create') }}"><i class="fas fa-plus-circle"></i><span>رفع مادة</span></a>
-                    @endcan
+                    <a href="{{ route('materials.index') }}"><i class="fas fa-copy"></i><span>عرض المواد</span></a>
+                    @if(auth('instructor')->user()->can('create-material', 'instructor'))
+                        <a href="{{ route('materials.create') }}"><i class="fas fa-file-upload"></i><span>إضافة مادة (Material)</span></a>
+                    @endif
                 </div>
             </div>
-            @endcanany
+            @endif
         
-            <!-- الفيديوهات -->
-            @canany(['index-video', 'create-video'])
+            {{-- 4. قسم الفيديوهات (Videos) --}}
+            @if(auth('instructor')->user()->can('index-video', 'instructor'))
             <div class="dropdown-menu-item">
                 <button class="dropdown-btn" onclick="toggleDropdown(this)">
-                    <span><i class="fas fa-video"></i><span>الفيديوهات</span></span>
+                    <span><i class="fas fa-video"></i><span>إدارة الفيديوهات</span></span>
                     <i class="fas fa-chevron-down arrow"></i>
                 </button>
                 <div class="dropdown-content">
-                    @can('index-video')
-                        <a href="{{ route('videos.index') }}"><i class="fas fa-list"></i><span>جميع الفيديوهات</span></a>
-                    @endcan
-                    @can('create-video')
-                        <a href="{{ route('videos.create') }}"><i class="fas fa-plus-circle"></i><span>إضافة فيديو</span></a>
-                    @endcan
+                    <a href="{{ route('videos.index') }}"><i class="fas fa-play-circle"></i><span>عرض الفيديوهات</span></a>
+                    @if(auth('instructor')->user()->can('create-video', 'instructor'))
+                        <a href="{{ route('videos.create') }}"><i class="fas fa-video-slash"></i><span>إضافة فيديو جديد</span></a>
+                    @endif
                 </div>
             </div>
-            @endcanany
+            @endif
         
-            <!-- التصنيفات -->
-            @canany(['index-category', 'create-category'])
-            <div class="dropdown-menu-item">
-                <button class="dropdown-btn" onclick="toggleDropdown(this)">
-                    <span><i class="fas fa-tags"></i><span>التصنيفات</span></span>
-                    <i class="fas fa-chevron-down arrow"></i>
-                </button>
-                <div class="dropdown-content">
-                    @can('index-category')
-                        <a href="{{ route('categories.index') }}"><i class="fas fa-list"></i><span>جميع التصنيفات</span></a>
-                    @endcan
-                    @can('create-category')
-                        <a href="{{ route('categories.create') }}"><i class="fas fa-plus-circle"></i><span>إضافة تصنيف</span></a>
-                    @endcan
-                </div>
-            </div>
-            @endcanany
         @endif
         </nav>
         <div class="admin-footer">

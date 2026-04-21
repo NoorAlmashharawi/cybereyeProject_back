@@ -81,14 +81,6 @@ class InstructorController extends Controller
          try {
              DB::beginTransaction();
      
-             //  إنشاء المدرب
-             $instructor = Instructor::create([
-                 'specialization'   => $request->specialization,
-                 'experience_years' => $request->experience_years,
-                 'rating'           => $request->rating,
-                 'bio'              => $request->bio,
-                 'enrollment_date'  => $request->enrollment_date ?? now(),
-             ]);
      
              //  إنشاء المستخدم المرتبط
              $user1 = User1::create([
@@ -96,12 +88,24 @@ class InstructorController extends Controller
                  'email'      => $request->email,
                  'password'   => Hash::make($request->password),
                  'role'       => 'instructor',
-                 'actor_id'   => $instructor->id,
+                 'actor_id'   => 0,
                  'actor_type' => 'App\Models\Instructor',
              ]);
      
+             //  إنشاء المدرب
+             $instructor = Instructor::create([
+                'specialization'   => $request->specialization,
+                'experience_years' => $request->experience_years,
+                'rating'           => $request->rating,
+                'bio'              => $request->bio,
+                'enrollment_date'  => $request->enrollment_date ?? now(),
+            ]);
             
-             $user1->assignRole('instructor');
+            $user1->update([
+                'actor_id' => $instructor->id
+            ]);
+            
+            $user1->assignRole('instructor');
      
              DB::commit();
      

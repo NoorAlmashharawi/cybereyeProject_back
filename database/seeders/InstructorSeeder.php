@@ -15,11 +15,11 @@ class InstructorSeeder extends Seeder
     public function run()
     {
         // جلب دور المدرب
-        $instructorRole = Role::where('name', 'مدرب')->where('guard_name', 'instructor')->first();
+        $instructorRole = Role::where('name', 'instructor')->where('guard_name', 'instructor')->first();
         
         if(!$instructorRole) {
             $instructorRole = Role::create([
-                'name' => 'مدرب',
+                'name' => 'instructor',
                 'guard_name' => 'instructor'
             ]);
         }
@@ -34,23 +34,15 @@ class InstructorSeeder extends Seeder
             'create-category', 'index-category', 'edit-category', 'delete-category',
         ];
 
-        // إنشاء الصلاحيات إذا لم تكن موجودة
         foreach ($instructorPermissions as $perm) {
             Permission::firstOrCreate(
-                ['name' => $perm, 'guard_name' => 'instructor'],
                 ['name' => $perm, 'guard_name' => 'instructor']
             );
         }
 
-        // تعيين الصلاحيات لدور المدرب
         $instructorRole->syncPermissions($instructorPermissions);
 
-        // ========== إنشاء مدرب تجريبي ==========
         
-        // التحقق من عدم وجود مدرب بنفس البريد
-        $existingUser = User1::where('email', 'instructor@cybereye.com')->first();
-        
-        if (!$existingUser) {
             // 1. إنشاء Instructor أولاً
             $instructor = Instructor::create([
                 'specialization'   => 'Web Development',
@@ -62,8 +54,8 @@ class InstructorSeeder extends Seeder
 
             // 2. إنشاء User1 مرتبط بالمدرب
             $user1 = User1::create([
-                'username'   => 'instructor_demo',
-                'email'      => 'instructor@cybereye.com',
+                'username'   => 'instructor_demo2',
+                'email'      => 'instructo62r@cybereye.com',
                 'password'   => Hash::make('12345678'),
                 'role'       => 'instructor',
                 'guard_name' => 'instructor',
@@ -71,23 +63,19 @@ class InstructorSeeder extends Seeder
                 'actor_id'   => $instructor->id,
             ]);
 
+             // 3. تحديث actor_id في user1
+        $user1->actor_id = $instructor->id;
+        $user1->save();
 
-            // 3. تعيين دور المدرب للمستخدم
-            $user1->assignRole($instructorRole);
+        // 4. تعيين دور الطالب للمستخدم
+        $user1->assignRole($instructorRole);
 
-            echo "========================================\n";
-            echo "تم إنشاء مدرب تجريبي بنجاح!\n";
-            echo "========================================\n";
-            echo "البريد الإلكتروني: instructor@cybereye.com\n";
-            echo " كلمة المرور: 12345678\n";
-            echo " اسم المستخدم: instructor_demo\n";
-            echo " التخصص: Web Development\n";
-            echo " الصلاحيات: " . $instructorRole->permissions->count() . " صلاحية\n";
-            echo "========================================\n";
-        } else {
-            echo " المدرب موجود بالفعل!\n";
-            echo " البريد: instructor@cybereye.com\n";
-            echo "كلمة المرور: 12345678\n";
-        }
+        echo "تم إنشاء طالب تجريبي:\n";
+        echo "   Username: student_demo\n";
+        echo "   Password: 12345678\n";
+        echo "   Email: student@cybereye.com\n";
+
+    
+     
     }
 }
