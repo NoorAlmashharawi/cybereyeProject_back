@@ -3,6 +3,7 @@
 @section('title', 'سلة محذوفات الكويزات')
 
 @section('styles')
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <style>
     *{background: rgb(5, 10, 16)}
     /* نفس التنسيقات التي استخدمتها في التصنيفات مع تعديل الكروت */
@@ -93,9 +94,13 @@
                 <div class="card-body">
                     {{ $quiz->description ?? 'لا يوجد وصف' }}
                 </div>
-                <div class="card-actions">
-                    <button onclick="restoreQuiz({{ $quiz->id }})" class="btn-restore"><i class="fas fa-undo-alt"></i> استعادة</button>
-                    <button onclick="forceDeleteQuiz({{ $quiz->id }})" class="btn-force"><i class="fas fa-trash-alt"></i> حذف نهائي</button>
+                  <div class="card-actions">
+                    <button onclick="restoreQuizz({{ $quiz->id }})" class="btn-restore">
+                        <i class="fas fa-undo-alt"></i> استعادة
+                    </button>
+                    <button onclick="forceDeleteQuizz({{ $quiz->id }})" class="btn-force">
+                        <i class="fas fa-trash-alt"></i> حذف نهائي
+                    </button>
                 </div>
             </div>
             @endforeach
@@ -107,13 +112,13 @@
 @endsection
 
 @section('scripts')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
  <script>
-function restoreQuiz(id) {
+function restoreQuizz(id) {
 
     Swal.fire({
         title: 'استعادة الكويز؟',
-        text: 'سيتم إعادة الكويز وجميع أسئلته.',
+        text: 'سيتم إعادة السؤال إلى بنك الكويزات.',
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'نعم، استعادة',
@@ -126,14 +131,14 @@ function restoreQuiz(id) {
         buttonsStyling: false
     }).then((result) => {
 
-        if(result.isConfirmed){
+        if (result.isConfirmed) {
 
             axios.post(`/cms/quizz/quizzs_restore/${id}`)
-            .then(function(){
+            .then(function (response) {
 
                 const card = document.querySelector(`#trash-card-${id}`);
 
-                if(card){
+                if (card) {
                     card.style.transition = "0.5s";
                     card.style.opacity = "0";
                     card.style.transform = "scale(0.8)";
@@ -143,7 +148,7 @@ function restoreQuiz(id) {
 
                 Swal.fire({
                     title: 'تمت الاستعادة',
-                    text: 'تم استعادة الكويز وأسئلته',
+                    text: 'تم استعادة الكويز بنجاح',
                     icon: 'success',
                     customClass: {
                         popup: 'dark-swal',
@@ -151,8 +156,19 @@ function restoreQuiz(id) {
                     },
                     buttonsStyling: false
                 });
-        
 
+            })
+            .catch(function () {
+                Swal.fire({
+                    title: 'خطأ',
+                    text: 'حدث خطأ أثناء الاستعادة',
+                    icon: 'error',
+                    customClass: {
+                        popup: 'dark-swal',
+                        confirmButton: 'swal2-danger-custom'
+                    },
+                    buttonsStyling: false
+                });
             });
 
         }
@@ -162,11 +178,11 @@ function restoreQuiz(id) {
 
 
 
-function forceDeleteQuiz(id) {
+function forceDeleteQuizz(id) {
 
     Swal.fire({
         title: 'حذف نهائي؟',
-        text: 'سيتم حذف الكويز وجميع أسئلته نهائياً.',
+        text: 'لن تتمكن من استعادة هذا السؤال بعد الحذف!',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'نعم، احذف',
@@ -179,14 +195,14 @@ function forceDeleteQuiz(id) {
         buttonsStyling: false
     }).then((result) => {
 
-        if(result.isConfirmed){
+        if (result.isConfirmed) {
 
             axios.delete(`/cms/quizz/quizzs_force/${id}`)
-            .then(function(){
+            .then(function (response) {
 
                 const card = document.querySelector(`#trash-card-${id}`);
 
-                if(card){
+                if (card) {
                     card.style.transition = "0.5s";
                     card.style.opacity = "0";
                     card.style.transform = "scale(0.8)";
@@ -196,7 +212,7 @@ function forceDeleteQuiz(id) {
 
                 Swal.fire({
                     title: 'تم الحذف',
-                    text: 'تم حذف الكويز وأسئلته نهائياً',
+                    text: 'تم حذف السؤال نهائياً',
                     icon: 'success',
                     customClass: {
                         popup: 'dark-swal',
@@ -205,7 +221,18 @@ function forceDeleteQuiz(id) {
                     buttonsStyling: false
                 });
 
-
+            })
+            .catch(function () {
+                Swal.fire({
+                    title: 'خطأ',
+                    text: 'حدث خطأ أثناء الحذف',
+                    icon: 'error',
+                    customClass: {
+                        popup: 'dark-swal',
+                        confirmButton: 'swal2-danger-custom'
+                    },
+                    buttonsStyling: false
+                });
             });
 
         }

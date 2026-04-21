@@ -1,5 +1,5 @@
 <?php
- 
+
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User1Controller;
@@ -206,8 +206,12 @@ Route::post('/quiz/{quiz}/submit', [QuizzController::class, 'submit'])->name('qu
 Route::get('/quiz/{quiz}/result', [QuizzController::class, 'result'])->name('quiz.result');
 Route::post('/quiz/{quiz}/save-temp', [QuizzController::class, 'saveTemp'])->name('quiz.saveTemp');
 
+Route::post('/quizzs_restore/{id}', [QuizzController::class, 'restore'])->name('quizzs.restore');
+Route::delete('/quizzs_force/{id}', [QuizzController::class, 'forceDelete'])->name('quizzs.force');
+
     Route::resource('quizzs', QuizzController::class);
     Route::get('/quizzs/start', [QuizzController::class, 'create'])->name('quizzs.show');
+
 });
 
 
@@ -221,5 +225,5 @@ Route::prefix('cms/certificate')->group(function(){
     Route::get('/quiz/studentResult', [QuizzController::class, 'studentResults'])->name('quiz.studentResults');
 
    Route::get('/quizzs_trashed', [QuizzController::class, 'trashed'])->name('quizzs.trashed');
-    Route::post('/quizzs_restore/{id}', [QuizzController::class, 'restore'])->name('quizzs.restore');
-    Route::delete('/quizzs_force/{id}', [QuizzController::class, 'forceDelete'])->name('quizzs.force');
+
+
