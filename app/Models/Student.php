@@ -8,8 +8,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Certificate;
 use App\Models\User1;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Student extends Model
+
+class Student extends Authenticatable
 {
     use HasFactory, SoftDeletes, HasRoles;
 
