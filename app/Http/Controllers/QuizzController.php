@@ -137,13 +137,13 @@ class QuizzController extends Controller
 
 public function restore($id)
 {
-    $quizz = Quizz::onlyTrashed()->findOrFail($id);
-
-    $quizz->questions()->restore();
-
+     $quizz = Quizz::onlyTrashed()->findOrFail($id);
     $quizz->restore();
 
-    return response()->json(['success' => true, 'message' => 'تم استعادة الكويز وأسئلته']);
+    return response()->json([
+        'success' => true,
+        'message' => 'تم استعادة السؤال بنجاح'
+    ]);
 }
 
 
@@ -155,10 +155,12 @@ public function forceDelete($id)
 
     $quizz->forceDelete();
 
-    return response()->json(['success' => true, 'message' => 'تم حذف الكويز وأسئلته نهائياً']);
+    return response()->json([
+        'success' => true,
+        'message' => 'تم حذف الكويز وأسئلته نهائياً']);
 }
 
-
+  
     public function trashed()
     {
         $quizzs = Quizz::onlyTrashed()->with('course')->get();
