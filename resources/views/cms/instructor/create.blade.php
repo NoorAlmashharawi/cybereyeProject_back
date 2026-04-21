@@ -23,7 +23,7 @@
 
 <div class="form-row">
 
-    {{-- <div class="form-group">
+    <div class="form-group">
         <label>Role NAme</label>
         <select class="form-control select2" id="role_id" name="role_id"  style="width: 100%;">
           @foreach ($roles as $role)
@@ -32,7 +32,7 @@
           @endforeach
       
         </select>
-      </div> --}}
+      </div> 
 
 <div class="form-group">
 <label>اسم المستخدم</label>

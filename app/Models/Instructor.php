@@ -14,6 +14,8 @@ class Instructor extends Model
 {
     use HasFactory, SoftDeletes, HasRoles;
 
+    
+
     protected $fillable = [
         'specialization',
         'experience_years',

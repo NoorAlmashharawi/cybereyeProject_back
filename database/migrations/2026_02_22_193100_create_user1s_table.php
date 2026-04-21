@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('username')->unique();
             $table->string('email')->unique();
             $table->string('password');
-            $table->enum('role',['Admin','instructor','student'])->default('student');
+            $table->enum('role',['admin','instructor','student'])->default('student');
             $table->morphs('actor');
 
             $table->softDeletes();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Validator;
 
 class PermissionController extends Controller
 {
@@ -50,30 +51,30 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator($request->all() , [
-
+        $validator = Validator($request->all(), [
+            'name' => 'required|string|unique:permissions,name',
+            'guard_name' => 'required|in:admin,student,instructor,author,super_admin',
         ]);
-
+    
         if(! $validator->fails()){
             $permissions = new Permission();
             $permissions->name = $request->input('name');
             $permissions->guard_name = $request->input('guard_name');
-
+    
             $isSaved = $permissions->save();
-
+    
             return response()->json([
                 'icon' => 'success' ,
                 'title' => 'Created is Successfully'
-            ] , 200);
+            ], 200);
         }
         else{
             return response()->json([
                 'icon' => 'error' ,
                 'title' => $validator->getMessageBag()->first(),
-            ] , 400);
+            ], 400);
         }
     }
-
     /**
      * Display the specified resource.
      *
@@ -106,24 +107,29 @@ class PermissionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator($request->all() , [
-
+        $validator = Validator($request->all(), [
+            'name' => 'required|string|unique:permissions,name,' . $id,
+            'guard_name' => 'required|in:admin,student,instructor,super_admin',
         ]);
-
+    
         if(! $validator->fails()){
             $permissions = Permission::findOrFail($id);
             $permissions->name = $request->input('name');
             $permissions->guard_name = $request->input('guard_name');
-
+    
             $isSaved = $permissions->save();
-
-            return ['redirect' => route('permissions.index')];
+    
+            return response()->json([
+                'icon' => 'success',
+                'title' => 'Updated Successfully',
+                'redirect' => route('permissions.index')
+            ], 200);
         }
         else{
             return response()->json([
-                'icon' => 'error' ,
+                'icon' => 'error',
                 'title' => $validator->getMessageBag()->first(),
-            ] , 400);
+            ], 400);
         }
     }
 
@@ -135,6 +141,12 @@ class PermissionController extends Controller
      */
     public function destroy($id)
     {
-        $permissions = Permission::destroy($id);
+        $permission = Permission::findOrFail($id);
+        $isDeleted = $permission->delete();
+        
+        return response()->json([
+            'icon' => 'success',
+            'title' => 'Deleted Successfully'
+        ], 200);
     }
 }

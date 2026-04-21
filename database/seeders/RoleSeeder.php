@@ -5,80 +5,74 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\DB;
+
 class RoleSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
-         //ROLES
-          Role::create(['name' => 'super admin', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
-          Role::create(['name' => 'admin', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
-          Role::create(['name' => ' مدرب', 'guard_name' => 'instructor', 'created_at' => now(), 'updated_at' => now()]);
-          Role::create(['name' => 'طالب ', 'guard_name' => 'student', 'created_at' => now(), 'updated_at' => now()]);
-   
-          // permission for Admin
-          Permission::create(['name' => 'create-admin', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'index-admin', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'delete-admin', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
+     
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('role_has_permissions')->truncate();
+        DB::table('model_has_roles')->truncate();
+        DB::table('model_has_permissions')->truncate();
+        Permission::truncate();
+        Role::truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-          Permission::create(['name' => 'create-student', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'index-student', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'delete-student', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
+      
+        $superAdminRole = Role::create(['name' => 'super admin', 'guard_name' => 'admin']);
+        $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'admin']);
+        $instructorRole = Role::create(['name' => 'instructor', 'guard_name' => 'instructor']);
+        $studentRole = Role::create(['name' => 'طالب', 'guard_name' => 'student']);
 
-          Permission::create(['name' => 'create-instructor', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'index-instructor', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'delete-instructor', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
-
-          Permission::create(['name' => 'create-category', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'index-category', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'delete-category', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
+       
+        $adminPerms = [
+            'create-admin', 'index-admin', 'edit-admin', 'delete-admin',
+            'create-student', 'index-student', 'edit-student', 'delete-student',
+            'create-instructor', 'index-instructor', 'edit-instructor', 'delete-instructor',
+            'create-category', 'index-category', 'edit-category', 'delete-category',
+            'index-quiz', 'index-question', 'index-material', 'index-video', 'index-course',
+            'index-role', 'create-role', 'edit-role', 'delete-role',
+            'index-permission', 'create-permission', 'edit-permission', 'delete-permission',
+        ];
         
-          Permission::create(['name' => 'index-quiz', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'index-question', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'index-material', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'index-video', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'index-course', 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
+        foreach ($adminPerms as $perm) {
+            Permission::create(['name' => $perm, 'guard_name' => 'admin']);
+        }
 
-          // permission for student
-          Permission::create(['name' => 'index-quiz', 'guard_name' => 'student', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'index-question', 'guard_name' => 'student', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'index-material', 'guard_name' => 'student', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'index-video', 'guard_name' => 'student', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'index-course', 'guard_name' => 'student', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'index-certificate', 'guard_name' => 'student', 'created_at' => now(), 'updated_at' => now()]);
+        // صلاحيات الطالب
+        $studentPerms = [
+            'index-quiz', 'index-question', 'index-material', 'index-video', 'index-course',
+            'index-certificate', 'view-student-dashboard', 'view-certificates',
+        ];
+        
+        foreach ($studentPerms as $perm) {
+            Permission::create(['name' => $perm, 'guard_name' => 'student']);
+        }
 
+        // صلاحيات المدرب
+        $instructorPerms = [
+            'create-quiz', 'index-quiz', 'edit-quiz', 'delete-quiz',
+            'create-question', 'index-question', 'edit-question', 'delete-question',
+            'create-material', 'index-material', 'edit-material', 'delete-material',
+            'create-video', 'index-video', 'edit-video', 'delete-video',
+            'create-course', 'index-course', 'edit-course', 'delete-course',
+            'create-category', 'index-category', 'edit-category', 'delete-category',
+        ];
+        
+        foreach ($instructorPerms as $perm) {
+            Permission::create(['name' => $perm, 'guard_name' => 'instructor']);
+        }
 
-          // permission for instructor
+        // تعيين الصلاحيات للأدوار
+        $superAdminRole->syncPermissions(
+            Permission::where('guard_name', 'admin')->get()
+        );
+        $adminRole->syncPermissions(Permission::where('guard_name', 'admin')->get());
+        $instructorRole->syncPermissions(Permission::where('guard_name', 'instructor')->get());
+        $studentRole->syncPermissions(Permission::where('guard_name', 'student')->get());
 
-          Permission::create(['name' => 'create-quiz', 'guard_name' => 'instructor', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'index-quiz', 'guard_name' => 'instructor', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'delete-quiz', 'guard_name' => 'instructor', 'created_at' => now(), 'updated_at' => now()]);
-
-          Permission::create(['name' => 'create-question', 'guard_name' => 'instructor', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'index-question', 'guard_name' => 'instructor', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'delete-question', 'guard_name' => 'instructor', 'created_at' => now(), 'updated_at' => now()]);
-    
-          Permission::create(['name' => 'create-material', 'guard_name' => 'instructor', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'index-material', 'guard_name' => 'instructor', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'delete-material', 'guard_name' => 'instructor', 'created_at' => now(), 'updated_at' => now()]);
-
-          Permission::create(['name' => 'create-video', 'guard_name' => 'instructor', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'index-video', 'guard_name' => 'instructor', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'delete-video', 'guard_name' => 'instructor', 'created_at' => now(), 'updated_at' => now()]);
-
-          Permission::create(['name' => 'create-course', 'guard_name' => 'instructor', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'index-course', 'guard_name' => 'instructor', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'delete-course', 'guard_name' => 'instructor', 'created_at' => now(), 'updated_at' => now()]);
-
-          Permission::create(['name' => 'create-category', 'guard_name' => 'instructor', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'index-category', 'guard_name' => 'instructor', 'created_at' => now(), 'updated_at' => now()]);
-          Permission::create(['name' => 'delete-category', 'guard_name' => 'instructor', 'created_at' => now(), 'updated_at' => now()]);
-
-
+        echo " Roles and permissions seeded successfully!\n";
     }
-
 }

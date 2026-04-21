@@ -15,6 +15,17 @@
 
     <form id="create-form" method="POST" action="{{ route('students.store') }}">
         @csrf
+
+        <div class="form-group">
+            <label>Role NAme</label>
+            <select class="form-control select2" id="role_id" name="role_id"  style="width: 100%;">
+              @foreach ($roles as $role)
+              <option value="{{ $role->id }}">{{ $role->name }}</option>
+
+              @endforeach
+          
+            </select>
+          </div>
         
         {{-- بيانات User1 --}}
         <h3 class="form-subtitle">بيانات الدخول</h3>
