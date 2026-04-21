@@ -15,10 +15,10 @@ class Admin extends Authenticatable
     use HasFactory, HasRoles;
 
     protected $fillable = [
-        
+      
        
     ];
-    
+
 
 
     public function user1()

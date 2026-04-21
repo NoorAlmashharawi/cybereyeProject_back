@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Response, Illuminate\Http\JsonResponse ;
-
+use Illuminate\Support\Facades\Validator;
 class RoleController extends Controller
 {
     /**
@@ -51,9 +51,12 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator($request->all() , [
 
+        $validator = Validator($request->all(), [
+            'name' => 'required|string|unique:roles,name',
+            'guard_name' => 'required|in:admin,student,instructor,super_admin',
         ]);
+     
 
         if(! $validator->fails()){
             $roles = new Role();
@@ -107,8 +110,9 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator($request->all() , [
-
+        $validator = Validator($request->all(), [
+            'name' => 'required|string|unique:roles,name,' . $id,
+            'guard_name' => 'required|in:admin,student,instructor,super_admin',
         ]);
 
         if(! $validator->fails()){
@@ -136,6 +140,12 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        $roles = Role::destroy($id);
+        $role = Role::findOrFail($id);
+        $role->delete();
+        
+        return response()->json([
+            'icon' => 'success',
+            'title' => 'Deleted Successfully'
+        ], 200);
     }
 }

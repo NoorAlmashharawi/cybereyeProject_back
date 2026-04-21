@@ -15,36 +15,37 @@ class UserAuthController extends Controller
            return  response()->view('cms.auth.login',compact('guard'));
     }
 
-    public function login(Request  $request ){
-        $validator = Validator($request ->all(),[
-            'email' => 'required|string|exists:user1s,email',
-            'password' => 'required|min:3'
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:user1s,email',
+            'password' => 'required',
+            'guard' => 'required|in:admin,student,instructor',
         ]);
-
+    
+        $guard = $request->guard;
+    
         $credentials = [
-            'email'=> $request->get('email'),
-            'password' =>$request->get('password')
+            'email' => $request->email,
+            'password' => $request->password,
         ];
-       if(! $validator->fails()){
-            if(Auth::guard($request->get('guard'))->attempt($credentials)){
-                return response()->json([
-                    'icon'=>'success',
-                    'title' => 'login is successfully'
-                ],200);
-            }else{
-                return response()->json([
-                    'icon'=>'error',
-                    'title' => 'login is faild'
-                ],400);
-            }
-        }else{
+    
+        if (Auth::guard($guard)->attempt($credentials)) {
+    
+            $request->session()->regenerate();
+    
             return response()->json([
-                'icon' => 'error',
-                'title' => $validator->getmessageBag()->first()
-            ],400);
+                'icon' => 'success',
+                'title' => 'login success',
+                'redirect' => '/cms/'.$guard.'/main'
+            ]);
         }
+    
+        return response()->json([
+            'icon' => 'error',
+            'title' => 'بيانات الدخول غير صحيحة'
+        ], 401);
     }
-
     public function logout(Request  $request){
         $guard = auth('admin')->check() ? 'admin':'student';
         Auth::guard($guard)->logout();

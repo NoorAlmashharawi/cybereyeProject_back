@@ -26,18 +26,57 @@ use App\Http\Controllers\CertificateController;
 
 
 
-// ====================  login ====================
+
+// ====================  نظام تسجيل الدخول ====================
 Route::prefix('cms')->group(function(){
     Route::get('{guard}/login', [UserAuthController::class, 'showLogin'])->name('view.login');
     Route::post('{guard}/login', [UserAuthController::class, 'login']);
     Route::get('logout', [UserAuthController::class, 'logout'])->name('view.logout');
 });
 
-
+// ==================== الـ Route الافتراضي لتسجيل الدخول ====================
 Route::get('/login', function () {
-    // استخدم guard افتراضي مناسب، مثلاً 'user1' أو 'admin'
-    return redirect()->route('view.login', ['guard' => 'user1']);
+   
+    return redirect()->route('view.login', ['guard' => 'student']);
 })->name('login');
+
+// ==================== Routes الرئيسية المحمية ====================
+Route::middleware(['auth:admin'])->prefix('cms/admin')->group(function () {
+    Route::get('/main', function () {
+        return view('cms.admin.main');
+    })->name('admin.main');
+    
+});
+
+Route::middleware(['auth:instructor'])->prefix('cms/instructor')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('cms.instructor.dashboard');
+    })->name('instructor.dashboard');
+    
+
+});
+
+Route::middleware(['auth:student'])->prefix('cms/student')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('cms.student.dashboard');
+    })->name('student.dashboard');
+    
+    Route::get('/my-courses', [StudentController::class, 'myCourses'])->name('student.my-courses');
+    Route::get('/my-certificates', [StudentController::class, 'myCertificates'])->name('student.my-certificates');
+});
+
+// ==================== Route رئيسية واحدة ====================
+Route::get('/cms/main', function () {
+    if (auth('admin')->check()) {
+        return redirect()->route('admin.main');
+    } elseif (auth('instructor')->check()) {
+        return redirect()->route('admin.main');
+    } elseif (auth('student')->check()) {
+        return redirect()->route('admin.main');
+    } else {
+        return redirect()->route('view.login', ['guard' => 'student']);
+    }
+})->name('main');
 
 // ====================  Student Registration (الخارجية) ====================
 Route::get('cms/register', [UserAuthController::class, 'showSignup'])->name('view.register');
