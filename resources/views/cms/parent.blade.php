@@ -342,6 +342,7 @@
                         <span>لوحة التحكم</span>
                     </a>
                 </div>
+                
         
                 <div class="menu-title">نظام الصلاحيات</div>
                 <div class="dropdown-menu-item">
@@ -365,8 +366,11 @@
                     </button>
                     <div class="dropdown-content">
                         <a href="{{ route('students.index') }}"><i class="fas fa-user-graduate"></i><span>الطلاب</span></a>
+                        <a href="{{ route('students.create') }}"><i class="fas fa-user-graduate"></i><span>اضافة طالب </span></a>
                         <a href="{{ route('instructors.index') }}"><i class="fas fa-chalkboard-teacher"></i><span>المدربين</span></a>
+                        <a href="{{ route('instructors.create') }}"><i class="fas fa-chalkboard-teacher"></i><span> ضافةالمدربين</span></a>
                         <a href="{{ route('admins.index') }}"><i class="fas fa-user-cog"></i><span>المشرفين</span></a>
+                        <a href="{{ route('admins.create') }}"><i class="fas fa-user-cog"></i><span> اضافةالمشرفين</span></a>
                     </div>
                 </div>
         
@@ -447,7 +451,13 @@
         
             <!-- ========== المدرب فقط ========== -->
             @if(auth('instructor')->check())
-
+            <div class="admin-menu-section">
+                <div class="menu-title">الرئيسية</div>
+                <a href="{{ route('main') }}" class="admin-menu-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>لوحة التحكم</span>
+                </a>
+            </div>
             {{-- 1. قسم الكورسات --}}
             @if(auth('instructor')->user()->can('index-course', 'instructor'))
             <div class="dropdown-menu-item">
@@ -523,6 +533,7 @@
             @endif
         
         @endif
+        
         </nav>
         <div class="admin-footer">
             @if(auth('admin')->check())

@@ -9,11 +9,13 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
+
 class StudentController extends Controller
 {
 
     public function index()
     {
+        // $this->authorize('viewAny', Admin::class);
         $students = Student::with('user1')->orderBy('id', 'desc')->withoutTrashed()->paginate(10);
         $totalStudents = Student::count();
 
@@ -63,17 +65,17 @@ class StudentController extends Controller
             'level'    => 'nullable|string',
             'status'   => 'nullable|string',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json([
                 'icon' => 'error',
                 'title' => $validator->errors()->first()
             ], 400);
         }
-    
+
         try {
             DB::beginTransaction();
-    
+
             // إنشاء المستخدم
             $user1 = User1::create([
                 'username'   => $request->username,
@@ -83,7 +85,7 @@ class StudentController extends Controller
                 'actor_id'   => 0,
                 'actor_type' => 'App\Models\Student',
             ]);
-    
+
             // إنشاء الطالب
             $student = Student::create([
                 'user_id'         => $user1->id,
@@ -93,31 +95,32 @@ class StudentController extends Controller
                 'progress'        => $request->progress ?? 0,
                 'enrollment_date' => $request->enrollment_date ?? now(),
             ]);
-    
+
             // ربط الطالب بالمستخدم
             $user1->update([
                 'actor_id' => $student->id
             ]);
-    
-            //  تعيين رول الطالب تلقائياً
-            $user1->assignRole('طالب');
-    
+
+            
+            $student->assignRole('student');  
+
             DB::commit();
-    
+
             return response()->json([
                 'icon' => 'success',
                 'title' => 'تم التسجيل بنجاح!'
             ], 200);
-    
+
         } catch (\Exception $e) {
             DB::rollBack();
-    
+
             return response()->json([
                 'icon' => 'error',
                 'title' => 'حدث خطأ: ' . $e->getMessage()
             ], 500);
         }
     }
+    
     // عرض تفاصيل طالب
     public function show($id)
     {
@@ -141,7 +144,7 @@ class StudentController extends Controller
 
         return view('cms.student.edit', compact('student'));
     }
-
+    
     // تحديث بيانات طالب
     public function update(Request $request, $id)
     {
@@ -174,10 +177,11 @@ class StudentController extends Controller
             DB::beginTransaction();
 
             if ($student->user1) {
-                $student->user1->update([
-                    'username' => $request->username,
-                    'email'    => $request->email,
-                ]);
+                // التعديل هنا: تحديث وحفظ صريح لجدول User1 لضمان "سماع" التغييرات
+                $userAccount = $student->user1;
+                $userAccount->username = $request->username;
+                $userAccount->email = $request->email;
+                $userAccount->save();
             }
 
             $student->update([
@@ -233,6 +237,7 @@ class StudentController extends Controller
 
         return view('cms.student.trashed', compact('students'));
     }
+    
     // استعادة طالب من سلة المحذوفات
     public function restore($id)
     {
@@ -242,7 +247,6 @@ class StudentController extends Controller
 
             // استعادة الطالب
             $student->restore();
-
 
             $user1 = User1::where('actor_id', $student->id)
                           ->where('actor_type', 'App\Models\Student')
@@ -265,15 +269,11 @@ class StudentController extends Controller
     {
         $students = Student::onlyTrashed()->findOrFail($id)->forceDelete();
         return back()->with('sucess','sucess');
-
-
     }
 
     public function forceAll()
     {
-    $students = Student::onlyTrashed()->forceDelete();
-    return back()->with('sucess','sucess');
-
-
+        $students = Student::onlyTrashed()->forceDelete();
+        return back()->with('sucess','sucess');
     }
 }
