@@ -14,13 +14,8 @@ use App\Models\Instructor;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
-<<<<<<< HEAD
-use App\Models\User1;
-
-=======
 use App\Models\User1;  
 use Spatie\Permission\Traits\HasRoles;
->>>>>>> origin/baraaqanoa
 
 
 class AdminController extends Controller
@@ -157,13 +152,8 @@ private function getArabicDayName($dayOfWeek)
     public function create()
     {
         $roles = Role::where('guard_name' , 'admin')->get();
-        // $this->authorize('create' , Admin::class);
-<<<<<<< HEAD
         $this->authorize('create', Admin::class);
-        return response()->view('cms.admin.create');
-=======
         return response()->view('cms.admin.create', compact('roles'));
->>>>>>> origin/baraaqanoa
 
     }
 
@@ -189,18 +179,10 @@ private function getArabicDayName($dayOfWeek)
         }
 
         try {
-<<<<<<< HEAD
-
-            $admin = Admin::create([
-
-            ]);
-
-=======
-            // 1. إنشاء Admin (بدون أي حقول)
+            // إنشاء Admin
             $admin = Admin::create();
     
-            // 2. إنشاء User1 مرتبط بـ Admin
->>>>>>> origin/baraaqanoa
+            // إنشاء User1 مرتبط بـ Admin
             $user1 = User1::create([
                 'username'   => $request->username,
                 'email'      => $request->email,
@@ -210,20 +192,11 @@ private function getArabicDayName($dayOfWeek)
                 'actor_type' => 'App\Models\Admin',
                 'actor_id'   => $admin->id,
             ]);
-<<<<<<< HEAD
-
-
-
-            $roles = Role::findOrFail($request->get('role_id'));
-            $admin ->assignRole($roles->name);
-
-=======
     
-            // 3. تعيين الدور للمستخدم
+            // تعيين الدور للمستخدم
             $role = Role::findOrFail($request->role_id);
             $user1->assignRole($role->name);
     
->>>>>>> origin/baraaqanoa
             return response()->json([
                 'icon'  => 'success',
                 'title' => 'تم إنشاء المسؤول بنجاح'
@@ -298,5 +271,3 @@ private function getArabicDayName($dayOfWeek)
 
     }
 }
- 
-
