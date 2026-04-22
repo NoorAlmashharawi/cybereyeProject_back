@@ -15,6 +15,7 @@ class Video extends Model
         'url',
         'duration',
         'lesson_id',
+        'course_id',
         'order_number'
     ];
 
@@ -23,7 +24,9 @@ class Video extends Model
     {
         return $this->belongsTo(Lesson::class);
     }
-    public function material() {
-    return $this->belongsTo(Material::class);
+    public function course()
+{
+    return $this->belongsTo(Course::class);
 }
+
 }

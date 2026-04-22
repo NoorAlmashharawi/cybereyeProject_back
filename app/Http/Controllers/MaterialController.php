@@ -12,47 +12,59 @@ class MaterialController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $materials = Material::with('course')->get();
-        return view('cms.material.index', compact('materials'));
+
+public function index(Request $request)
+{
+    $courseId = $request->query('course_id');
+    if (!$courseId) {
+        abort(404, 'لم يتم تحديد الكورس');
     }
+    $materials = Material::where('course_id', $courseId)->get();
+    return view('cms.material.index', compact('materials', 'courseId'));
+}
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-       $courses = Course::all();
-    return view('cms.material.create', compact('courses'));
-    }
 
+
+public function create(Request $request)
+{
+    $courseId = $request->query('course_id');
+    if (!$courseId) {
+        abort(404, 'لم يتم تحديد الكورس');
+    }
+    $course = Course::findOrFail($courseId);
+    return view('cms.material.create', compact('course'));
+}
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'course_id' => 'required|exists:courses,id',
-            'file' => 'required|file|mimes:pdf,zip,doc,docx|max:10240',
+public function store(Request $request)
+{
+    $request->validate([
+        'title' => 'required|string|max:255',
+        'course_id' => 'required|exists:courses,id',
+        'file' => 'required|file|mimes:pdf,zip,doc,docx|max:10240',
+    ]);
+
+    if ($request->hasFile('file')) {
+        $file = $request->file('file');
+        $path = $file->store('materials', 'public');
+
+        Material::create([
+            'title' => $request->title,
+            'course_id' => $request->course_id,
+            'file_path' => $path,
+            'file_type' => $file->getClientOriginalExtension(),
+            'description' => $request->description,
         ]);
 
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $path = $file->store('materials', 'public');
-
-            $isSaved = Material::create([
-                'title' => $request->title,
-                'course_id' => $request->course_id,
-                'file_path' => $path,
-                'file_type' => $file->getClientOriginalExtension(),
-                'description' => $request->description,
-            ]);
-
-            return response()->json(['icon' => 'success', 'title' => 'تم رفع الملف بنجاح']);
-        }
+        // بناء الرابط يدوياً
+        $redirectUrl = '/cms/instructor/materials?course_id=' . $request->course_id;
+        return redirect()->to($redirectUrl)->with('success', 'تم رفع الملف بنجاح');
     }
+}
 
     /**
      * Display the specified resource.
@@ -137,7 +149,7 @@ public function restore($id) {
 // للحذف النهائي (من قاعدة البيانات والملفات)
 public function forceDelete($id) {
     $material = Material::withTrashed()->findOrFail($id);
-    //حذف الملف من التخزين بالاول 
+    //حذف الملف من التخزين بالاول
     Storage::delete($material->file_path);
     $material->forceDelete();
     return redirect()->back()->with('success', 'تم الحذف النهائي للمادة');

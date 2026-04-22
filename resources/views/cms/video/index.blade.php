@@ -566,14 +566,15 @@
                 <h2><i class="fas fa-list"></i> قائمة التشغيل</h2>
                 <p style="color: #888;">{{ isset($videos) ? $videos->count() : 0 }} فيديو</p>
                 <div class="admin-actions-header">
+                    <input type="hidden" name="course_id" value="{{ $courseId }}">
                     <button class="admin-btn admin-btn-add" onclick="openAddModal()">
                         <i class="fas fa-plus"></i> إضافة فيديو جديد
                     </button>
 
-                    <a class="admin-btn admin-btn-add" href="{{ route('materials.index') }}">
-                        <i class="fas fa-book-open"></i>
-                        <span> الدروس</span>
-                    </a>
+                  <a class="admin-btn admin-btn-add" href="{{ route('materials.index', ['course_id' => $courseId]) }}">
+    <i class="fas fa-book-open"></i>
+    <span> الدروس</span>
+</a>
 
                     <a class="admin-btn admin-btn-add" href="{{ route('quizzs.index') }}">
                         <i class="fas fa-question-circle"></i>
@@ -698,8 +699,8 @@
             <form id="videoForm" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" id="videoId" name="videoId">
-                <input type="hidden" name="material_id" value="{{ $materialId }}">
-  
+              <input type="hidden" name="course_id" value="{{ $courseId }}">
+
                 <div class="form-group">
                     <label>عنوان الفيديو *</label>
                     <input type="text" id="title" name="title" required>
@@ -902,9 +903,8 @@
             formData.append('title', title);
             formData.append('description', description);
             formData.append('duration', duration);
-
-            // السطر الجديد هون: عشان يبعت رقم المادة للكنترولر
-formData.append('material_id', document.querySelector('input[name="material_id"]').value);
+            //رقم الكورس للكونترولر
+formData.append('course_id', document.getElementsByName('course_id')[0].value);
 
             if (videoFile) {
                 formData.append('url', videoFile);

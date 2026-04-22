@@ -76,15 +76,18 @@
                 <i class="fas fa-archive"></i> الأرشيف
             </a>
 
-            <a href="{{ route('materials.create') }}" class="btn-add-main">
+            <a href="{{ route('materials.create', ['course_id' => $courseId]) }}" class="btn-add-main">
                 <i class="fas fa-plus"></i> رفع مادة جديدة
             </a>
+
         </div>
     </div>
 
     <div class="materials-grid">
         @forelse($materials as $material)
         <div class="material-card" id="card-{{ $material->id }}">
+            {{-- ارجعيله هدا اظن مكانه خطا --}}
+            <input type="hidden" name="course_id" value="{{ $courseId }}">
             <div class="file-icon-wrapper">
                 <span class="file-type-badge">{{ strtoupper($material->file_type) }}</span>
                 @if($material->file_type == 'pdf')

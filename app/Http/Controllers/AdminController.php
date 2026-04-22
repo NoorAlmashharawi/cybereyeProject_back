@@ -14,7 +14,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User1;
-
+use Spatie\Permission\Traits\HasRoles;
 
 
 class AdminController extends Controller
@@ -168,9 +168,9 @@ private function getArabicDayName($dayOfWeek)
 
     public function create()
     {
-        // $roles = Role::where('guard_name' , 'admin')->get();
+        $roles = Role::where('guard_name' , 'admin')->get();
         // $this->authorize('create' , Admin::class);
-        return response()->view('cms.admin.create');
+        return response()->view('cms.admin.create', compact('roles'));
 
     }
 
@@ -183,7 +183,7 @@ private function getArabicDayName($dayOfWeek)
             'username' => 'required|string|min:3|max:20|unique:user1s,username',
             'email'    => 'required|email|unique:user1s,email',
             'password' => 'required|min:8|confirmed',
-            // أضيفي level و status إذا كانت موجودة في جدول admins
+            'role_id'  => 'required|exists:roles,id',
         ]);
 
         if ($validator->fails()) {
@@ -199,13 +199,18 @@ private function getArabicDayName($dayOfWeek)
 
             ]);
 
+            // 1. إنشاء Admin (بدون أي حقول)
+            $admin = Admin::create();
+
+            // 2. إنشاء User1 مرتبط بـ Admin
             $user1 = User1::create([
-                'username' => $request->username,
-                'email'    => $request->email,
-                'password' => Hash::make($request->password),
-                'role'     => 'admin',
-                'actor_type' => 'App\Models\ِAdmin',
-            'actor_id'   => $admin->id,
+                'username'   => $request->username,
+                'email'      => $request->email,
+                'password'   => Hash::make($request->password),
+                'role'       => 'Admin',
+                'guard_name' => 'admin',
+                'actor_type' => 'App\Models\Admin',
+                'actor_id'   => $admin->id,
             ]);
 
 
@@ -215,6 +220,11 @@ private function getArabicDayName($dayOfWeek)
 
             $roles = Role::findOrFail($request->get('role_id'));
             $admin ->assignRole($roles->name);
+
+
+            // 3. تعيين الدور للمستخدم
+            $role = Role::findOrFail($request->role_id);
+            $user1->assignRole($role->name);
 
             return response()->json([
                 'icon'  => 'success',
@@ -228,8 +238,6 @@ private function getArabicDayName($dayOfWeek)
             ], 500);
         }
     }
-
-
     /**
      * Display the specified resource.
      */

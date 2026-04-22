@@ -48,64 +48,76 @@ class StudentController extends Controller
     // عرض صفحة إنشاء طالب جديد
     public function create()
     {
-        // $roles = Role::where('guard_name' , 'admin')->get();
+        $roles = Role::where('guard_name' , 'student')->get();
         // $this->authorize('create' , Student::class);
-        return view('cms.student.create');
+        return view('cms.student.create',compact('roles'));
     }
 
     // حفظ طالب جديد
-public function store(Request $request)
-{
-    $validator = Validator($request->all(), [
-        'username' => 'required|string|min:3|max:20|unique:user1s,username',
-        'email'    => 'required|email|unique:user1s,email',
-        'password' => 'required|min:8|confirmed',
-        'level'    => 'nullable|string',
-        'status'   => 'nullable|string',
-    ]);
-
-    if ($validator->fails()) {
-        return response()->json(['icon' => 'error', 'title' => $validator->errors()->first()], 400);
+    public function store(Request $request)
+    {
+        $validator = Validator($request->all(), [
+            'username' => 'required|string|min:3|max:20|unique:user1s,username',
+            'email'    => 'required|email|unique:user1s,email',
+            'password' => 'required|min:8|confirmed',
+            'level'    => 'nullable|string',
+            'status'   => 'nullable|string',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json([
+                'icon' => 'error',
+                'title' => $validator->errors()->first()
+            ], 400);
+        }
+    
+        try {
+            DB::beginTransaction();
+    
+            // إنشاء المستخدم
+            $user1 = User1::create([
+                'username'   => $request->username,
+                'email'      => $request->email,
+                'password'   => Hash::make($request->password),
+                'role'       => 'student',
+                'actor_id'   => 0,
+                'actor_type' => 'App\Models\Student',
+            ]);
+    
+            // إنشاء الطالب
+            $student = Student::create([
+                'user_id'         => $user1->id,
+                'level'           => $request->level ?? 'beginner',
+                'status'          => $request->status ?? 'active',
+                'specialization'  => $request->specialization ?? 'General',
+                'progress'        => $request->progress ?? 0,
+                'enrollment_date' => $request->enrollment_date ?? now(),
+            ]);
+    
+            // ربط الطالب بالمستخدم
+            $user1->update([
+                'actor_id' => $student->id
+            ]);
+    
+            //  تعيين رول الطالب تلقائياً
+            $user1->assignRole('طالب');
+    
+            DB::commit();
+    
+            return response()->json([
+                'icon' => 'success',
+                'title' => 'تم التسجيل بنجاح!'
+            ], 200);
+    
+        } catch (\Exception $e) {
+            DB::rollBack();
+    
+            return response()->json([
+                'icon' => 'error',
+                'title' => 'حدث خطأ: ' . $e->getMessage()
+            ], 500);
+        }
     }
-
-    try {
-        DB::beginTransaction();
-
-        $user1 = User1::create([
-            'username'   => $request->username,
-            'email'      => $request->email,
-            'password'   => Hash::make($request->password),
-            'role'       => 'student',
-            'actor_id'   => 0,
-            'actor_type' => 'App\Models\Student',
-        ]);
-
-        $student = Student::create([
-            'user_id'         => $user1->id, 
-            'level'           => $request->level ?? 'beginner',
-            'status'          => $request->status ?? 'active',
-            'specialization'  => $request->specialization ?? 'General',
-            'progress'        => $request->progress ?? 0,
-            'enrollment_date' => $request->enrollment_date ?? now(),
-        ]);
-
-       
-        $user1->update([
-            'actor_id' => $student->id
-        ]);
-
-        // $roles = Role::findOrFail($request->get('role_id'));
-        // $student ->assignRole($roles->name);
-        DB::commit();
-
-        return response()->json(['icon' => 'success', 'title' => 'تم التسجيل بنجاح!'], 200);
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-        // هان بنرجع رسالة الخطأ عشان نعرف شو صار لو فشل
-        return response()->json(['icon' => 'error', 'title' => 'حدث خطأ: ' . $e->getMessage()], 500);
-    }
-}
     // عرض تفاصيل طالب
     public function show($id)
     {

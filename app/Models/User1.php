@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Permission\Traits\HasRoles;
 
 
 
@@ -15,7 +16,7 @@ class User1 extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\User1Factory> */
     use HasFactory, Notifiable;
-    use SoftDeletes;
+    use SoftDeletes,HasRoles;
 
     protected $table = 'user1s';
 
@@ -66,5 +67,17 @@ public function student() {
     return $this->hasOne(Student::class);
 }
 
+
+public function getGuardNameAttribute()
+{
+    if ($this->role === 'Admin') {
+        return 'admin';
+    } elseif ($this->role === 'instructor') {
+        return 'instructor';
+    } elseif ($this->role === 'student') {
+        return 'student';
+    }
+    return 'web';
+}
 
 }

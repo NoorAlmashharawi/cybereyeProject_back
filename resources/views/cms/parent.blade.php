@@ -27,7 +27,10 @@
             border: 1px solid rgba(0, 255, 255, 0.2);
             backdrop-filter: blur(10px);
             position: relative;
-            overflow: hidden;
+            overflow-y: auto;
+            overflow-x: hidden;
+            max-height: calc(100vh - 40px);
+            scroll-behavior: smooth;
         }
         
         .admin-menu::before {
@@ -46,7 +49,6 @@
             100% { left: 100%; }
         }
         
-        /* عناوين الأقسام */
         .menu-title {
             font-size: 13px;
             font-weight: 700;
@@ -71,11 +73,6 @@
             box-shadow: 0 0 10px #00ffff;
         }
         
-        .menu-title:first-of-type {
-            margin-top: 0;
-        }
-        
-        /* العنصر العادي */
         .admin-menu-item {
             display: flex;
             align-items: center;
@@ -140,12 +137,6 @@
             text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
         }
         
-        .admin-menu-item.active i {
-            color: #00ff88;
-            text-shadow: 0 0 10px #00ff88;
-        }
-        
-        /* ========== القوائم المنسدلة السيبرانية ========== */
         .dropdown-menu-item {
             position: relative;
             margin: 5px 0;
@@ -191,11 +182,6 @@
             box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
         }
         
-        .dropdown-btn:hover i {
-            color: #00ff88;
-            text-shadow: 0 0 5px #00ff88;
-        }
-        
         .dropdown-btn span i {
             margin-left: 12px;
             width: 22px;
@@ -230,7 +216,6 @@
             margin-top: 5px;
             margin-bottom: 5px;
             border: 1px solid rgba(0, 255, 255, 0.1);
-            position: relative;
         }
         
         .dropdown-content.show {
@@ -263,7 +248,6 @@
             width: 20px;
             font-size: 13px;
             color: #00ffff;
-            text-shadow: 0 0 3px #00ffff;
         }
         
         .dropdown-content a:hover {
@@ -271,7 +255,6 @@
             color: #00ffff;
             border-right-color: #00ffff;
             padding-right: 40px;
-            text-shadow: 0 0 3px rgba(0, 255, 255, 0.5);
         }
         
         .dropdown-content a:hover::before {
@@ -279,14 +262,8 @@
             left: 15px;
         }
         
-        .dropdown-content a:hover i {
-            color: #00ff88;
-            text-shadow: 0 0 8px #00ff88;
-        }
-        
-        /* شريط التمرير المخصص */
         .admin-menu::-webkit-scrollbar {
-            width: 5px;
+            width: 6px;
         }
         
         .admin-menu::-webkit-scrollbar-track {
@@ -295,12 +272,11 @@
         }
         
         .admin-menu::-webkit-scrollbar-thumb {
-            background: #00ffff;
+            background: linear-gradient(135deg, #00ffff, #00ff88);
             border-radius: 10px;
             box-shadow: 0 0 5px #00ffff;
         }
         
-        /* تأثير النيون عند التمرير */
         @keyframes neonPulse {
             0% { box-shadow: 0 0 5px rgba(0, 255, 255, 0.5); }
             50% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.8); }
@@ -312,119 +288,34 @@
             animation: neonPulse 1s infinite;
         }
         
-        /* ========== التجاوب مع الشاشات الصغيرة ========== */
         @media (max-width: 768px) {
             .admin-menu {
                 padding: 15px;
             }
-            
             .admin-menu-item,
             .dropdown-btn {
                 padding: 8px 12px;
                 font-size: 13px;
             }
-            
-            .admin-menu-item i,
-            .dropdown-btn span i {
-                width: 20px;
-                font-size: 14px;
-            }
-            
             .dropdown-content a {
                 padding: 6px 15px 6px 35px;
                 font-size: 12px;
             }
         }
         
-        /* تأثير الشاشة السيبرانية */
-        @keyframes glitch {
-            0% { text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.5), -0.05em -0.025em 0 rgba(0, 255, 255, 0.5); }
-            14% { text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.5), -0.05em -0.025em 0 rgba(0, 255, 255, 0.5); }
-            15% { text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.5), 0.025em 0.025em 0 rgba(0, 255, 255, 0.5); }
-            49% { text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.5), 0.025em 0.025em 0 rgba(0, 255, 255, 0.5); }
-            50% { text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.5), 0.05em 0 0 rgba(0, 255, 255, 0.5); }
-            99% { text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.5), 0.05em 0 0 rgba(0, 255, 255, 0.5); }
-            100% { text-shadow: -0.025em 0 0 rgba(255, 0, 0, 0.5), -0.025em -0.025em 0 rgba(0, 255, 255, 0.5); }
+        .admin-menu {
+            scrollbar-width: thin;
+            scrollbar-color: #00ffff rgba(0, 255, 255, 0.05);
         }
+
         
-        /* مصفوفة الخلفية (Matrix Effect) */
-        .matrix-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.05;
-            pointer-events: none;
-        }
-
-        /* ========== جعل القائمة الجانبية قابلة للتمرير ========== */
-.admin-menu {
-    padding: 20px;
-    background: linear-gradient(135deg, #0a0f1e 0%, #0d1428 100%);
-    border-radius: 15px;
-    box-shadow: 0 5px 25px rgba(0, 255, 255, 0.1), 0 0 20px rgba(0, 255, 255, 0.05);
-    border: 1px solid rgba(0, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    position: relative;
-    overflow-y: auto;  /* جعل القائمة قابلة للتمرير عموديًا */
-    overflow-x: hidden; /* إخفاء التمرير الأفقي */
-    max-height: calc(100vh - 40px); /* أقصى ارتفاع مناسب للشاشة */
-    scroll-behavior: smooth; /* تمرير سلس */
-}
-
-/* تخصيص شريط التمرير للقائمة الجانبية */
-.admin-menu::-webkit-scrollbar {
-    width: 6px; /* عرض شريط التمرير */
-}
-
-.admin-menu::-webkit-scrollbar-track {
-    background: rgba(0, 255, 255, 0.05); /* لون مسار التمرير */
-    border-radius: 10px;
-    margin: 10px 0; /* مسافة من الأعلى والأسفل */
-}
-
-.admin-menu::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #00ffff, #00ff88); /* لون شريط التمرير المتدرج */
-    border-radius: 10px;
-    box-shadow: 0 0 5px #00ffff; /* تأثير النيون */
-}
-
-.admin-menu::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #00ff88, #00ffff);
-    box-shadow: 0 0 10px #00ffff; /* تكبير تأثير النيون عند المرور */
-}
-
-/* لإخفاء شريط التمرير عندما لا يتم التمرير (اختياري) */
-.admin-menu {
-    scrollbar-width: thin; /* للـ Firefox */
-    scrollbar-color: #00ffff rgba(0, 255, 255, 0.05); /* للـ Firefox */
-}
-
-/* تأثير لمعان عند التمرير */
-.admin-menu::-webkit-scrollbar-thumb:hover {
-    background: #00ff88;
-    box-shadow: 0 0 8px #00ff88;
-}
-
-/* إضافة تدرج في نهاية القائمة (تأثير بصري) */
-.admin-menu::after {
-    content: '';
-    position: sticky;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 30px;
-    background: linear-gradient(to top, #0a0f1e, transparent);
-    pointer-events: none;
-    display: none; /* فعّل هذا السطر إذا أردت تأثير التدرج */
-}
     </style>
     @yield('styles')
 </head>
 
 <body>
+
+ 
     <button class="sidebar-toggle" onclick="toggleSidebar()">
         <i class="fas fa-bars"></i>
     </button>
@@ -437,364 +328,271 @@
             </div>
         </div>
 
-<nav class="admin-menu">
-    <!-- قسم الرئيسية -->
-    <div class="admin-menu-section">
-        <div class="menu-title">الرئيسية</div>
-        <a href="{{ route('main') }}" class="admin-menu-item active">
-            <i class="fas fa-tachometer-alt"></i>
-            <span>لوحة التحكم</span>
-        </a>
-    </div>
+        <nav class="admin-menu">
 
-    <!-- قسم إدارة المحتوى -->
-    <div class="menu-title">إدارة المحتوى</div>
-
-    <!-- الأدوار والصلاحيات - منسدل -->
-    <div class="dropdown-menu-item">
-        <button class="dropdown-btn" onclick="toggleDropdown(this)">
-            <span>
-                <i class="fas fa-shield-alt"></i>
-                <span>الأدوار والصلاحيات</span>
-            </span>
-            <i class="fas fa-chevron-down arrow"></i>
-        </button>
-        <div class="dropdown-content">
-            <a href="{{ route('roles.index') }}">
-                <i class="fas fa-shield-alt"></i>
-                <span>الأدوار</span>
-            </a>
-            <a href="{{ route('roles.create') }}">
-                <i class="fas fa-plus-circle"></i>
-                <span>إضافة دور جديد</span>
-            </a>
-            <a href="{{ route('permissions.index') }}">
-                <i class="fas fa-key"></i>
-                <span>الصلاحيات</span>
-            </a>
-            <a href="{{ route('permissions.create') }}">
-                <i class="fas fa-plus-square"></i>
-                <span>إضافة صلاحية</span>
-            </a>
-        </div>
-    </div>
-
-    <!-- الكورسات - منسدل -->
-    <div class="dropdown-menu-item">
-        <button class="dropdown-btn" onclick="toggleDropdown(this)">
-            <span>
-                <i class="fas fa-book-open"></i>
-                <span>الكورسات</span>
-            </span>
-            <i class="fas fa-chevron-down arrow"></i>
-        </button>
-
-        <div class="dropdown-content">
-            {{-- @can('index-course') --}}
-            <a href="{{ route('courses.index') }}">
-                <i class="fas fa-list"></i>
-                <span>جميع الكورسات</span>
-            </a>
-            {{-- @endcan --}}
-            {{-- @can('create-course') --}}
-            <a href="{{ route('courses.create') }}">
-                <i class="fas fa-plus-circle"></i>
-                <span>إضافة كورس جديد</span>
-            </a>
-            {{-- @endcan --}}
-        </div>
-    </div>
-
-    <!-- التصنيفات - منسدل -->
-    <div class="dropdown-menu-item">
-        <button class="dropdown-btn" onclick="toggleDropdown(this)">
-            <span>
-                <i class="fas fa-tags"></i>
-                <span>التصنيفات</span>
-            </span>
-            <i class="fas fa-chevron-down arrow"></i>
-        </button>
-        <div class="dropdown-content">
-{{-- 
-            @can('index-category') --}}
-            <a href="{{ route('categories.index') }}">
-                <i class="fas fa-list"></i>
-                <span>جميع التصنيفات</span>
-            </a>
-            {{-- @endcan --}}
-            {{-- @can('create-category') --}}
-            <a href="{{ route('categories.create') }}">
-                <i class="fas fa-plus-circle"></i>
-                <span>إضافة تصنيف جديد</span>
-            </a>
-            {{-- @endcan --}}
-        </div>
-    </div>
-
-    <!-- المواد التعليمية - منسدل -->
-    <div class="dropdown-menu-item">
-        <button class="dropdown-btn" onclick="toggleDropdown(this)">
-            <span>
-                <i class="fas fa-file-download"></i>
-                <span>المواد التعليمية</span>
-            </span>
-            <i class="fas fa-chevron-down arrow"></i>
-        </button>
-        <div class="dropdown-content">
-            {{-- @can('index-material') --}}
-            <a href="{{ route('materials.index') }}">
-                <i class="fas fa-list"></i>
-                <span>جميع المواد</span>
-            </a>
-            {{-- @endcan --}}
-            {{-- @can('create-material') --}}
-            <a href="{{ route('materials.create') }}">
-                <i class="fas fa-plus-circle"></i>
-                <span>رفع مادة جديدة</span>
-            </a>
-            {{-- @endcan --}}
-        </div>
-    </div>
-
-    <!-- قسم إدارة المستخدمين -->
-    <div class="menu-title">إدارة المستخدمين</div>
-
-    <!-- الطلاب - منسدل -->
-    <div class="dropdown-menu-item">
-        <button class="dropdown-btn" onclick="toggleDropdown(this)">
-            <span>
-                <i class="fas fa-user-graduate"></i>
-                <span>الطلاب</span>
-            </span>
-            <i class="fas fa-chevron-down arrow"></i>
-        </button>
-        <div class="dropdown-content">
-            {{-- @can('index-student') --}}
-            <a href="{{ route('students.index') }}">
-                <i class="fas fa-list"></i>
-                <span>جميع الطلاب</span>
-            </a>
-            {{-- @endcan --}}
-            {{-- @can('create-student') --}}
-            <a href="{{ route('students.create') }}">
-                <i class="fas fa-plus-circle"></i>
-                <span>إضافة طالب جديد</span>
-            </a>
-            {{-- @endcan --}}
-        </div>
-    </div>
-
-    <!-- المدربون - منسدل -->
-    <div class="dropdown-menu-item">
-        <button class="dropdown-btn" onclick="toggleDropdown(this)">
-            <span>
-                <i class="fas fa-chalkboard-teacher"></i>
-                <span>المدربون</span>
-            </span>
-            <i class="fas fa-chevron-down arrow"></i>
-        </button>
-        <div class="dropdown-content">
-            {{-- @can('index-instuctor') --}}
-            <a href="{{ route('instructors.index') }}">
-                <i class="fas fa-list"></i>
-                <span>جميع المدربين</span>
-            </a>
-            {{-- @endcan --}}
-            {{-- @can('create-instuctor') --}}
-            <a href="{{ route('instructors.create') }}">
-                <i class="fas fa-plus-circle"></i>
-                <span>إضافة مدرب جديد</span>
-            </a>
-            {{-- @endcan --}}
-        </div>
-    </div>
-
-    <!-- المشرفون - منسدل -->
-    <div class="dropdown-menu-item">
-        <button class="dropdown-btn" onclick="toggleDropdown(this)">
-            <span>
-                <i class="fas fa-user-cog"></i>
-                <span>المشرفون</span>
-            </span>
-            <i class="fas fa-chevron-down arrow"></i>
-        </button>
-        <div class="dropdown-content">
-            {{-- @can('index-admin') --}}
-            <a href="{{ route('admins.index') }}">
-                <i class="fas fa-list"></i>
-                <span>جميع المشرفين</span>
-            </a>
-            {{-- @endcan --}}
-            {{-- @can('create-admin') --}}
-            <a href="{{ route('admins.create') }}">
-                <i class="fas fa-plus-circle"></i>
-                <span>إضافة مشرف جديد</span>
-            </a>
-            {{-- @endcan --}}
-        </div>
-    </div>
-
-    <!-- قسم تحكم الطالب -->
- 
-<div class="menu-title">تحكم الطالب</div>
-
-<div class="dropdown-menu-item">
-    <button class="dropdown-btn" onclick="toggleDropdown(this)">
-        <span>
-            <i class="fas fa-book-reader"></i>
-            <span>كورساتي</span>
-        </span>
-        <i class="fas fa-chevron-down arrow"></i>
-    </button>
-    <div class="dropdown-content">
-        {{-- @can('index-course') --}}
-        <a href="{{ route('student.dashboard') }}">
-            <i class="fas fa-tachometer-alt"></i>
-            <span>كورساتي</span>
-        </a>
-        {{-- @endcan --}}
-    </div>
+            {{-- للتشخيص فقط - امسحه بعد الإصلاح --}}
+@if(auth('instructor')->check())
+<div style="background: #00ff0033; padding: 10px; margin: 10px; border-radius: 10px; color: #0f0;">
+    ✅ أنت مسجل كـ: مدرب<br>
+    الصلاحيات المتوفرة: 
+    @php
+        $user = auth('instructor')->user();
+        $permissions = $user->getPermissionNames();
+        echo $permissions->isEmpty() ? 'لا توجد صلاحيات!' : implode(', ', $permissions->toArray());
+    @endphp
 </div>
-
-
- 
-        <span>
-            <a href="{{ route('student.my-certificates') }}">
-            <i class="fas fa-certificate"></i>
-            <span>شهاداتي</span>
-        </span>
+@endif
+            <!-- ========== الأدمن فقط ========== -->
+            @if(auth('admin')->check())
+                @php $user = auth('admin')->user(); @endphp
+                
+                <div class="admin-menu-section">
+                    <div class="menu-title">الرئيسية</div>
+                    <a href="{{ route('main') }}" class="admin-menu-item">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>لوحة التحكم</span>
+                    </a>
+                </div>
         
-
- 
-
-
-   
-    <!-- قسم تحكم المدرب -->
-    <div class="menu-title">تحكم المدرب</div>
-  
-    <div class="dropdown-menu-item">
-      
-                   <button class="dropdown-btn" onclick="toggleDropdown(this)">
-            <span>
-                <i class="fas fa-chalkboard-teacher"></i>
-                <span>إدارة الكورسات</span>
-            </span>
-            <i class="fas fa-chevron-down arrow"></i>
-        </button>
-        <div class="dropdown-content">
-            {{-- @can('create-course') --}}
-            <a href="{{ route('courses.create') }}">
-                <i class="fas fa-plus-circle"></i>
-                <span>إنشاء كورس جديد</span>
-            </a>
-            {{-- @endcan --}}
-        </div>
-    </div>
-  
-
-    <div class="dropdown-menu-item">
-        <button class="dropdown-btn" onclick="toggleDropdown(this)">
-            <span>
-                <i class="fas fa-tags"></i>
-                <span>التصنيفات</span>
-            </span>
-            <i class="fas fa-chevron-down arrow"></i>
-        </button>
-        <div class="dropdown-content">
-            {{-- @can('create-category') --}}
-            <a href="{{ route('categories.create') }}">
-                <i class="fas fa-folder-plus"></i>
-                <span>إضافة تصنيف</span>
-            </a>
-            {{-- @endcan --}}
-            {{-- @can('index-category') --}}
-            <a href="{{ route('categories.index') }}">
-                <i class="fas fa-list"></i>
-                <span>جميع التصنيفات</span>
-            </a>
-            {{-- @endcan --}}
-        </div>
-    </div>
-
-    <div class="dropdown-menu-item">
-        <button class="dropdown-btn" onclick="toggleDropdown(this)">
-            <span>
-                <i class="fas fa-file-upload"></i>
-                <span>المواد التعليمية</span>
-            </span>
-            <i class="fas fa-chevron-down arrow"></i>
-        </button>
-        <div class="dropdown-content">
-            {{-- @can('create-material') --}}
-            <a href="{{ route('materials.create') }}">
-                <i class="fas fa-plus-circle"></i>
-                <span>رفع مادة تعليمية</span>
-            </a>
-            {{-- @endcan
-            @can('index-material') --}}
-            <a href="{{ route('materials.index') }}">
-                <i class="fas fa-list"></i>
-                <span>جميع المواد</span>
-            </a>
-            {{-- @endcan --}}
-        </div>
-    </div>
-
-    <div class="dropdown-menu-item">
-        <button class="dropdown-btn" onclick="toggleDropdown(this)">
-            <span>
-                <i class="fas fa-video"></i>
-                <span>الفيديوهات</span>
-            </span>
-            <i class="fas fa-chevron-down arrow"></i>
-        </button>
-        <div class="dropdown-content">
-            <a href="{{ route('videos.index') }}">
-                <i class="fas fa-list"></i>
-                <span>إدارة الفيديوهات</span>
-            </a>
-            {{-- @can('create-video') --}}
-            <a href="{{ route('videos.create') }}">
-                <i class="fas fa-plus-circle"></i>
-                <span>إضافة فيديو جديد</span>
-            </a>
-            {{-- @endcan --}}
-        </div>
-    </div>
-
-    <div class="dropdown-menu-item">
-        <button class="dropdown-btn" onclick="toggleDropdown(this)">
-            <span>
-                <i class="fas fa-edit"></i>
-                <span>الكويزات</span>
-            </span>
-            <i class="fas fa-chevron-down arrow"></i>
-        </button>
-        <div class="dropdown-content">
-            {{-- @can('create-quiz') --}}
-            <a href="{{ route('quizzs.create') }}">
-                <i class="fas fa-plus-circle"></i>
-                <span>إنشاء كويز جديد</span>
-            </a>
-            {{-- @endcan
-            @can('index-quiz') --}}
-            <a href="{{ route('quizzs.index') }}">
-                <i class="fas fa-list"></i>
-                <span>جميع الكويزات</span>
-            </a>
-            {{-- @endcan --}}
-        </div>
-    </div>
-</nav>
-
-        <div class="admin-footer">
-            <div class="admin-profile">
-                <div class="admin-avatar">م</div>
-                <div class="admin-info">
-                    <h4> المستخدم</h4>
-                    <p>admin@cybereye.com</p>
+                <div class="menu-title">نظام الصلاحيات</div>
+                <div class="dropdown-menu-item">
+                    <button class="dropdown-btn" onclick="toggleDropdown(this)">
+                        <span><i class="fas fa-shield-alt"></i><span>الأدوار والصلاحيات</span></span>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="{{ route('roles.index') }}"><i class="fas fa-shield-alt"></i><span>الأدوار</span></a>
+                        <a href="{{ route('roles.create') }}"><i class="fas fa-plus-circle"></i><span>إضافة دور</span></a>
+                        <a href="{{ route('permissions.index') }}"><i class="fas fa-key"></i><span>الصلاحيات</span></a>
+                        <a href="{{ route('permissions.create') }}"><i class="fas fa-plus-square"></i><span>إضافة صلاحية</span></a>
+                    </div>
+                </div>
+        
+                <div class="menu-title">إدارة المستخدمين</div>
+                <div class="dropdown-menu-item">
+                    <button class="dropdown-btn" onclick="toggleDropdown(this)">
+                        <span><i class="fas fa-users"></i><span>المستخدمين</span></span>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="{{ route('students.index') }}"><i class="fas fa-user-graduate"></i><span>الطلاب</span></a>
+                        <a href="{{ route('instructors.index') }}"><i class="fas fa-chalkboard-teacher"></i><span>المدربين</span></a>
+                        <a href="{{ route('admins.index') }}"><i class="fas fa-user-cog"></i><span>المشرفين</span></a>
+                    </div>
+                </div>
+        
+                <div class="menu-title">إدارة المحتوى</div>
+                <div class="dropdown-menu-item">
+                    <button class="dropdown-btn" onclick="toggleDropdown(this)">
+                        <span><i class="fas fa-book-open"></i><span>الكورسات</span></span>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="{{ route('courses.index') }}"><i class="fas fa-list"></i><span>جميع الكورسات</span></a>
+                    </div>
+                </div>
+        
+                <div class="dropdown-menu-item">
+                    <button class="dropdown-btn" onclick="toggleDropdown(this)">
+                        <span><i class="fas fa-tags"></i><span>التصنيفات</span></span>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="{{ route('categories.index') }}"><i class="fas fa-list"></i><span>جميع التصنيفات</span></a>
+                    </div>
+                </div>
+        
+                <div class="dropdown-menu-item">
+                    <button class="dropdown-btn" onclick="toggleDropdown(this)">
+                        <span><i class="fas fa-file-download"></i><span>المواد التعليمية</span></span>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="{{ route('materials.index') }}"><i class="fas fa-list"></i><span>جميع المواد</span></a>
+                    </div>
+                </div>
+        
+                <div class="dropdown-menu-item">
+                    <button class="dropdown-btn" onclick="toggleDropdown(this)">
+                        <span><i class="fas fa-video"></i><span>الفيديوهات</span></span>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="{{ route('videos.index') }}"><i class="fas fa-list"></i><span>جميع الفيديوهات</span></a>
+                    </div>
+                </div>
+        
+                <div class="dropdown-menu-item">
+                    <button class="dropdown-btn" onclick="toggleDropdown(this)">
+                        <span><i class="fas fa-edit"></i><span>الكويزات</span></span>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="{{ route('quizzs.index') }}"><i class="fas fa-list"></i><span>جميع الكويزات</span></a>
+                    </div>
+                </div>
+            @endif
+        
+            <!-- ========== الطالب فقط ========== -->
+            @if(auth('student')->check())
+                @php $user = auth('student')->user(); @endphp
+                
+                <div class="admin-menu-section">
+                    <div class="menu-title">الرئيسية</div>
+                    <a href="{{ route('main') }}" class="admin-menu-item">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>لوحة التحكم</span>
+                    </a>
+                </div>
+        
+                <div class="menu-title">لوحة الطالب</div>
+                <a href="{{ route('student.dashboard') }}" class="admin-menu-item">
+                    <i class="fas fa-book-open"></i>
+                    <span>كورساتي المسجلة</span>
+                </a>
+                <a href="{{ route('student.my-certificates') }}" class="admin-menu-item">
+                    <i class="fas fa-certificate"></i>
+                    <span>شهاداتي</span>
+                </a>
+            @endif
+        
+            <!-- ========== المدرب فقط ========== -->
+            @if(auth('instructor')->check())
+            @php $user = auth('instructor')->user(); @endphp
+            
+            <div class="admin-menu-section">
+                <div class="menu-title">الرئيسية</div>
+                <a href="{{ route('main') }}" class="admin-menu-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>لوحة التحكم</span>
+                </a>
+            </div>
+        
+            <div class="menu-title">لوحة المدرب</div>
+            
+            <!-- الكورسات -->
+            @canany(['index-course', 'create-course'])
+            <div class="dropdown-menu-item">
+                <button class="dropdown-btn" onclick="toggleDropdown(this)">
+                    <span><i class="fas fa-book-open"></i><span>الكورسات</span></span>
+                    <i class="fas fa-chevron-down arrow"></i>
+                </button>
+                <div class="dropdown-content">
+                    @can('index-course')
+                        <a href="{{ route('courses.index') }}"><i class="fas fa-list"></i><span>جميع الكورسات</span></a>
+                    @endcan
+                    @can('create-course')
+                        <a href="{{ route('courses.create') }}"><i class="fas fa-plus-circle"></i><span>إضافة كورس</span></a>
+                    @endcan
                 </div>
             </div>
+            @endcanany
+        
+            <!-- الكويزات -->
+            @canany(['index-quiz', 'create-quiz'])
+            <div class="dropdown-menu-item">
+                <button class="dropdown-btn" onclick="toggleDropdown(this)">
+                    <span><i class="fas fa-edit"></i><span>الكويزات</span></span>
+                    <i class="fas fa-chevron-down arrow"></i>
+                </button>
+                <div class="dropdown-content">
+                    @can('index-quiz')
+                        <a href="{{ route('quizzs.index') }}"><i class="fas fa-list"></i><span>جميع الكويزات</span></a>
+                    @endcan
+                    @can('create-quiz')
+                        <a href="{{ route('quizzs.create') }}"><i class="fas fa-plus-circle"></i><span>إنشاء كويز</span></a>
+                    @endcan
+                </div>
+            </div>
+            @endcanany
+        
+            <!-- المواد التعليمية -->
+            @canany(['index-material', 'create-material'])
+            <div class="dropdown-menu-item">
+                <button class="dropdown-btn" onclick="toggleDropdown(this)">
+                    <span><i class="fas fa-file-download"></i><span>المواد التعليمية</span></span>
+                    <i class="fas fa-chevron-down arrow"></i>
+                </button>
+                <div class="dropdown-content">
+                    @can('index-material')
+                        <a href="{{ route('materials.index') }}"><i class="fas fa-list"></i><span>جميع المواد</span></a>
+                    @endcan
+                    @can('create-material')
+                        <a href="{{ route('materials.create') }}"><i class="fas fa-plus-circle"></i><span>رفع مادة</span></a>
+                    @endcan
+                </div>
+            </div>
+            @endcanany
+        
+            <!-- الفيديوهات -->
+            @canany(['index-video', 'create-video'])
+            <div class="dropdown-menu-item">
+                <button class="dropdown-btn" onclick="toggleDropdown(this)">
+                    <span><i class="fas fa-video"></i><span>الفيديوهات</span></span>
+                    <i class="fas fa-chevron-down arrow"></i>
+                </button>
+                <div class="dropdown-content">
+                    @can('index-video')
+                        <a href="{{ route('videos.index') }}"><i class="fas fa-list"></i><span>جميع الفيديوهات</span></a>
+                    @endcan
+                    @can('create-video')
+                        <a href="{{ route('videos.create') }}"><i class="fas fa-plus-circle"></i><span>إضافة فيديو</span></a>
+                    @endcan
+                </div>
+            </div>
+            @endcanany
+        
+            <!-- التصنيفات -->
+            @canany(['index-category', 'create-category'])
+            <div class="dropdown-menu-item">
+                <button class="dropdown-btn" onclick="toggleDropdown(this)">
+                    <span><i class="fas fa-tags"></i><span>التصنيفات</span></span>
+                    <i class="fas fa-chevron-down arrow"></i>
+                </button>
+                <div class="dropdown-content">
+                    @can('index-category')
+                        <a href="{{ route('categories.index') }}"><i class="fas fa-list"></i><span>جميع التصنيفات</span></a>
+                    @endcan
+                    @can('create-category')
+                        <a href="{{ route('categories.create') }}"><i class="fas fa-plus-circle"></i><span>إضافة تصنيف</span></a>
+                    @endcan
+                </div>
+            </div>
+            @endcanany
+        @endif
+        </nav>
+        <div class="admin-footer">
+            @if(auth('admin')->check())
+                @php $user = auth('admin')->user(); @endphp
+                <div class="admin-profile">
+                    <div class="admin-avatar">{{ substr($user->username, 0, 1) }}</div>
+                    <div class="admin-info">
+                        <h4>{{ $user->username }}</h4>
+                        <p>{{ $user->email }}</p>
+                        <small><i class="fas fa-crown"></i> {{ $user->getRoleNames()->first() ?? 'أدمن' }}</small>
+                    </div>
+                </div>
+            @elseif(auth('student')->check())
+                @php $user = auth('student')->user(); @endphp
+                <div class="admin-profile">
+                    <div class="admin-avatar">{{ substr($user->username, 0, 1) }}</div>
+                    <div class="admin-info">
+                        <h4>{{ $user->username }}</h4>
+                        <p>{{ $user->email }}</p>
+                        <small><i class="fas fa-user-graduate"></i> {{ $user->getRoleNames()->first() ?? 'طالب' }}</small>
+                    </div>
+                </div>
+            @elseif(auth('instructor')->check())
+                @php $user = auth('instructor')->user(); @endphp
+                <div class="admin-profile">
+                    <div class="admin-avatar">{{ substr($user->username, 0, 1) }}</div>
+                    <div class="admin-info">
+                        <h4>{{ $user->username }}</h4>
+                        <p>{{ $user->email }}</p>
+                        <small><i class="fas fa-chalkboard-teacher"></i> {{ $user->getRoleNames()->first() ?? 'مدرب' }}</small>
+                    </div>
+                </div>
+            @endif
         </div>
     </aside>
 
@@ -816,7 +614,6 @@
             content.classList.toggle('show');
         }
         
-        // إغلاق القوائم عند الضغط خارجها
         document.addEventListener('click', function(event) {
             if (!event.target.closest('.dropdown-menu-item')) {
                 document.querySelectorAll('.dropdown-content').forEach(function(content) {

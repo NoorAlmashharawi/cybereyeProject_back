@@ -53,18 +53,13 @@
                     <label class="form-cyber-label">عنوان المادة التعليمية</label>
                     <input type="text" class="form-cyber-control" id="title" placeholder="مثلاً: ملف تدريب الأكسل">
                 </div>
-
-                <div class="col-md-5 mb-5">
-                    <label class="form-cyber-label">الكورس التابع له</label>
-                    <select class="form-cyber-control" id="course_id">
-                        <option value="" disabled selected style="color: #666;">-- اختر الكورس من القائمة --</option>
-                        @foreach($courses as $course)
-                            <option value="{{ $course->id }}">
-                                {{ $course->course_name ?? ($course->title ?? 'اسم الكورس غير متوفر') }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+<input type="hidden" name="course_id" id="course_id" value="{{ $course->id }}">
+<div class="col-md-12 mb-5">
+    <label class="form-cyber-label">الكورس التابع له</label>
+    <p class="text-white bg-dark p-2 rounded" style="background: #1f2937; padding: 12px; border-radius: 8px;">
+        {{ $course->course_name }}
+    </p>
+</div>
 
                 <div class="col-md-12 mb-5">
                     <label class="form-cyber-label">تحميل الملف (يدعم معظم الصيغ)</label>
@@ -104,55 +99,56 @@
         }
     }
 
-    function performStore() {
-        let title = document.getElementById('title').value;
-        let course_id = document.getElementById('course_id').value;
-        let description = document.getElementById('description').value;
-        let fileInput = document.getElementById('fileInput').files[0];
+function performStore() {
+    let title = document.getElementById('title').value;
+    let course_id = document.getElementById('course_id').value;
+    let description = document.getElementById('description').value;
+    let fileInput = document.getElementById('fileInput').files[0];
 
-        if (!title) {
-            showError('حقل العنوان فارغ، يرجى كتابة عنوان للمادة');
-            return;
-        }
-        if (!course_id) {
-            showError('لم يتم اختيار كورس، يرجى تحديد الكورس من القائمة');
-            return;
-        }
-        if (!fileInput) {
-            showError('لم يتم اختيار ملف، يرجى رفع ملف أولاً');
-            return;
-        }
-
-        let formData = new FormData();
-        formData.append('title', title);
-        formData.append('course_id', course_id);
-        formData.append('description', description);
-        formData.append('file', fileInput);
-
-        axios.post('/cms/instructor/materials', formData)
-            .then(function (response) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'تم الحفظ!',
-                    text: response.data.message || 'تم الرفع بنجاح',
-                    background: '#111827',
-                    color: '#fff',
-                    showConfirmButton: false,
-                    timer: 1500
-                }).then(() => {
-                    window.location.href = "{{ route('materials.index') }}";
-                });
-            })
-            .catch(function (error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'خطأ في العملية',
-                    text: error.response?.data?.message || 'حدث خطأ غير متوقع',
-                    background: '#111827',
-                    color: '#fff'
-                });
-            });
+    if (!title) {
+        showError('حقل العنوان فارغ، يرجى كتابة عنوان للمادة');
+        return;
     }
+    if (!course_id) {
+        showError('لم يتم اختيار كورس، يرجى تحديد الكورس من القائمة');
+        return;
+    }
+    if (!fileInput) {
+        showError('لم يتم اختيار ملف، يرجى رفع ملف أولاً');
+        return;
+    }
+
+    let formData = new FormData();
+    formData.append('title', title);
+    formData.append('course_id', course_id);
+    formData.append('description', description);
+    formData.append('file', fileInput);
+
+    axios.post('/cms/instructor/materials', formData)
+        .then(function (response) {
+            Swal.fire({
+                icon: 'success',
+                title: 'تم الحفظ!',
+                text: response.data.message || 'تم الرفع بنجاح',
+                background: '#111827',
+                color: '#fff',
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                // ✅ التعديل هنا
+                window.location.href = "/cms/instructor/materials?course_id=" + course_id;
+            });
+        })
+        .catch(function (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'خطأ في العملية',
+                text: error.response?.data?.message || 'حدث خطأ غير متوقع',
+                background: '#111827',
+                color: '#fff'
+            });
+        });
+}
 
     function showError(msg) {
         Swal.fire({

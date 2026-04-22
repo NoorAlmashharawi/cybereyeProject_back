@@ -47,10 +47,10 @@ class InstructorController extends Controller
     public function create()
      {
 
-    //     $roles = Role::where('guard_name' , 'admin')->get();
+        $roles = Role::where('guard_name' , 'instructor')->get();
     //     $this->authorize('create' , Instructor::class);
       
-         return response()->view('cms.instructor.create');
+         return response()->view('cms.instructor.create',compact('roles'));
     }
 
     /**
@@ -60,37 +60,37 @@ class InstructorController extends Controller
      public function store(Request $request)
      {
          $validator = Validator($request->all(), [
-                      'username' => 'required|string|min:3|max:20|unique:user1s,username',
-            'email' => 'required|email|unique:user1s,email',
-            'password' => 'required|min:8|confirmed',
-
-            'specialization' => 'required|string',
-            'experience_years' => 'required|integer|min:0',
-            'rating' => 'required|numeric|min:1|max:5',
-            'bio' => 'nullable|string',
-            'enrollment_date' => 'nullable|date',
+             'username' => 'required|string|min:3|max:20|unique:user1s,username',
+             'email'    => 'required|email|unique:user1s,email',
+             'password' => 'required|min:8|confirmed',
+     
+             'specialization'   => 'required|string',
+             'experience_years' => 'required|integer|min:0',
+             'rating'           => 'required|numeric|min:1|max:5',
+             'bio'              => 'nullable|string',
+             'enrollment_date'  => 'nullable|date',
          ]);
- 
+     
          if ($validator->fails()) {
              return response()->json([
                  'icon'  => 'error',
                  'title' => $validator->errors()->first(),
              ], 400);
          }
- 
+     
          try {
              DB::beginTransaction();
- 
-             $instructor =  Instructor::create([
-                'specialization'=>$request->specialization,           
-                'experience_years'=>$request->experience_years,
-                'rating'=>$request->rating,
-                'bio'=>$request->bio,
-                'enrollment_date'=>$request->enrollment_date ?? now(),
+     
+             //  إنشاء المدرب
+             $instructor = Instructor::create([
+                 'specialization'   => $request->specialization,
+                 'experience_years' => $request->experience_years,
+                 'rating'           => $request->rating,
+                 'bio'              => $request->bio,
+                 'enrollment_date'  => $request->enrollment_date ?? now(),
              ]);
- 
-        
-
+     
+             //  إنشاء المستخدم المرتبط
              $user1 = User1::create([
                  'username'   => $request->username,
                  'email'      => $request->email,
@@ -99,18 +99,20 @@ class InstructorController extends Controller
                  'actor_id'   => $instructor->id,
                  'actor_type' => 'App\Models\Instructor',
              ]);
- 
-            //  $roles = Role::findOrFail($request->get('role_id'));
-            //  $instructor ->assignRole($roles->name);
+     
+            
+             $user1->assignRole('instructor');
+     
              DB::commit();
- 
+     
              return response()->json([
                  'icon'  => 'success',
                  'title' => 'تم إنشاء المدرب بنجاح'
              ], 200);
- 
+     
          } catch (\Exception $e) {
              DB::rollBack();
+     
              return response()->json([
                  'icon'  => 'error',
                  'title' => 'خطأ: ' . $e->getMessage()
@@ -225,7 +227,7 @@ class InstructorController extends Controller
 
     public function trashed()
 {
-    // ✅ استخدم withTrashed() مع user1
+  
     $instructors = Instructor::onlyTrashed()
         ->with(['user1' => function($query) {
             $query->withTrashed();  // جلب user1 المحذوف أيضاً

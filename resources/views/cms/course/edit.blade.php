@@ -113,11 +113,10 @@
             <h5 style="font-size: 0.9rem; color: #8898aa; margin-bottom: 15px; padding-right: 10px;">إدارة المحتوى</h5>
 
 
-            <a href="{{ route('videos.index', $course->id) }}" class="manage-btn">
+<a href="/cms/video/videos?course_id={{ $course->id }}" class="manage-btn">
     <i class="fas fa-play-circle"></i>
     <span>إدارة الدروس</span>
 </a>
-
             <a href="{{ route('quizzs.create') }}" class="manage-btn">
                 <i class="fas fa-question-circle"></i>
                 <span>إدارة الكويزات</span>

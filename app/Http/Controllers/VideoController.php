@@ -15,21 +15,18 @@ use Illuminate\Support\Str;
 
 class VideoController extends Controller
 {
-    
-    public function index(Request $request)
-{
-    // بناخد الـ material_id من الرابط (مثلاً: cms/video?material_id=2)
-    $materialId = $request->query('material_id');
 
-    // بنجيب الفيديوهات اللي تابعة لهاد الماتيريال بس
-    $videos = Video::where('material_id', $materialId)
+public function index(Request $request)
+{
+    $courseId = $request->query('course_id');
+    // 2. الفلترة بتصير بناءً على رقم الكورس
+    $videos = Video::where('course_id', $courseId)
                    ->orderBy('order_number', 'asc')
                    ->get();
-
-    return view('cms.Video.index', compact('videos', 'materialId'));
+    // 3. نمرر المتغيرات الجديدة للـ View
+    return view('cms.Video.index', compact('videos', 'courseId'));
 }
-
-    public function player($courseId = null)
+    public function player($courseId)
     {
         $query = Video::orderBy('created_at', 'asc');
 
@@ -51,13 +48,18 @@ class VideoController extends Controller
 
     public function store(Request $request)
     {
+
+    if (auth()->check() && auth()->user()->role == 'Admin') {
+        abort(403, 'غير مسموح للأدمن بإضافة فيديوهات');
+    }
+
         $validator = Validator::make($request->all(), [
             'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
             'duration'    => 'nullable|integer',
             'url'         => 'required|file|mimes:mp4,mkv,avi,mov|max:102400',
             'lesson_id'   => 'nullable|exists:lessons,id',
-            'course_id'   => 'nullable|exists:courses,id',
+             'course_id'   => 'required|exists:courses,id',
         ]);
 
         if ($validator->fails()) {
