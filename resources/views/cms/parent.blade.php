@@ -366,8 +366,11 @@
                     </button>
                     <div class="dropdown-content">
                         <a href="{{ route('students.index') }}"><i class="fas fa-user-graduate"></i><span>الطلاب</span></a>
+                        <a href="{{ route('students.create') }}"><i class="fas fa-user-graduate"></i><span>اضافة طالب </span></a>
                         <a href="{{ route('instructors.index') }}"><i class="fas fa-chalkboard-teacher"></i><span>المدربين</span></a>
+                        <a href="{{ route('instructors.create') }}"><i class="fas fa-chalkboard-teacher"></i><span> ضافةالمدربين</span></a>
                         <a href="{{ route('admins.index') }}"><i class="fas fa-user-cog"></i><span>المشرفين</span></a>
+                        <a href="{{ route('admins.create') }}"><i class="fas fa-user-cog"></i><span> اضافةالمشرفين</span></a>
                     </div>
                 </div>
         
@@ -530,6 +533,7 @@
             @endif
         
         @endif
+        
         </nav>
         <div class="admin-footer">
             @if(auth('admin')->check())
