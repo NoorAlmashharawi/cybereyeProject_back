@@ -11,6 +11,8 @@
 @endsection
 
 @section('content')
+
+@if(auth('admin')->check())
 <!-- شريط الأدوات العلوي -->
 <div class="admin-toolbar">
     <div class="toolbar-title">
@@ -204,6 +206,97 @@
         </div>
     </div>
 </div>
+@endif
+
+{{-- بداية قسم الطالب الفخم والداينمك بالكامل --}}
+@if(auth('student')->check())
+<div class="student-modern-dashboard" dir="rtl" style="padding: 10px; font-family: 'Cairo', sans-serif;">
+
+    <div style="background: linear-gradient(105deg, #1e293b 0%, #334155 100%); border-radius: 24px; padding: 35px; color: white; margin-bottom: 30px; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+        <div style="position: relative; z-index: 2; display: flex; align-items: center; gap: 20px;">
+            <div style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.2); overflow: hidden;">
+                <img src="https://ui-avatars.com/api/?name={{ urlencode($user->username) }}&background=4361ee&color=fff&size=128" alt="student-avatar" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div>
+                <span style="background: rgba(67, 97, 238, 0.3); padding: 4px 12px; border-radius: 50px; font-size: 0.75rem; color: #4cc9f0; font-weight: 700;">لوحة الطالب</span>
+                <h1 style="margin: 5px 0; font-weight: 800; font-size: 1.8rem;">مرحباً، {{ $user->username }} ✨</h1>
+                <p style="opacity: 0.7; font-size: 0.95rem; margin: 0;"><i class="far fa-envelope" style="margin-left: 5px;"></i> {{ $user->email }}</p>
+            </div>
+        </div>
+        <div style="position: relative; z-index: 2;">
+            <a href="{{ route('view.logout') }}" style="background: rgba(255,255,255,0.1); color: white; padding: 10px 20px; border-radius: 12px; text-decoration: none; font-size: 0.9rem; font-weight: 600; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);">
+                تسجيل الخروج <i class="fas fa-sign-out-alt" style="margin-right: 8px;"></i>
+            </a>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 40px;">
+        <div style="background: white; border-radius: 20px; padding: 25px; display: flex; align-items: center; gap: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.03); border: 1px solid #f1f5f9;">
+            <div style="width: 60px; height: 60px; border-radius: 15px; background: #eef2ff; color: #4361ee; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;"><i class="fas fa-book-open"></i></div>
+            <div>
+                <h4 style="margin: 0; color: #64748b; font-size: 0.9rem; font-weight: 600;">الكورسات المسجلة</h4>
+                <div style="font-size: 1.6rem; font-weight: 800; color: #1e293b;">{{ $enrolledCourses->count() }}</div>
+            </div>
+        </div>
+
+        <div style="background: white; border-radius: 20px; padding: 25px; display: flex; align-items: center; gap: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.03); border: 1px solid #f1f5f9;">
+            <div style="width: 60px; height: 60px; border-radius: 15px; background: #ecfdf5; color: #10b981; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;"><i class="fas fa-medal"></i></div>
+            <div>
+                <h4 style="margin: 0; color: #64748b; font-size: 0.9rem; font-weight: 600;">الشهادات المحصلة</h4>
+                <div style="font-size: 1.6rem; font-weight: 800; color: #1e293b;">{{ $certificatesCount }}</div>
+            </div>
+        </div>
+
+        <div style="background: white; border-radius: 20px; padding: 25px; display: flex; align-items: center; gap: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.03); border: 1px solid #f1f5f9;">
+            <div style="width: 60px; height: 60px; border-radius: 15px; background: #fff7ed; color: #f59e0b; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;"><i class="fas fa-graduation-cap"></i></div>
+            <div>
+                <h4 style="margin: 0; color: #64748b; font-size: 0.9rem; font-weight: 600;">التخصص الحالي</h4>
+                <div style="font-size: 1.1rem; font-weight: 800; color: #1e293b;">{{ $student->specialization ?? 'لم يحدد بعد' }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-bottom: 40px;">
+        <div style="margin-bottom: 25px;">
+            <h3 style="margin: 0; font-weight: 800; color: #1e293b; font-size: 1.5rem;">📚 رحلتي التعليمية</h3>
+            <p style="color: #64748b; margin-top: 5px; font-size: 0.9rem;">استكشف كافة الكورسات التي انضممت إليها</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px;">
+            @forelse($enrolledCourses as $course)
+                <div style="background: white; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.04); border: 1px solid #f1f5f9; transition: all 0.3s ease; position: relative;">
+                    <div style="position: absolute; top: 15px; left: 15px; z-index: 5;">
+                        <span style="background: rgba(67, 97, 238, 0.1); color: #4361ee; padding: 5px 12px; border-radius: 10px; font-size: 0.7rem; font-weight: 700; backdrop-filter: blur(5px);">
+                             {{ $course->level == 'beginner' ? 'مبتدئ' : ($course->level == 'intermediate' ? 'متوسط' : 'متقدم') }}
+                        </span>
+                    </div>
+                    <div style="height: 140px; background: linear-gradient(45deg, #f8fafc, #e2e8f0); display: flex; align-items: center; justify-content: center;">
+                         <i class="fas fa-graduation-cap" style="font-size: 3.5rem; color: #cbd5e1;"></i>
+                    </div>
+                    <div style="padding: 25px;">
+                        <h4 style="margin: 0 0 15px; font-weight: 800; color: #1e293b; font-size: 1.15rem; line-height: 1.5; min-height: 54px;">{{ $course->course_name }}</h4>
+                        <div style="display: flex; flex-direction: column; gap: 12px; border-top: 1px solid #f1f5f9; padding-top: 15px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 32px; height: 32px; background: #4361ee; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.7rem;"><i class="fas fa-user-tie"></i></div>
+                                <div>
+                                    <p style="margin: 0; font-size: 0.75rem; color: #94a3b8;">المدرب</p>
+                                    <p style="margin: 0; font-size: 0.85rem; font-weight: 700; color: #475569;">{{ $course->instructor->user1->username ?? 'غير محدد' }}</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 20px;">
+                                <div style="display: flex; align-items: center; gap: 6px; color: #64748b; font-size: 0.8rem;"><i class="far fa-clock" style="color: #4361ee;"></i><span>{{ $course->no_hours }} ساعة</span></div>
+                                <div style="display: flex; align-items: center; gap: 6px; color: #64748b; font-size: 0.8rem;"><i class="far fa-folder-open" style="color: #10b981;"></i><span>{{ $course->category->title ?? 'عام' }}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                {{-- كود الـ empty --}}
+            @endforelse
+        </div>
+    </div>
+</div>
+@endif
 
 <!-- AI Assistant Chat -->
 <div class="ai-assistant-card" style="margin-top: 30px; background: white; border-radius: 15px; padding: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.08);">
@@ -211,7 +304,7 @@
         <i class="fas fa-robot" style="font-size: 24px; color: #4361ee;"></i>
         <h3 style="margin: 0;">المساعد الذكي</h3>
     </div>
-    
+
     <div class="chat-container" style="height: 350px; overflow-y: auto; border: 1px solid #e9ecef; border-radius: 10px; padding: 15px; margin-bottom: 15px; background: #f8f9fa;" id="chatContainer">
         <div id="chatMessages">
             <div class="message ai-message" style="margin-bottom: 15px;">
@@ -226,7 +319,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="chat-input" style="display: flex; gap: 10px;">
         <input type="text" id="chatInput" placeholder="اكتب سؤالك هنا..." style="flex: 1; padding: 14px 18px; border: 2px solid #e9ecef; border-radius: 30px; font-size: 0.95rem; outline: none;">
         <button onclick="sendMessage()" style="background: #4361ee; color: white; border: none; border-radius: 30px; padding: 0 30px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px;">
@@ -243,11 +336,11 @@
         let input = document.getElementById('chatInput');
         let message = input.value.trim();
         if (!message) return;
-        
+
         addMessage(message, 'user');
         input.value = '';
         showTypingIndicator();
-        
+
         fetch('{{ route("ai.chat") }}', {
             method: 'POST',
             headers: {
@@ -270,12 +363,12 @@
             addMessage('عذراً، حدث خطأ في الاتصال', 'error');
         });
     }
-    
+
     function addMessage(text, type) {
         let chat = document.getElementById('chatMessages');
         let messageDiv = document.createElement('div');
         messageDiv.style.marginBottom = '15px';
-        
+
         let content = '';
         if (type === 'user') {
             content = `
@@ -311,12 +404,12 @@
                 </div>
             `;
         }
-        
+
         messageDiv.innerHTML = content;
         chat.appendChild(messageDiv);
         chat.scrollTop = chat.scrollHeight;
     }
-    
+
     function showTypingIndicator() {
         let chat = document.getElementById('chatMessages');
         let typingDiv = document.createElement('div');
@@ -335,40 +428,40 @@
         chat.appendChild(typingDiv);
         chat.scrollTop = chat.scrollHeight;
     }
-    
+
     function removeTypingIndicator() {
         let indicator = document.getElementById('typingIndicator');
         if (indicator) indicator.remove();
     }
-    
+
     document.getElementById('chatInput').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             sendMessage();
         }
     });
-    
+    @if(auth('admin')->check())
     // بيانات الرسم البياني
     const weeklyLabels = @json($weeklyRegistrations['labels']);
     const weeklyStudents = @json($weeklyRegistrations['students']);
     const weeklyInstructors = @json($weeklyRegistrations['instructors']);
     const weeklyAdmins = @json($weeklyRegistrations['admins']);
-    
+
     const monthlyLabels = @json($monthlyRegistrations['labels']);
     const monthlyStudents = @json($monthlyRegistrations['students']);
     const monthlyInstructors = @json($monthlyRegistrations['instructors']);
     const monthlyAdmins = @json($monthlyRegistrations['admins']);
-    
+
     let registrationsChart;
-    
+
     function initChart(type = 'weekly') {
         const ctx = document.getElementById('registrationsChart').getContext('2d');
         if (registrationsChart) registrationsChart.destroy();
-        
+
         const labels = type === 'weekly' ? weeklyLabels : monthlyLabels;
         const studentsData = type === 'weekly' ? weeklyStudents : monthlyStudents;
         const instructorsData = type === 'weekly' ? weeklyInstructors : monthlyInstructors;
         const adminsData = type === 'weekly' ? weeklyAdmins : monthlyAdmins;
-        
+
         registrationsChart = new Chart(ctx, {
             type: 'bar',
             data: {
@@ -393,7 +486,7 @@
             }
         });
     }
-    
+
     document.querySelectorAll('.period-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
@@ -401,7 +494,8 @@
             initChart(this.textContent.includes('أسبوعي') ? 'weekly' : 'monthly');
         });
     });
-    
+
     document.addEventListener('DOMContentLoaded', () => initChart('weekly'));
+    @endif
 </script>
 @endsection

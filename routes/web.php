@@ -36,31 +36,25 @@ Route::prefix('cms')->group(function(){
 
 // ==================== الـ Route الافتراضي لتسجيل الدخول ====================
 Route::get('/login', function () {
-   
+
     return redirect()->route('view.login', ['guard' => 'student']);
 })->name('login');
 
 // ==================== Routes الرئيسية المحمية ====================
 Route::middleware(['auth:admin'])->prefix('cms/admin')->group(function () {
-    Route::get('/main', function () {
-        return view('cms.admin.main');
-    })->name('admin.main');
-    
+    Route::get('/main', [AdminController::class, 'main'])->name('admin.main');
+
 });
 
 Route::middleware(['auth:instructor'])->prefix('cms/instructor')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('cms.instructor.dashboard');
-    })->name('instructor.dashboard');
-    
+    Route::get('/dashboard', [AdminController::class, 'main'])->name('instructor.dashboard');
+
 
 });
 
 Route::middleware(['auth:student'])->prefix('cms/student')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('cms.student.dashboard');
-    })->name('student.dashboard');
-    
+    Route::get('/dashboard', [AdminController::class, 'main'])->name('student.dashboard');
+
     Route::get('/my-courses', [StudentController::class, 'myCourses'])->name('student.my-courses');
     Route::get('/my-certificates', [StudentController::class, 'myCertificates'])->name('student.my-certificates');
 });
