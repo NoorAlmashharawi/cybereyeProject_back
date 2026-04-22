@@ -212,7 +212,6 @@
 
     <div style="background: linear-gradient(135deg, #1e293b 0%, #4361ee 100%); border-radius: 24px; padding: 40px; color: white; margin-bottom: 30px; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(67, 97, 238, 0.25);">
         <div style="display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 1;">
-
             <div style="display: flex; align-items: center; gap: 25px;">
                 <div style="width: 85px; height: 85px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.2); overflow: hidden;">
                     <img src="https://ui-avatars.com/api/?name={{ urlencode($user->username) }}&background=4361ee&color=fff" style="width: 100%; height: 100%; object-fit: cover;">
@@ -241,11 +240,10 @@
             </div>
         </div>
 
-
         <div style="background: white; border-radius: 20px; padding: 25px; display: flex; align-items: center; gap: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #f1f5f9;">
             <div style="width: 60px; height: 60px; border-radius: 16px; background: linear-gradient(135deg, #4cc9f0, #4361ee); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;"><i class="fas fa-clock"></i></div>
             <div>
-                <h4 style="margin: 0; color: #64748b; font-size: 0.95rem;">اجمالي عدد الساعات </h4>
+                <h4 style="margin: 0; color: #64748b; font-size: 0.95rem;">إجمالي عدد الساعات </h4>
                 <div style="font-size: 1.7rem; font-weight: 800; color: #1e293b;">{{ $totalHours }} ساعة</div>
             </div>
         </div>
@@ -270,8 +268,8 @@
 
                     <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
                         <div style="display: flex; align-items: center; gap: 10px; color: #64748b; font-size: 0.9rem;">
-                            <i class="fas fa-user-graduate" style="color: #4361ee; width: 20px;"></i>
-                            <span>الطلاب المسجلين: <strong>{{ $course->students_count }} طالب</strong></span>
+                            <i class="fas fa-hourglass-half" style="color: #4361ee; width: 20px;"></i>
+                            <span>مدة الكورس: <strong>{{ $course->no_hours }} ساعة</strong></span>
                         </div>
                         <div style="display: flex; align-items: center; gap: 10px; color: #64748b; font-size: 0.9rem;">
                             <i class="fas fa-layer-group" style="color: #4361ee; width: 20px;"></i>
@@ -299,7 +297,6 @@
     </div>
 </div>
 @endif
-
 
 
 
