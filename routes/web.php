@@ -1,5 +1,6 @@
 <?php
 
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User1Controller;
 use App\Http\Controllers\StudentController;
@@ -175,24 +176,26 @@ Route::prefix('cms/instructor')->group(function(){
 
 // ==================== Routes للكورسات ====================
 
+// روابط عامة (عرض التفاصيل - للجميع)
 Route::prefix('cms/course')->group(function(){
-    Route::resource('courses', CourseController::class);
     Route::get('courses/{id}/details', [CourseController::class, 'showCourseDetails'])->name('course.details');
     Route::post('courses/{id}/enroll', [CourseController::class, 'enroll'])->name('course.enroll')->middleware('auth:student');
     Route::post('comments', [App\Http\Controllers\CommentController::class, 'store'])->name('comments.store');
     Route::delete('comments/{comment}', [App\Http\Controllers\CommentController::class, 'destroy'])->name('comments.destroy');
     Route::post('reviews', [App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
     Route::post('/course/{id}/review', [App\Http\Controllers\CourseController::class, 'storeReview'])->name('course.review.store');
-    // Route::resource('lessons', App\Http\Controllers\LessonController::class);
-    Route::get('cms/admin/courses/{course}/lessons', [CourseController::class, 'manageLessons'])->name('video.index');
 });
 
-// Route::put('instructors_update/{id}', [InstructorController::class, 'update'])->name('courses_update');
-Route::resource('courses', CourseController::class);
-// Route::resource('users', User1sController::class);
- Route::view('details','cms/courseDetails/details');
+// روابط إدارة الكورسات (للمدربين فقط)
+Route::prefix('cms/course')->middleware('auth:admin,instructor')->group(function(){
+    Route::resource('courses', CourseController::class);
+    // Route::resource('lessons', App\Http\Controllers\LessonController::class);
+    Route::get('admin/courses/{course}/lessons', [CourseController::class, 'manageLessons'])->name('video.index');
+});
 
-
+// إذا كنتِ تحتاجين لرابط view منفصل، اتركيه هكذا:
+Route::view('details', 'cms/courseDetails/details');
+Route::get('course/{id}/player', [CourseController::class, 'showCoursePlayer'])->name('course.player');
 
 
 
@@ -238,8 +241,12 @@ Route::post('/quiz/{quiz}/submit', [QuizzController::class, 'submit'])->name('qu
 Route::get('/quiz/{quiz}/result', [QuizzController::class, 'result'])->name('quiz.result');
 Route::post('/quiz/{quiz}/save-temp', [QuizzController::class, 'saveTemp'])->name('quiz.saveTemp');
 
+Route::post('/quizzs_restore/{id}', [QuizzController::class, 'restore'])->name('quizzs.restore');
+Route::delete('/quizzs_force/{id}', [QuizzController::class, 'forceDelete'])->name('quizzs.force');
+
     Route::resource('quizzs', QuizzController::class);
     Route::get('/quizzs/start', [QuizzController::class, 'create'])->name('quizzs.show');
+
 });
 
 
@@ -253,8 +260,6 @@ Route::prefix('cms/certificate')->group(function(){
     Route::get('/quiz/studentResult', [QuizzController::class, 'studentResults'])->name('quiz.studentResults');
 
    Route::get('/quizzs_trashed', [QuizzController::class, 'trashed'])->name('quizzs.trashed');
-    Route::post('/quizzs_restore/{id}', [QuizzController::class, 'restore'])->name('quizzs.restore');
-    Route::delete('/quizzs_force/{id}', [QuizzController::class, 'forceDelete'])->name('quizzs.force');
 
 // 1. راوت تصفير الرقم (البادج) عند فتح الجرس - POST
 Route::post('/mark-notification-read', function () {

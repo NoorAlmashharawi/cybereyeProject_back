@@ -16,15 +16,15 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // إنشاء الصلاحيات
         $permissions = [
-            'view videos',
-            'create videos',
-            'edit videos',
-            'delete videos',
-            'view certificates',
-            'create certificates',
-            'view students',
-            'manage users',
-            'view dashboard',
+            'view-videos',
+            'create-videos',
+            'edit-videos',
+            'delete-videos',
+            'view-certificates',
+            'create-certificates',
+            'view-students',
+            'manage-users',
+            'view-dashboard',
         ];
 
         foreach ($permissions as $permission) {
@@ -41,12 +41,12 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // إعطاء الصلاحيات للمدرب
         $instructorRole->syncPermissions([
-            'view videos',
-            'create videos',
-            'edit videos',
-            'delete videos',
-            'view certificates',
-            'view dashboard',
+            'view-videos',
+            'create-videos',
+            'edit-videos',
+            'delete-videos',
+            'view-certificates',
+            'view-dashboard',
         ]);
 
         // إعطاء الصلاحيات للطالب

@@ -148,6 +148,7 @@
                             {{ $course->status == 'active' ? 'نشط' : 'معطل' }}
                         </span>
                     </td>
+
                     <td class="action-buttons">
                         {{-- زر العرض (show) يظهر للجميع --}}
                         <a href="{{ route('courses.show', $course->id) }}" style="color: #17a2b8; margin-right: 10px;">
@@ -155,7 +156,7 @@
                         </a>
 
                         {{-- أزرار التعديل والحذف تظهر فقط لغير الأدمن --}}
-                        @if(auth()->check() && auth()->user()->role != 'Admin')
+                        @if(auth()->check() && strtolower(auth()->user()->role) != 'admin')
                             <a href="{{ route('courses.edit', $course->id) }}" class="action-btn edit">
                                 <i class="fas fa-edit"></i>
                             </a>

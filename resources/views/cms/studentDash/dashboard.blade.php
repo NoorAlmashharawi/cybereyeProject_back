@@ -439,11 +439,10 @@
                                         <div class="progress-bar-fill" style="width: {{ $progress['percentage'] }}%;"></div>
                                     </div>
                                 </div>
-                                <div class="course-actions">
-                                    <a href="{{ route('videos.index') }}" class="btn btn-primary">
-                                        <i class="fas fa-play"></i> متابعة
-                                    </a>
-                                </div>
+
+                               <a href="{{ route('course.player', $course->id) }}" class="btn btn-primary">
+    <i class="fas fa-play-circle"></i> متابعة الكورس
+</a>
                             </div>
                         </div>
                     @endforeach

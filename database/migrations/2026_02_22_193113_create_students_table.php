@@ -18,11 +18,9 @@ return new class extends Migration
             $table->string('specialization')->default('General');
             $table->string('role')->default('student');
             $table->string('status');
-         $table->foreignId('user_id')->constrained('user1s')->onDelete('cascade');
 
-
+            $table->foreignId('user_id')->constrained('user1s')->onDelete('cascade');
             // $table->foreignId('user1_id')->constrained('user1s')->cascadeOnDelete();
-
             $table->timestamp('enrollment_date')->nullable();
             $table->softDeletes();
             $table->timestamps();

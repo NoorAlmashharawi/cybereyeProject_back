@@ -1,15 +1,16 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Certificate;
 use App\Models\User1;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Student extends Model
+
+class Student extends Authenticatable
 {
     use HasFactory, SoftDeletes, HasRoles;
 
@@ -139,6 +140,7 @@ class Student extends Model
     {
         return $this->belongsToMany(Course::class, 'course_student', 'student_id', 'course_id');
     }
+
 
     // ========== العلاقة مع الدروس عبر الكورسات المسجل فيها ==========
     public function lessons()

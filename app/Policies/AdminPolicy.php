@@ -18,25 +18,29 @@ class AdminPolicy
      */
     public function viewAny()
     {
-        //  return $admin->hasPermissionTo('Index Admin')
-        // ? $this->allow()
-        // : $this->deny('This is Cant Make Index Admin');
+
         if(auth('admin')->check()){
-            return auth()->user()->hasPermissionTo('Index-Admin')
-             ?  $this->allow()
-             : $this->deny(' can not open Index-Admin');
-         }
-         elseif(auth('author')->check()){
-            return auth()->user()->hasPermissionTo('Index-Admin')
-             ?  $this->allow()
-             : $this->deny(' can not open Index-Admin');
-         }
-         else
-         {
-           return  auth()->user()->hasPermissionTo('Index-Admin')
-             ?  $this->allow()
-             : $this->deny(' can not open Index-Admin');
-         }
+            return auth('admin')->user()->hasPermissionTo('index-admin')
+                ? $this->allow()
+                : $this->deny('لا تملك صلاحية عرض الأدمن');
+        }
+
+
+        elseif(auth('instructor')->check()){
+            return auth('instructor')->user()->hasPermissionTo('index-admin')
+                ? $this->allow()
+                : $this->deny('لا تملك صلاحية عرض الأدمن');
+        }
+
+
+        elseif(auth('student')->check()){
+            return auth('student')->user()->hasPermissionTo('index-admin')
+                ? $this->allow()
+                : $this->deny('لا تملك صلاحية عرض الأدمن');
+        }
+
+
+        return $this->deny('يجب تسجيل الدخول أولاً');
     }
 
     /**
@@ -57,29 +61,35 @@ class AdminPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function create(Admin $admin)
+    public function create( )
     {
 
         // return $admin->hasPermissionTo('Create-Admin')
         // ? $this->allow()
         // : $this->deny("This is Cant Show Create Admin");
+           if(auth('admin')->check()){
+            return auth('admin')->user()->hasPermissionTo('create-admin')
+                ? $this->allow()
+                : $this->deny('لا تملك صلاحية إنشاء أدمن');
+        }
 
-        if(auth('admin')->check()){
-            return auth()->user()->hasPermissionTo('Create-Admin')
-             ?  $this->allow()
-             : $this->deny(' can not open Index-Admin');
-         }
-         elseif(auth('author')->check()){
-            return auth()->user()->hasPermissionTo('Create-Admin')
-             ?  $this->allow()
-             : $this->deny(' can not open Index-Admin');
-         }
-         else
-         {
-           return  auth()->user()->hasPermissionTo('Create-Admin')
-             ?  $this->allow()
-             : $this->deny(' can not open Index-Admin');
-         }
+        // فحص الـ instructor guard
+        elseif(auth('instructor')->check()){
+            return auth('instructor')->user()->hasPermissionTo(' create-admin')
+                ? $this->allow()
+                : $this->deny('لا تملك صلاحية إنشاء أدمن');
+        }
+
+        // فحص الـ student guard
+        elseif(auth('student')->check()){
+            return auth('student')->user()->hasPermissionTo('create-admin')
+                ? $this->allow()
+                : $this->deny('لا تملك صلاحية إنشاء أدمن');
+        }
+
+        // غير مسجل دخول
+        return $this->deny('يجب تسجيل الدخول أولاً');
+
     }
 
     /**
@@ -102,9 +112,31 @@ class AdminPolicy
      * @param  \App\Models\Admin  $admin
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Admin $admin)
+    public function delete( )
     {
-        //
+          if(auth('admin')->check()){
+            return auth('admin')->user()->hasPermissionTo('delete-admin')
+                ? $this->allow()
+                : $this->deny('لا تملك صلاحية حذف الأدمن');
+        }
+
+        // فحص الـ instructor guard
+        elseif(auth('instructor')->check()){
+            return auth('instructor')->user()->hasPermissionTo('delete-admin')
+                ? $this->allow()
+                : $this->deny('لا تملك صلاحية حذف الأدمن');
+        }
+
+        // فحص الـ student guard
+        elseif(auth('student')->check()){
+            return auth('student')->user()->hasPermissionTo('delete-admin')
+                ? $this->allow()
+                : $this->deny('لا تملك صلاحية حذف الأدمن');
+        }
+
+        // غير مسجل دخول
+        return $this->deny('يجب تسجيل الدخول أولاً');
+
     }
 
     /**
@@ -131,3 +163,5 @@ class AdminPolicy
         //
     }
 }
+
+

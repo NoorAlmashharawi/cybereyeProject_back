@@ -9,296 +9,346 @@ use App\Models\Category;
 use App\Models\Instructor;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+
 class CourseController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-//     public function index()
-//     {
-//     $courses = Course::all();
-// return view('cms.course.index', compact('courses'));
-// }
+    public function index(Request $request)
+    {
+        $user = auth()->user();
+        $query = Course::with(['instructor.user1', 'category'])->withCount('students');
 
-public function index(Request $request)
-{
-    // 1. جلب الكورسات مع عداد الطلاب المسجلين ارجعيله
-    $query = Course::with(['instructor.user1', 'category'])->withCount('students');
-
-    if ($request->has('category_id') && $request->category_id != '') {
-        $query->where('category_id', $request->category_id);
-    }
-
-    // 2. زر البحث
-    if ($request->has('search') && $request->search != '') {
-        $search = $request->search;
-        $query->where(function($q) use ($search) {
-            $q->where('course_name', 'like', '%' . $search . '%')
-              ->orWhereHas('instructor.user1', function($q2) use ($search) {
-                  $q2->where('username', 'like', '%' . $search . '%');
-              });
-        });
-    }
-
-    // 3. حساب الكاردات (أرقام حقيقية ودقيقة من الداتابيز)
-    $totalCourses = Course::count();
-    $activeCourses = Course::where('status', 'active')->count();
-    $totalInstructors = Instructor::count();
-
-    // 4. paginate
-    $courses = $query->latest()
-                     ->paginate(10)
-                     ->appends(['search' => $request->search]);
-
-    // 5. إرسال البيانات للفيو
-    return view('cms.course.index', compact(
-        'courses',
-        'totalCourses',
-        'activeCourses',
-        'totalInstructors'
-    ));
-}
-
-
-public function create()
-{
-    $categories = Category::all();
-    $instructors = Instructor::with('user1')->get();
-
-
-    return view('cms.course.create', compact('categories', 'instructors'));
-}
-
-public function store(Request $request)
-{
-    $validator = Validator($request->all(), [
-        'course_name'   => 'required|string|min:3|max:100',
-        'instructor_id' => 'required|exists:instructors,id',
-        'category_id'   => 'required',
-        'level'         => 'required',
-        'no_hours'      => 'required|numeric',
-        'course_image'  => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
-    ]);
-
-    if (!$validator->fails()) {
-        $course = new Course();
-        $course->course_name = $request->input('course_name');
-        $course->short_description = $request->input('short_description');
-        $course->level = $request->input('level');
-        $course->no_hours = $request->input('no_hours');
-        $course->rating = 0;
-        $course->status = $request->input('status', 'active');
-        $course->category_id = $request->input('category_id');
-        $course->instructor_id = $request->input('instructor_id');
-
-        // --- التعديل هنا ليتوافق مع الـ Update والـ Storage Link ---
-
-        if ($request->hasFile('course_image')) {
-            $file = $request->file('course_image');
-
-            // 1. توليد اسم الملف
-            $filename = time() . '_' . $file->getClientOriginalName();
-
-            // 2. التخزين باستخدام نفس الطريقة في الـ Update (مهم جداً!)
-            $file->storeAs('courses', $filename, ['disk' => 'public']);
-
-            // 3. حفظ المسار النسبي في قاعدة البيانات
-            $course->course_image = 'courses/' . $filename;
+        if ($user && $user->role == 'instructor') {
+            $instructorId = $user->actor_id;
+            $query->where('instructor_id', $instructorId);
         }
 
-        $isSaved = $course->save();
+        if ($request->has('category_id') && $request->category_id != '') {
+            $query->where('category_id', $request->category_id);
+        }
 
-        return response()->json([
-            'icon' => $isSaved ? 'success' : 'error',
-            'title' => $isSaved ? 'تم حفظ الكورس بنجاح' : 'فشل الحفظ'
-        ], $isSaved ? 201 : 400);
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('course_name', 'like', '%' . $search . '%')
+                  ->orWhereHas('instructor.user1', function($q2) use ($search) {
+                      $q2->where('username', 'like', '%' . $search . '%');
+                  });
+            });
+        }
 
-    } else {
-        return response()->json([
-            'icon' => 'error',
-            'title' => $validator->getMessageBag()->first()
-        ], 400);
+        if ($user && $user->role == 'instructor') {
+            $totalCourses = $query->count();
+            $activeCourses = $query->where('status', 'active')->count();
+        } else {
+            $totalCourses = Course::count();
+            $activeCourses = Course::where('status', 'active')->count();
+        }
+        $totalInstructors = Instructor::count();
+
+        $courses = $query->latest()->paginate(10)->appends(['search' => $request->search]);
+
+        return view('cms.course.index', compact(
+            'courses',
+            'totalCourses',
+            'activeCourses',
+            'totalInstructors'
+        ));
     }
-}
-    /**
-     * Display the specified resource.
-     */
-   public function show($id)
-{
-    $course = Course::with(['instructor.user1', 'category'])->findOrFail($id);
-    return view('cms.course.show', compact('course'));
-}
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    public function create()
+    {
+        $categories = Category::all();
+        $user = auth()->user();
 
-    public function edit($id)
-{
-    // جلب الكورس أو إعطاء خطأ 404 لو مش موجود
-    $course = Course::findOrFail($id);
+        if ($user && $user->role == 'instructor') {
+            // المدرب: لا نمرر قائمة المدربين، بل نمرر instructor_id المخفي
+            $instructorId = $user->actor_id;
+            return view('cms.course.create', compact('categories', 'instructorId'));
+        } else {
+            // الأدمن: يمرر قائمة المدربين لاختيار واحد
+            $instructors = Instructor::with('user1')->get();
+            return view('cms.course.create', compact('categories', 'instructors'));
+        }
+    }
 
-    // جلب الأقسام والمدربين عشان الـ Select Options
-    $categories = Category::all();
-    $instructors = Instructor::with('user1')->get();
+    public function store(Request $request)
+    {
+        $user = auth()->user();
 
-    return view('cms.course.edit', compact('course', 'categories', 'instructors'));
-}
+        $rules = [
+            'course_name'   => 'required|string|min:3|max:100',
+            'category_id'   => 'required|exists:categories,id',
+            'level'         => 'required|in:beginner,intermediate,advanced',
+            'no_hours'      => 'required|numeric|min:1',
+            'course_image'  => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+            'short_description' => 'nullable|string|max:500',
+            'status'        => 'nullable|in:active,draft',
+        ];
 
-    /**
-     * Update the specified resource in storage.
-     */
-public function update(Request $request, $id)
-{
-    // 1. التحقق من البيانات
-    $validator = Validator($request->all(), [
-        'course_name'       => 'required|string|min:3|max:100',
-        'category_id'       => 'required|exists:categories,id',
-        'instructor_id'     => 'required|exists:instructors,id',
-        'no_hours'          => 'required|integer|min:1',
-        'level'             => 'required|in:beginner,intermediate,advanced',
-        'status'            => 'required|in:active,draft',
-        'short_description' => 'nullable|string|max:500',
-        'course_image'      => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
-    ]);
+        // إذا كان المستخدم أدمن، يتطلب instructor_id
+        if ($user && $user->role == 'admin') {
+            $rules['instructor_id'] = 'required|exists:instructors,id';
+        }
 
-    if (!$validator->fails()) {
-        $course = Course::findOrFail($id);
+        $validator = Validator::make($request->all(), $rules);
 
-        $course->course_name = $request->input('course_name');
-        $course->category_id = $request->input('category_id');
-        $course->instructor_id = $request->input('instructor_id');
-        $course->no_hours = $request->input('no_hours');
-        $course->level = $request->input('level');
-        $course->status = $request->input('status');
-        $course->short_description = $request->input('short_description');
+        if (!$validator->fails()) {
+            $course = new Course();
+            $course->course_name = $request->input('course_name');
+            $course->short_description = $request->input('short_description');
+            $course->level = $request->input('level');
+            $course->no_hours = $request->input('no_hours');
+            $course->rating = 0;
+            $course->status = $request->input('status', 'active');
+            $course->category_id = $request->input('category_id');
 
-        // 2. التعامل مع الصورة (التعديل هنا)
-        if ($request->hasFile('course_image')) {
-
-            // تأكدي أولاً أن الحقل ليس فارغاً وأن الملف موجود فعلياً على القرص قبل الحذف
-            if ($course->course_image && Storage::disk('public')->exists($course->course_image)) {
-                Storage::disk('public')->delete($course->course_image);
+            // تعيين instructor_id
+            if ($user && $user->role == 'instructor') {
+                $course->instructor_id = $user->actor_id;
+            } else {
+                $course->instructor_id = $request->input('instructor_id');
             }
 
-            // تخزين الصورة الجديدة
-            $file = $request->file('course_image');
-            $imageName = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('courses', $imageName, ['disk' => 'public']);
+            if ($request->hasFile('course_image')) {
+                $file = $request->file('course_image');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->storeAs('courses', $filename, ['disk' => 'public']);
+                $course->course_image = 'courses/' . $filename;
+            }
 
-            // حفظ المسار الجديد
-            $course->course_image = 'courses/' . $imageName;
+            $isSaved = $course->save();
+
+            return response()->json([
+                'icon' => $isSaved ? 'success' : 'error',
+                'title' => $isSaved ? 'تم حفظ الكورس بنجاح' : 'فشل الحفظ'
+            ], $isSaved ? 201 : 400);
+
+        } else {
+            return response()->json([
+                'icon' => 'error',
+                'title' => $validator->getMessageBag()->first()
+            ], 400);
+        }
+    }
+
+    public function show($id)
+    {
+        $course = Course::with(['instructor.user1', 'category'])->findOrFail($id);
+        return view('cms.course.show', compact('course'));
+    }
+
+    public function edit($id)
+    {
+        $course = Course::findOrFail($id);
+        $user = auth()->user();
+
+        // منع المدرب من تعديل كورس ليس له
+        if ($user && $user->role == 'instructor' && $course->instructor_id != $user->actor_id) {
+            abort(403, 'ليس لديك صلاحية لتعديل هذا الكورس');
         }
 
-        $isSaved = $course->save();
+        $categories = Category::all();
 
-        return response()->json([
-            'icon' => $isSaved ? 'success' : 'error',
-            'title' => $isSaved ? 'تم تحديث الكورس بنجاح' : 'فشل التحديث'
-        ], $isSaved ? 200 : 400);
-
-    } else {
-        return response()->json([
-            'icon' => 'error',
-            'title' => $validator->getMessageBag()->first()
-        ], 400);
-    }
-}
-
-    /**
-     * Remove the specified resource from storage.
-     */
-public function destroy($id)
-{
-    // 1. البحث عن الكورس
-    $course = Course::find($id);
-
-    // 2. التحقق من الوجود
-    //هدا مهم لما يكون عندي كزا ادمن بيحاولوا يحذفوا نفس الكورس
-   // بحط هاي عشان ما يصير تضارب لما يعمل الادمن ريفريش
-    if (!$course) {
-        return response()->json([
-            'icon' => 'error',
-            'title' => 'خطأ!',
-            'text' => 'الكورس الذي تحاول حذفه غير موجود.'
-        ], 404);
+        if ($user && $user->role == 'instructor') {
+            // المدرب: لا يرى قائمة المدربين، فقط الكورس نفسه
+            return view('cms.course.edit', compact('course', 'categories'));
+        } else {
+            // الأدمن: يرى قائمة المدربين ليختار
+            $instructors = Instructor::with('user1')->get();
+            return view('cms.course.edit', compact('course', 'categories', 'instructors'));
+        }
     }
 
-    // 3. تنفيذ الحذف
-    $deleted = $course->delete();
+    public function update(Request $request, $id)
+    {
+        $course = Course::findOrFail($id);
+        $user = auth()->user();
 
-    if ($deleted) {
-        return response()->json([
-            'icon' => 'success',
-            'title' => 'تم الحذف بنجاح',
-            'text' => 'تمت إزالة الكورس من قاعدة البيانات.'
-        ], 200);
-    } else {
-        return response()->json([
-            'icon' => 'error',
-            'title' => 'فشل الحذف',
-            'text' => 'حدث خطأ ما أثناء محاولة الحذف.'
-        ], 400);
+        // منع المدرب من تعديل كورس ليس له
+        if ($user && $user->role == 'instructor' && $course->instructor_id != $user->actor_id) {
+            return response()->json([
+                'icon' => 'error',
+                'title' => 'غير مسموح',
+                'text' => 'ليس لديك صلاحية لتعديل هذا الكورس'
+            ], 403);
+        }
+
+        $rules = [
+            'course_name'       => 'required|string|min:3|max:100',
+            'category_id'       => 'required|exists:categories,id',
+            'no_hours'          => 'required|integer|min:1',
+            'level'             => 'required|in:beginner,intermediate,advanced',
+            'status'            => 'required|in:active,draft',
+            'short_description' => 'nullable|string|max:500',
+            'course_image'      => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+        ];
+
+        // إذا كان المستخدم أدمن، يتطلب instructor_id
+        if ($user && $user->role == 'admin') {
+            $rules['instructor_id'] = 'required|exists:instructors,id';
+        }
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if (!$validator->fails()) {
+            $course->course_name = $request->input('course_name');
+            $course->category_id = $request->input('category_id');
+            $course->no_hours = $request->input('no_hours');
+            $course->level = $request->input('level');
+            $course->status = $request->input('status');
+            $course->short_description = $request->input('short_description');
+
+            // تحديث instructor_id (للأدمن فقط، المدرب لا يغيره)
+            if ($user && $user->role == 'admin') {
+                $course->instructor_id = $request->input('instructor_id');
+            }
+
+            if ($request->hasFile('course_image')) {
+                if ($course->course_image && Storage::disk('public')->exists($course->course_image)) {
+                    Storage::disk('public')->delete($course->course_image);
+                }
+                $file = $request->file('course_image');
+                $imageName = time() . '_' . $file->getClientOriginalName();
+                $file->storeAs('courses', $imageName, ['disk' => 'public']);
+                $course->course_image = 'courses/' . $imageName;
+            }
+
+            $isSaved = $course->save();
+
+            return response()->json([
+                'icon' => $isSaved ? 'success' : 'error',
+                'title' => $isSaved ? 'تم تحديث الكورس بنجاح' : 'فشل التحديث'
+            ], $isSaved ? 200 : 400);
+
+        } else {
+            return response()->json([
+                'icon' => 'error',
+                'title' => $validator->getMessageBag()->first()
+            ], 400);
+        }
     }
-}
 
+    public function destroy($id)
+    {
+        $course = Course::find($id);
+        $user = auth()->user();
+
+        if (!$course) {
+            return response()->json([
+                'icon' => 'error',
+                'title' => 'خطأ!',
+                'text' => 'الكورس الذي تحاول حذفه غير موجود.'
+            ], 404);
+        }
+
+        // منع المدرب من حذف كورس ليس له
+        if ($user && $user->role == 'instructor' && $course->instructor_id != $user->actor_id) {
+            return response()->json([
+                'icon' => 'error',
+                'title' => 'غير مسموح',
+                'text' => 'ليس لديك صلاحية لحذف هذا الكورس'
+            ], 403);
+        }
+
+        $deleted = $course->delete();
+
+        if ($deleted) {
+            return response()->json([
+                'icon' => 'success',
+                'title' => 'تم الحذف بنجاح',
+                'text' => 'تمت إزالة الكورس من قاعدة البيانات.'
+            ], 200);
+        } else {
+            return response()->json([
+                'icon' => 'error',
+                'title' => 'فشل الحذف',
+                'text' => 'حدث خطأ ما أثناء محاولة الحذف.'
+            ], 400);
+        }
+    }
 
     public function showCourseDetails($id)
     {
-        // جلب الكورس مع كل العلاقات اللي رح نحتاجها في الصفحة مرة واحدة
         $course = Course::with([
             'lessons',
             'materials',
             'reviews.user',
-            'instructor.user1' // معلومات المدرب
+            'instructor.user1'
         ])->findOrFail($id);
 
-        // توجيه الطالب لصفحة العرض
         return view('course-details', compact('course'));
     }
 
- public function storeReview(Request $request, $id)
+public function showCoursePlayer($id)
 {
-    $request->validate([
-        'rating' => 'required|numeric|min:1|max:5',
-        'comment' => 'nullable|string|max:1000',
-    ]);
+    $course = Course::with(['videos', 'materials', 'instructor.user1'])->findOrFail($id);
+    $user = auth('student')->user();
+    $enrolled = false;
+    $progress = 0;
 
-    // نحدد الـ guard يدويا عشان نجيب الـ id صح
-    $userId = auth('student')->id();
+    if ($user) {
+        $student = null;
+        if ($user->actor_type === 'App\Models\Student') {
+            $student = \App\Models\Student::find($user->actor_id);
+        } else {
+            $student = $user->student;
+        }
 
-    if (!$userId) {
-        return back()->with('error', 'يجب تسجيل الدخول كطالب للتقييم');
+        if ($student) {
+            $enrolled = $course->students()->where('student_id', $student->id)->exists();
+            if ($enrolled) {
+                $totalVideos = $course->videos->count();
+                $completedVideos = \App\Models\StudentVideoProgress::where('student_id', $student->id)
+                    ->where('course_id', $course->id)
+                    ->where('completed', true)
+                    ->count();
+                $progress = $totalVideos > 0 ? round(($completedVideos / $totalVideos) * 100) : 0;
+
+                // إضافة حالة الإكمال لكل فيديو
+                $course->videos->each(function($video) use ($student) {
+                    $video->completed_for_user = \App\Models\StudentVideoProgress::where('student_id', $student->id)
+                        ->where('video_id', $video->id)
+                        ->where('completed', true)
+                        ->exists();
+                });
+            }
+        }
     }
 
-    \App\Models\Review::create([
-        'course_id' => $id,
-        'user_id'   => $userId,
-        'rating'    => $request->rating,
-        'comment'   => $request->comment,
-    ]);
-
-    return back()->with('success', 'تم إرسال تقييمك بنجاح!');
+    return view('cms.studentDash.player', compact('course', 'enrolled', 'progress'));
 }
+    public function storeReview(Request $request, $id)
+    {
+        $request->validate([
+            'rating' => 'required|numeric|min:1|max:5',
+            'comment' => 'nullable|string|max:1000',
+        ]);
 
+        $userId = auth('student')->id();
 
-public function home()
-{
-    // اجيب البيانات للهوم
-    $latestReviews = \App\Models\Review::with(['user', 'course'])->latest()->take(3)->get();
+        if (!$userId) {
+            return back()->with('error', 'يجب تسجيل الدخول كطالب للتقييم');
+        }
 
-    // ارجاع فيو الهوم وتمرير التعليقات اله
-    return view('cms.home.home', compact('latestReviews'));
-}
+        \App\Models\Review::create([
+            'course_id' => $id,
+            'user_id'   => $userId,
+            'rating'    => $request->rating,
+            'comment'   => $request->comment,
+        ]);
 
-public function manageLessons(Course $course)
-{
-    // جلب الدروس التابعة لهذا الكورس باستخدام العلاقة (lessons)
-    $lessons = $course->lessons;
+        return back()->with('success', 'تم إرسال تقييمك بنجاح!');
+    }
 
-    // بنفتح صفحة الـ index تاعت الدروس وبنبعت الكورس والدروس
-    return view('cms.video.index', compact('course', 'lessons'));
-}
+    public function home()
+    {
+        $latestReviews = \App\Models\Review::with(['user', 'course'])->latest()->take(3)->get();
+        return view('cms.home.home', compact('latestReviews'));
+    }
 
-
+    public function manageLessons(Course $course)
+    {
+        $lessons = $course->lessons;
+        return view('cms.video.index', compact('course', 'lessons'));
+    }
 }

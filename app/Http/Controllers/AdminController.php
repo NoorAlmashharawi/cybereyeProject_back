@@ -11,6 +11,8 @@ use App\Models\Student;
 use App\Models\Course;
 use App\Models\Instructor;
 use Spatie\Permission\Models\Role;
+
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User1;
@@ -24,7 +26,7 @@ class AdminController extends Controller
      */
     public function index()
     {
-
+        $this->authorize('viewAny', Admin::class);
         $admins = Admin::with('user1')->orderBy('id', 'desc')->paginate(10);
 
         return response()->view('cms.admin.index',compact('admins'));
@@ -41,6 +43,9 @@ public function main()
     $totalCourses = Course::count();
     $weeklyRegistrations = $this->getWeeklyRegistrations();
     $monthlyRegistrations = $this->getMonthlyRegistrations();
+
+    return view('cms.admin.main', compact('newStudents', 'courses','totalUsers', 'totalCourses', 'weeklyRegistrations', 'monthlyRegistrations'));
+
 
     // شغل سجا العسل
     $activeCourses = Course::where('status', 'active')->count();
@@ -169,7 +174,7 @@ private function getArabicDayName($dayOfWeek)
     public function create()
     {
         $roles = Role::where('guard_name' , 'admin')->get();
-        // $this->authorize('create' , Admin::class);
+        $this->authorize('create', Admin::class);
         return response()->view('cms.admin.create', compact('roles'));
 
     }
@@ -179,6 +184,8 @@ private function getArabicDayName($dayOfWeek)
      */
     public function store(Request $request)
     {
+           $this->authorize('create', Admin::class);
+
         $validator = Validator($request->all(), [
             'username' => 'required|string|min:3|max:20|unique:user1s,username',
             'email'    => 'required|email|unique:user1s,email',
@@ -203,6 +210,10 @@ private function getArabicDayName($dayOfWeek)
             $admin = Admin::create();
 
             // 2. إنشاء User1 مرتبط بـ Admin
+            // إنشاء Admin
+            $admin = Admin::create();
+
+            // إنشاء User1 مرتبط بـ Admin
             $user1 = User1::create([
                 'username'   => $request->username,
                 'email'      => $request->email,
@@ -223,6 +234,8 @@ private function getArabicDayName($dayOfWeek)
 
 
             // 3. تعيين الدور للمستخدم
+
+            // تعيين الدور للمستخدم
             $role = Role::findOrFail($request->role_id);
             $user1->assignRole($role->name);
 
@@ -267,6 +280,7 @@ private function getArabicDayName($dayOfWeek)
      */
     public function destroy($id)
     {
+         $this->authorize('delete', Admin::class);
         $admins = Admin::destroy($id);
     }
 

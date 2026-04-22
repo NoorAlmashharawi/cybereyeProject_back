@@ -24,10 +24,9 @@
                 <p style="font-size: 1.2rem; margin-top: 1.5rem; opacity: 0.9;">{{ $course->short_description }}</p>
 
                 <div class="course-actions" style="margin-top: 2rem;">
-                    <form action="{{ route('videos.index') }}" method="GET">
-                        <input type="hidden" name="course_id" value="{{ $course->id }}">
-                        <button type="submit" class="btn-primary"><i class="fas fa-play-circle"></i> ابدأ الكورس الآن</button>
-                    </form>
+                  <a href="{{ route('course.player', $course->id) }}" class="btn-primary">
+    <i class="fas fa-play-circle"></i> ابدأ الكورس الآن
+</a>
                 </div>
             </div>
         </section>

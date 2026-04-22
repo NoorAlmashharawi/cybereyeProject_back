@@ -217,7 +217,7 @@
             <a href="#" class="menu-item active">
                 <i class="fas fa-plus-circle"></i> إضافة كورس جديد
             </a>
-
+        </div>
     </aside>
 
     <main class="main-form-content">
@@ -235,26 +235,30 @@
                 <div class="form-group">
                     <label for="category_id">التصنيف الدراسي *</label>
                     <select id="category_id">
-                    <option value="">-- اختر المسار التعليمي --</option>
-                    @foreach($categories as $category)
-                        {{-- هنا بنعرض الـ title تبع المسارات اللي أنتِ عملتيها --}}
-                        <option value="{{ $category->id }}">{{ $category->title }}</option>
-                    @endforeach
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="instructor_id">المدرب المسؤول *</label>
-
-                    <select id="instructor_id">
-                        <option value="">حدد مدرب الدورة</option>
-                        @foreach($instructors as $instructor)
-                            <option value="{{ $instructor->id }}">
-                                {{ $instructor->user1->username ?? $instructor->user1->username ?? 'مدرب غير معروف' }}
-                            </option>
+                        <option value="">-- اختر المسار التعليمي --</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->title }}</option>
                         @endforeach
                     </select>
                 </div>
+
+                {{-- حقل المدرب: يظهر فقط للأدمن (عند وجود متغير $instructors) --}}
+                @if(isset($instructors))
+                    <div class="form-group">
+                        <label for="instructor_id">المدرب المسؤول *</label>
+                        <select id="instructor_id">
+                            <option value="">حدد مدرب الدورة</option>
+                            @foreach($instructors as $instructor)
+                                <option value="{{ $instructor->id }}">
+                                    {{ $instructor->user1->username ?? 'مدرب غير معروف' }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                @else
+                    {{-- للمدرب: حقل مخفي بقيمة instructorId --}}
+                    <input type="hidden" id="instructor_id" value="{{ $instructorId }}">
+                @endif
             </div>
 
             <div class="form-group" style="margin-bottom: 25px;">
@@ -295,7 +299,6 @@
 @endsection
 
 @section('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     function previewImage(event) {
         const file = event.target.files[0];
@@ -320,19 +323,24 @@
 
         formData.append('course_name', document.getElementById('course_name').value);
         formData.append('category_id', document.getElementById('category_id').value);
-        formData.append('instructor_id', document.getElementById('instructor_id').value);
         formData.append('short_description', document.getElementById('short_description').value);
         formData.append('level', document.getElementById('level').value);
         formData.append('no_hours', document.getElementById('no_hours').value);
         formData.append('status', document.getElementById('status').value);
         formData.append('start_date', '{{ date("Y-m-d") }}');
 
+        // جلب instructor_id (سواء من select أو من hidden input)
+        let instructorIdElement = document.getElementById('instructor_id');
+        if (instructorIdElement) {
+            formData.append('instructor_id', instructorIdElement.value);
+        }
+
         const imageFile = document.getElementById('course_image').files[0];
         if (imageFile) {
             formData.append('course_image', imageFile);
         }
 
-        // استدعاء دالة store من ملف crud.js
+        // استدعاء دالة store من ملف crud.js (افتراض أنها موجودة)
         store('{{ route("courses.store") }}', formData);
     }
 </script>

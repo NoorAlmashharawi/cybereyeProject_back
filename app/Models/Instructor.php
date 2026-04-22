@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\User1;
 use Spatie\Permission\Traits\HasRoles;
@@ -17,6 +18,7 @@ class Instructor extends Model
     use HasFactory, SoftDeletes, HasRoles;
 
 
+    protected $guard_name = 'instructor';
 
     protected $fillable = [
         'specialization',
@@ -24,9 +26,10 @@ class Instructor extends Model
         'rating',
         'bio',
         'enrollment_date'
+
     ];
 
-         
+
 
 
 
@@ -36,6 +39,7 @@ class Instructor extends Model
 
 
   protected $casts = [
+
         'enrollment_date' => 'date',
     ];
 

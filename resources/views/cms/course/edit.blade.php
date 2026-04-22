@@ -58,7 +58,7 @@
     /* المعلومات الأساسية - بدون خطوط بيضاء */
     .form-subtitle {
         color: #1abc9c !important; font-weight: 700; font-size: 1.1rem;
-        margin-bottom: 25px !important; border: none !important; /* شلنا الخط */
+        margin-bottom: 25px !important; border: none !important;
         background: transparent !important; padding: 0 !important;
     }
 
@@ -108,22 +108,18 @@
             <input type="file" id="course_image" style="display: none;" accept="image/*" onchange="previewImage(event)">
         </div>
 
-        {{-- أزرار الإدارة  )--}}
+        {{-- أزرار الإدارة --}}
         <div class="management-menu">
             <h5 style="font-size: 0.9rem; color: #8898aa; margin-bottom: 15px; padding-right: 10px;">إدارة المحتوى</h5>
 
-
-<a href="/cms/video/videos?course_id={{ $course->id }}" class="manage-btn">
-    <i class="fas fa-play-circle"></i>
-    <span>إدارة الدروس</span>
-</a>
+            <a href="/cms/video/videos?course_id={{ $course->id }}" class="manage-btn">
+                <i class="fas fa-play-circle"></i>
+                <span>إدارة الدروس</span>
+            </a>
             <a href="{{ route('quizzs.create') }}" class="manage-btn">
                 <i class="fas fa-question-circle"></i>
                 <span>إدارة الكويزات</span>
             </a>
-
-
-
 
             <hr style="border-top: 1px solid #f0f2f9;">
 
@@ -156,8 +152,7 @@
                         <select id="category_id" class="form-control">
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}" {{ $course->category_id == $category->id ? 'selected' : '' }}>
-
-                                    {{ $course->category->title ?? 'غير مصنف' }}
+                                    {{ $category->title }}
                                 </option>
                             @endforeach
                         </select>
@@ -165,16 +160,22 @@
                 </div>
 
                 <div class="form-row">
-                    <div class="form-group">
-                        <label>المدرب المسؤول</label>
-                        <select id="instructor_id" class="form-control">
-                            @foreach($instructors as $instructor)
-                                <option value="{{ $instructor->id }}" {{ $course->instructor_id == $instructor->id ? 'selected' : '' }}>
-                                    {{ $instructor->user1->username ?? 'مدرب غير معروف' }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                    {{-- حقل المدرب: يظهر فقط للأدمن (عند وجود متغير $instructors) --}}
+                    @if(isset($instructors))
+                        <div class="form-group">
+                            <label>المدرب المسؤول</label>
+                            <select id="instructor_id" class="form-control">
+                                @foreach($instructors as $instructor)
+                                    <option value="{{ $instructor->id }}" {{ $course->instructor_id == $instructor->id ? 'selected' : '' }}>
+                                        {{ $instructor->user1->username ?? 'مدرب غير معروف' }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @else
+                        {{-- للمدرب: حقل مخفي بقيمة instructor_id الحالية --}}
+                        <input type="hidden" id="instructor_id" value="{{ $course->instructor_id }}">
+                    @endif
 
                     <div class="form-group">
                         <label>مستوى الدورة</label>
@@ -232,7 +233,13 @@
         formData.append('_method', 'PUT');
         formData.append('course_name', document.getElementById('course_name').value);
         formData.append('category_id', document.getElementById('category_id').value);
-        formData.append('instructor_id', document.getElementById('instructor_id').value);
+
+        // جلب instructor_id (سواء من select أو من hidden input)
+        let instructorIdElement = document.getElementById('instructor_id');
+        if (instructorIdElement) {
+            formData.append('instructor_id', instructorIdElement.value);
+        }
+
         formData.append('level', document.getElementById('level').value);
         formData.append('no_hours', document.getElementById('no_hours').value);
         formData.append('status', document.getElementById('status').value);
@@ -242,8 +249,13 @@
         if (img) formData.append('course_image', img);
 
         axios.post('/cms/course/courses/' + id, formData)
-        .then(res => Swal.fire({ icon: 'success', title: 'تم التحديث!', timer: 1500, showConfirmButton: false }))
-        .catch(err => Swal.fire({ icon: 'error', title: 'خطأ في التحديث' }));
+        .then(res => {
+            Swal.fire({ icon: 'success', title: 'تم التحديث!', timer: 1500, showConfirmButton: false })
+                .then(() => window.location.reload());
+        })
+        .catch(err => {
+            Swal.fire({ icon: 'error', title: 'خطأ في التحديث', text: err.response?.data?.title || 'حدث خطأ' });
+        });
     }
 </script>
 @endsection

@@ -68,16 +68,16 @@ public function student() {
 }
 
 
-public function getGuardNameAttribute()
-{
-    if ($this->role === 'Admin') {
-        return 'admin';
-    } elseif ($this->role === 'instructor') {
-        return 'instructor';
-    } elseif ($this->role === 'student') {
-        return 'student';
-    }
-    return 'web';
-}
+// public function getGuardNameAttribute()
+// {
+//     if ($this->role === 'Admin') {
+//         return 'admin';
+//     } elseif ($this->role === 'instructor') {
+//         return 'instructor';
+//     } elseif ($this->role === 'student') {
+//         return 'student';
+//     }
+//     return 'web';
+// }
 
 }
