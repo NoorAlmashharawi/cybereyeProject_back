@@ -3,178 +3,128 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
-use Illuminate\Http\Request;
-use IlluminateHttpResponse;
-use IlluminateHttpFacadesDB;
-use App\http\Controllers\StudentController;
 use App\Models\Student;
 use App\Models\Course;
-use Spatie\Permission\Models\Role;
-use App\Models\Instructor;
-
+use App\Models\User1;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
-<<<<<<< HEAD
-use App\Models\User1;
-
-=======
-use App\Models\User1;  
-use Spatie\Permission\Traits\HasRoles;
->>>>>>> origin/baraaqanoa
-
+use Spatie\Permission\Models\Role;
 
 class AdminController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * عرض قائمة المسؤولين
      */
     public function index()
     {
         $this->authorize('viewAny', Admin::class);
         $admins = Admin::with('user1')->orderBy('id', 'desc')->paginate(10);
-
-        return response()->view('cms.admin.index',compact('admins'));
-
-    }
-
-
-    public function main()
-{
-    $newStudents = Student::with('user1')->latest()->limit(10)->get();
-    $courses = Course::all();
-    $totalUsers = User1::count();
-    $totalCourses = Course::count();
-    $weeklyRegistrations = $this->getWeeklyRegistrations();
-    $monthlyRegistrations = $this->getMonthlyRegistrations();
-
-    return view('cms.admin.main', compact('newStudents', 'courses','totalUsers', 'totalCourses', 'weeklyRegistrations', 'monthlyRegistrations'));
-}
-
-
-/**
- * تحويل رقم اليوم إلى اسم عربي
- */
-
- private function getWeeklyRegistrations()
-{
-    $data = [
-        'students' => [],
-        'instructors' => [],
-        'admins' => []
-    ];
-    $labels = [];
-
-    for ($i = 6; $i >= 0; $i--) {
-        $date = now()->subDays($i);
-        $labels[] = $this->getArabicDayName($date->dayOfWeek);
-
-        // عدد الطلاب المسجلين في هذا اليوم
-        $data['students'][] = User1::whereDate('created_at', $date->toDateString())
-            ->where('role', 'student')
-            ->count();
-
-        // عدد المدربين المسجلين في هذا اليوم
-        $data['instructors'][] = User1::whereDate('created_at', $date->toDateString())
-            ->where('role', 'instructor')
-            ->count();
-
-        // عدد المشرفين المسجلين في هذا اليوم
-        $data['admins'][] = User1::whereDate('created_at', $date->toDateString())
-            ->where('role', 'admin')
-            ->count();
-    }
-
-    return [
-        'labels' => $labels,
-        'students' => $data['students'],
-        'instructors' => $data['instructors'],
-        'admins' => $data['admins']
-    ];
-}
-
-private function getMonthlyRegistrations()
-{
-    $months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
-               'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
-
-    $data = [
-        'students' => [],
-        'instructors' => [],
-        'admins' => []
-    ];
-
-    for ($i = 1; $i <= 12; $i++) {
-        // عدد الطلاب المسجلين في هذا الشهر
-        $data['students'][] = User1::whereMonth('created_at', $i)
-            ->whereYear('created_at', date('Y'))
-            ->where('role', 'student')
-            ->count();
-
-        // عدد المدربين المسجلين في هذا الشهر
-        $data['instructors'][] = User1::whereMonth('created_at', $i)
-            ->whereYear('created_at', date('Y'))
-            ->where('role', 'instructor')
-            ->count();
-
-        // عدد المشرفين المسجلين في هذا الشهر
-        $data['admins'][] = User1::whereMonth('created_at', $i)
-            ->whereYear('created_at', date('Y'))
-            ->where('role', 'admin')
-            ->count();
-    }
-
-    return [
-        'labels' => $months,
-        'students' => $data['students'],
-        'instructors' => $data['instructors'],
-        'admins' => $data['admins']
-    ];
-}
-private function getArabicDayName($dayOfWeek)
-{
-    $days = [
-        1 => 'الإثنين',
-        2 => 'الثلاثاء',
-        3 => 'الأربعاء',
-        4 => 'الخميس',
-        5 => 'الجمعة',
-        6 => 'السبت',
-        7 => 'الأحد',
-    ];
-
-    // في Laravel، يوم الأحد = 7 (أو 0 حسب الإعداد)
-    if ($dayOfWeek == 0) {
-        $dayOfWeek = 7;
-    }
-
-    return $days[$dayOfWeek] ?? 'غير محدد';
-}
-
-
-
-
-
-    public function create()
-    {
-        $roles = Role::where('guard_name' , 'admin')->get();
-        // $this->authorize('create' , Admin::class);
-<<<<<<< HEAD
-        $this->authorize('create', Admin::class);
-        return response()->view('cms.admin.create');
-=======
-        return response()->view('cms.admin.create', compact('roles'));
->>>>>>> origin/baraaqanoa
-
+        return response()->view('cms.admin.index', compact('admins'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * الصفحة الرئيسية للداشبورد (الإحصائيات)
+     */
+    public function main()
+{
+    // فحص الطالب
+    if (auth('student')->check()) {
+        $user = auth('student')->user(); // هذا User1
+        $student = $user->actor; // هذا موديل Student
+
+        // جلب الكورسات المسجلة مع التقدم
+        $enrolledCourses = $student->courses()->with(['instructor.user1'])->get();
+        $certificatesCount = \App\Models\Certificate::where('student_id', $student->id)->count();
+
+        // حساب التقدم لكل كورس
+        $coursesProgress = [];
+        foreach ($enrolledCourses as $course) {
+            $coursesProgress[$course->id] = $student->getCourseProgress($course->id);
+        }
+
+        return view('cms.admin.main', compact('user', 'student', 'enrolledCourses', 'certificatesCount', 'coursesProgress'));
+    }
+
+    // فحص المدرب
+    if (auth('instructor')->check()) {
+        $user = auth('instructor')->user();
+        $instructor = $user->actor;
+        return view('cms.admin.main', compact('user', 'instructor'));
+    }
+
+    // فحص الأدمن
+    if (auth('admin')->check()) {
+        $user = auth('admin')->user();
+        $newStudents = Student::with('user1')->latest()->limit(10)->get();
+        $courses = Course::all();
+        $totalUsers = User1::count();
+        $totalCourses = Course::count();
+        $weeklyRegistrations = $this->getWeeklyRegistrations();
+        $monthlyRegistrations = $this->getMonthlyRegistrations();
+
+        return view('cms.admin.main', compact(
+            'newStudents', 'courses', 'totalUsers', 'totalCourses',
+            'weeklyRegistrations', 'monthlyRegistrations', 'user'
+        ));
+    }
+
+    // إذا ولا واحد منهم يوجهه لتسجيل الدخول
+    return redirect()->route('view.login');
+}
+
+
+
+    private function getWeeklyRegistrations()
+    {
+        $data = ['students' => [], 'instructors' => [], 'admins' => []];
+        $labels = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = now()->subDays($i);
+            $labels[] = $this->getArabicDayName($date->dayOfWeek);
+            $data['students'][] = User1::whereDate('created_at', $date->toDateString())->where('role', 'student')->count();
+            $data['instructors'][] = User1::whereDate('created_at', $date->toDateString())->where('role', 'instructor')->count();
+            $data['admins'][] = User1::whereDate('created_at', $date->toDateString())->where('role', 'admin')->count();
+        }
+        return ['labels' => $labels, 'students' => $data['students'], 'instructors' => $data['instructors'], 'admins' => $data['admins']];
+    }
+
+    private function getMonthlyRegistrations()
+    {
+        $months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+        $data = ['students' => [], 'instructors' => [], 'admins' => []];
+        for ($i = 1; $i <= 12; $i++) {
+            $data['students'][] = User1::whereMonth('created_at', $i)->whereYear('created_at', date('Y'))->where('role', 'student')->count();
+            $data['instructors'][] = User1::whereMonth('created_at', $i)->whereYear('created_at', date('Y'))->where('role', 'instructor')->count();
+            $data['admins'][] = User1::whereMonth('created_at', $i)->whereYear('created_at', date('Y'))->where('role', 'admin')->count();
+        }
+        return ['labels' => $months, 'students' => $data['students'], 'instructors' => $data['instructors'], 'admins' => $data['admins']];
+    }
+
+    private function getArabicDayName($dayOfWeek)
+    {
+        $days = [1 => 'الإثنين', 2 => 'الثلاثاء', 3 => 'الأربعاء', 4 => 'الخميس', 5 => 'الجمعة', 6 => 'السبت', 0 => 'الأحد', 7 => 'الأحد'];
+        return $days[$dayOfWeek] ?? 'غير محدد';
+    }
+
+    /**
+     * عرض صفحة إنشاء مسؤول جديد
+     */
+    public function create()
+    {
+        $this->authorize('create', Admin::class);
+        $roles = Role::where('guard_name', 'admin')->get();
+        return response()->view('cms.admin.create', compact('roles'));
+    }
+
+    /**
+     * حفظ مسؤول جديد
      */
     public function store(Request $request)
     {
-           $this->authorize('create', Admin::class);
+        $this->authorize('create', Admin::class);
 
-        $validator = Validator($request->all(), [
+        $validator = Validator::make($request->all(), [
             'username' => 'required|string|min:3|max:20|unique:user1s,username',
             'email'    => 'required|email|unique:user1s,email',
             'password' => 'required|min:8|confirmed',
@@ -182,25 +132,14 @@ private function getArabicDayName($dayOfWeek)
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'icon'  => 'error',
-                'title' => $validator->errors()->first(),
-            ], 400);
+            return response()->json(['icon' => 'error', 'title' => $validator->errors()->first()], 400);
         }
 
         try {
-<<<<<<< HEAD
-
-            $admin = Admin::create([
-
-            ]);
-
-=======
-            // 1. إنشاء Admin (بدون أي حقول)
+            // 1. إنشاء سجل الأدمن
             $admin = Admin::create();
-    
-            // 2. إنشاء User1 مرتبط بـ Admin
->>>>>>> origin/baraaqanoa
+
+            // 2. إنشاء مستخدم مرتبط بالأدمن
             $user1 = User1::create([
                 'username'   => $request->username,
                 'email'      => $request->email,
@@ -210,93 +149,37 @@ private function getArabicDayName($dayOfWeek)
                 'actor_type' => 'App\Models\Admin',
                 'actor_id'   => $admin->id,
             ]);
-<<<<<<< HEAD
 
-
-
-            $roles = Role::findOrFail($request->get('role_id'));
-            $admin ->assignRole($roles->name);
-
-=======
-    
-            // 3. تعيين الدور للمستخدم
-            $role = Role::findOrFail($request->role_id);
+            // 3. تعيين الدور (Role)
+            $role = Role::findById($request->role_id, 'admin');
             $user1->assignRole($role->name);
-    
->>>>>>> origin/baraaqanoa
-            return response()->json([
-                'icon'  => 'success',
-                'title' => 'تم إنشاء المسؤول بنجاح'
-            ], 200);
 
+            return response()->json(['icon' => 'success', 'title' => 'تم إنشاء المسؤول بنجاح'], 200);
         } catch (\Exception $e) {
-            return response()->json([
-                'icon'  => 'error',
-                'title' => 'خطأ في قاعدة البيانات: ' . $e->getMessage()
-            ], 500);
+            return response()->json(['icon' => 'error', 'title' => 'خطأ: ' . $e->getMessage()], 500);
         }
     }
-    /**
-     * Display the specified resource.
-     */
-    public function show(Admin $admin)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Admin $admin)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Admin $admin)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
-         $this->authorize('delete', Admin::class);
-        $admins = Admin::destroy($id);
+        $this->authorize('delete', Admin::class);
+        Admin::destroy($id);
+        return response()->json(['icon' => 'success', 'title' => 'تم الحذف بنجاح'], 200);
     }
 
-
-    public function trashed()
-    {
-        $students = Student::onlyTrashed()->orderBy('deleted_at','desc')->get();
-        return response()->view('cms.student.trashed',compact('students'));
-
+    // --- وظائف استرجاع الطلاب (Trashed) ---
+    public function trashed() {
+        $students = Student::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
+        return response()->view('cms.student.trashed', compact('students'));
     }
 
-    public function restore($id)
-    {
-        $students = Student::onlyTrashed()->findOrFail($id)->restore();
-        return back()->withFragment('success',"success");
-
+    public function restore($id) {
+        Student::onlyTrashed()->findOrFail($id)->restore();
+        return back();
     }
 
-    public function force($id)
-    {
-        $students = Student::onlyTrashed()->findOrFail($id)->forceDelete();
-        return back()->withFragment('success',"success");
-
-    }
-
-    public function forceAll()
-    {
-        $students = Student::onlyTrashed()->forceDelete();
-        return back()->withFragment('success',"success");
-
+    public function force($id) {
+        Student::onlyTrashed()->findOrFail($id)->forceDelete();
+        return back();
     }
 }
- 
-
