@@ -15,6 +15,7 @@ class StudentController extends Controller
 
     public function index()
     {
+        // $this->authorize('viewAny', Admin::class);
         $students = Student::with('user1')->orderBy('id', 'desc')->withoutTrashed()->paginate(10);
         $totalStudents = Student::count();
 
@@ -100,8 +101,8 @@ class StudentController extends Controller
                 'actor_id' => $student->id
             ]);
 
-            // ✅ تعيين رول الطالب (تم دمج السطرين الصحيحين)
-            $user1->assignRole('student');  // استخدم 'student' بدلاً من 'طالب'
+            
+            $student->assignRole('student');  
 
             DB::commit();
 

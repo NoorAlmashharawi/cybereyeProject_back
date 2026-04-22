@@ -19,7 +19,7 @@ class AdminController extends Controller
      */
     public function index()
     {
-        // $this->authorize('viewAny', Admin::class);
+        //  $this->authorize('viewAny', Admin::class);
         $admins = Admin::with('user1')->orderBy('id', 'desc')->paginate(10);
         return response()->view('cms.admin.index', compact('admins'));
     }
@@ -27,50 +27,72 @@ class AdminController extends Controller
     /**
      * الصفحة الرئيسية للداشبورد (الإحصائيات)
      */
+   
+    
+    /**
+     * الصفحة الرئيسية للداشبورد (الإحصائيات)
+     */
     public function main()
     {
+        // المتغيرات المشتركة لجميع الأدوار
+        $totalUsers = User1::count();
+        $totalCourses = Course::count();
+        $newStudents = Student::with('user1')->latest()->limit(10)->get();
+        $weeklyRegistrations = $this->getWeeklyRegistrations();
+        $monthlyRegistrations = $this->getMonthlyRegistrations();
+        
+        // متغير الكورسات (سيتم تعبئته حسب الدور)
+        $courses = [];
+    
         // فحص الطالب
         if (auth('student')->check()) {
-            $user = auth('student')->user(); // هذا User1
-            $student = $user->actor; // هذا موديل Student
-
-            // جلب الكورسات المسجلة مع التقدم
+            $user = auth('student')->user();
+            $student = $user->actor;
+            
             $enrolledCourses = $student->courses()->with(['instructor.user1'])->get();
             $certificatesCount = \App\Models\Certificate::where('student_id', $student->id)->count();
-
-            // حساب التقدم لكل كورس
+            
             $coursesProgress = [];
             foreach ($enrolledCourses as $course) {
                 $coursesProgress[$course->id] = $student->getCourseProgress($course->id);
             }
-
-            return view('cms.admin.main', compact('user', 'student', 'enrolledCourses', 'certificatesCount', 'coursesProgress'));
+            
+          
+            $courses = $enrolledCourses;
+    
+            return view('cms.admin.main', compact(
+                'user', 'student', 'enrolledCourses', 'certificatesCount', 'coursesProgress',
+                'totalUsers', 'totalCourses', 'newStudents', 'weeklyRegistrations', 'monthlyRegistrations',
+                'courses'  
+            ));
         }
-
-        // فحص المدرب
+    
+       
         if (auth('instructor')->check()) {
             $user = auth('instructor')->user();
             $instructor = $user->actor;
-            return view('cms.admin.main', compact('user', 'instructor'));
+            
+          
+            $courses = Course::where('instructor_id', $instructor->id)->get();
+            
+            return view('cms.admin.main', compact(
+                'user', 'instructor',
+                'totalUsers', 'totalCourses', 'newStudents', 'weeklyRegistrations', 'monthlyRegistrations',
+                'courses' 
+            ));
         }
-
+    
         // فحص الأدمن
         if (auth('admin')->check()) {
             $user = auth('admin')->user();
-            $newStudents = Student::with('user1')->latest()->limit(10)->get();
-            $courses = Course::all();
-            $totalUsers = User1::count();
-            $totalCourses = Course::count();
-            $weeklyRegistrations = $this->getWeeklyRegistrations();
-            $monthlyRegistrations = $this->getMonthlyRegistrations();
-
+            $courses = Course::with(['instructor.user1', 'category'])->withCount('students')->get();
+    
             return view('cms.admin.main', compact(
                 'newStudents', 'courses', 'totalUsers', 'totalCourses',
                 'weeklyRegistrations', 'monthlyRegistrations', 'user'
             ));
         }
-
-        // إذا ولا واحد منهم يوجهه لتسجيل الدخول
+    
         return redirect()->route('view.login');
     }
 
@@ -121,46 +143,54 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('create', Admin::class);
-
-        $validator = Validator::make($request->all(), [
+        $validator = Validator($request->all(), [
             'username' => 'required|string|min:3|max:20|unique:user1s,username',
             'email'    => 'required|email|unique:user1s,email',
             'password' => 'required|min:8|confirmed',
             'role_id'  => 'required|exists:roles,id',
         ]);
-
+    
         if ($validator->fails()) {
-            return response()->json(['icon' => 'error', 'title' => $validator->errors()->first()], 400);
+            return response()->json([
+                'icon'  => 'error',
+                'title' => $validator->errors()->first(),
+            ], 400);
         }
-
+    
         try {
             DB::beginTransaction();
-
-            // 1. إنشاء سجل الأدمن
+            
+            // إنشاء Admin أولاً
             $admin = Admin::create();
-
-            // 2. إنشاء مستخدم مرتبط بالأدمن
+            
+            // إنشاء User1 مرتبط بـ Admin
             $user1 = User1::create([
                 'username'   => $request->username,
                 'email'      => $request->email,
                 'password'   => Hash::make($request->password),
                 'role'       => 'Admin',
-                'guard_name' => 'web',
+                'guard_name' => 'web',  // استخدم web بدلاً من admin
                 'actor_type' => 'App\Models\Admin',
                 'actor_id'   => $admin->id,
             ]);
-
-            // 3. تعيين الدور (Role)
-            $role = Role::findById($request->role_id, 'admin');
-            $user1->assignRole($role->name);
-
+            
+            // تعيين الدور من الـ role_id الموجود في الطلب
+            $role = Role::findOrFail($request->role_id);
+            $user1->assignRole($role);  // استخدم object الدور
+            
             DB::commit();
-
-            return response()->json(['icon' => 'success', 'title' => 'تم إنشاء المسؤول بنجاح'], 200);
+    
+            return response()->json([
+                'icon'  => 'success',
+                'title' => 'تم إنشاء المسؤول بنجاح'
+            ], 200);
+    
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['icon' => 'error', 'title' => 'خطأ: ' . $e->getMessage()], 500);
+            return response()->json([
+                'icon'  => 'error',
+                'title' => 'خطأ في قاعدة البيانات: ' . $e->getMessage()
+            ], 500);
         }
     }
 

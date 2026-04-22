@@ -16,31 +16,13 @@ class AdminPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny()
+    public function viewAny(Admin $admin)
     {
+        // return $admin->hasPermissionTo('create-admin')
+        // ? $this->allow()
+        // : $this->deny('لا تملك صلاحية عرض الأدمن');
 
-        if(auth('admin')->check()){
-            return auth('admin')->user()->hasPermissionTo('index-admin')
-                ? $this->allow()
-                : $this->deny('لا تملك صلاحية عرض الأدمن');
-        }
-
-
-        elseif(auth('instructor')->check()){
-            return auth('instructor')->user()->hasPermissionTo('index-admin')
-                ? $this->allow()
-                : $this->deny('لا تملك صلاحية عرض الأدمن');
-        }
-
-
-        elseif(auth('student')->check()){
-            return auth('student')->user()->hasPermissionTo('index-admin')
-                ? $this->allow()
-                : $this->deny('لا تملك صلاحية عرض الأدمن');
-        }
-
-
-        return $this->deny('يجب تسجيل الدخول أولاً');
+     
     }
 
     /**

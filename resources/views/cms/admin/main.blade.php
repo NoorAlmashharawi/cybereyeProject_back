@@ -208,7 +208,7 @@
 </div>
 @endif
 
-{{-- بداية قسم الطالب الفخم والداينمك بالكامل --}}
+
 @if(auth('student')->check())
 <div class="student-modern-dashboard" dir="rtl" style="padding: 10px; font-family: 'Cairo', sans-serif;">
 
