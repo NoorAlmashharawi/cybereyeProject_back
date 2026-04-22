@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use DB;
 use Illuminate\Http\Request;
 use IlluminateHttpResponse;
 use IlluminateHttpFacadesDB;
@@ -25,7 +26,10 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $this->authorize('viewAny', Admin::class);
+
+        
+    
+        // $this->authorize('viewAny', Admin::class);
         $admins = Admin::with('user1')->orderBy('id', 'desc')->paginate(10);
 
         return response()->view('cms.admin.index',compact('admins'));
@@ -152,7 +156,7 @@ private function getArabicDayName($dayOfWeek)
     public function create()
     {
         $roles = Role::where('guard_name' , 'admin')->get();
-        $this->authorize('create', Admin::class);
+        // $this->authorize('create', Admin::class);
         return response()->view('cms.admin.create', compact('roles'));
 
     }
@@ -160,49 +164,74 @@ private function getArabicDayName($dayOfWeek)
     /**
      * Store a newly created resource in storage.
      */
+
+
+     
+    //          //  تعيين رول الطالب تلقائياً
+    //          $student->assignRole('student');
+     
+    //          DB::commit();
+     
+    //          return response()->json([
+    //              'icon' => 'success',
+    //              'title' => 'تم التسجيل بنجاح!'
+    //          ], 200);
+     
+    //      } catch (\Exception $e) {
+    //          DB::rollBack();
+     
+    //          return response()->json([
+    //              'icon' => 'error',
+    //              'title' => 'حدث خطأ: ' . $e->getMessage()
+    //          ], 500);
+    //      }
+    //  }
     public function store(Request $request)
     {
-           $this->authorize('create', Admin::class);
-
         $validator = Validator($request->all(), [
             'username' => 'required|string|min:3|max:20|unique:user1s,username',
             'email'    => 'required|email|unique:user1s,email',
             'password' => 'required|min:8|confirmed',
             'role_id'  => 'required|exists:roles,id',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json([
                 'icon'  => 'error',
                 'title' => $validator->errors()->first(),
             ], 400);
         }
-
-        try {
-            // إنشاء Admin
-            $admin = Admin::create();
     
+        try {
+            DB::beginTransaction();
+            
+            // إنشاء Admin أولاً
+            $admin = Admin::create();
+            
             // إنشاء User1 مرتبط بـ Admin
             $user1 = User1::create([
                 'username'   => $request->username,
                 'email'      => $request->email,
                 'password'   => Hash::make($request->password),
                 'role'       => 'Admin',
-                'guard_name' => 'admin',
+                'guard_name' => 'web',  // استخدم web بدلاً من admin
                 'actor_type' => 'App\Models\Admin',
                 'actor_id'   => $admin->id,
             ]);
-    
-            // تعيين الدور للمستخدم
+            
+            // تعيين الدور من الـ role_id الموجود في الطلب
             $role = Role::findOrFail($request->role_id);
-            $user1->assignRole($role->name);
+            $user1->assignRole($role);  // استخدم object الدور
+            
+            DB::commit();
     
             return response()->json([
                 'icon'  => 'success',
                 'title' => 'تم إنشاء المسؤول بنجاح'
             ], 200);
-
+    
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'icon'  => 'error',
                 'title' => 'خطأ في قاعدة البيانات: ' . $e->getMessage()

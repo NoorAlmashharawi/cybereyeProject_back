@@ -100,7 +100,7 @@ class StudentController extends Controller
             ]);
     
             //  تعيين رول الطالب تلقائياً
-            $user1->assignRole('طالب');
+            $student->assignRole('student');
     
             DB::commit();
     

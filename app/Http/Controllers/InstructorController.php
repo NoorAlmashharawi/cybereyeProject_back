@@ -105,7 +105,7 @@ class InstructorController extends Controller
                 'actor_id' => $instructor->id
             ]);
             
-            $user1->assignRole('instructor');
+            $instructor->assignRole('instructor');
      
              DB::commit();
      

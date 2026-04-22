@@ -342,6 +342,7 @@
                         <span>لوحة التحكم</span>
                     </a>
                 </div>
+                
         
                 <div class="menu-title">نظام الصلاحيات</div>
                 <div class="dropdown-menu-item">
@@ -447,7 +448,13 @@
         
             <!-- ========== المدرب فقط ========== -->
             @if(auth('instructor')->check())
-
+            <div class="admin-menu-section">
+                <div class="menu-title">الرئيسية</div>
+                <a href="{{ route('main') }}" class="admin-menu-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>لوحة التحكم</span>
+                </a>
+            </div>
             {{-- 1. قسم الكورسات --}}
             @if(auth('instructor')->user()->can('index-course', 'instructor'))
             <div class="dropdown-menu-item">

@@ -15,6 +15,7 @@ class Student extends Authenticatable
     use HasFactory, SoftDeletes, HasRoles;
 
     protected $table = 'students';
+    protected $guard_name = 'student';
 
     protected $fillable = [
         'enrollment_date',
