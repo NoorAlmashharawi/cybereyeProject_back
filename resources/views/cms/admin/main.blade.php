@@ -207,8 +207,102 @@
     </div>
 </div>
 @endif
+@if(auth('instructor')->check())
+<div class="instructor-modern-dashboard" dir="rtl" style="padding: 10px; font-family: 'Cairo', sans-serif;">
 
-{{-- بداية قسم الطالب الفخم والداينمك بالكامل --}}
+    <div style="background: linear-gradient(135deg, #1e293b 0%, #4361ee 100%); border-radius: 24px; padding: 40px; color: white; margin-bottom: 30px; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(67, 97, 238, 0.25);">
+        <div style="display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 1;">
+
+            <div style="display: flex; align-items: center; gap: 25px;">
+                <div style="width: 85px; height: 85px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.2); overflow: hidden;">
+                    <img src="https://ui-avatars.com/api/?name={{ urlencode($user->username) }}&background=4361ee&color=fff" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div>
+                    <span style="background: rgba(255, 255, 255, 0.2); padding: 5px 15px; border-radius: 50px; font-size: 0.8rem; color: #fff; font-weight: 600;">لوحة المدرب</span>
+                    <h1 style="margin: 10px 0 5px 0; font-weight: 800; font-size: 2rem;">مرحباً بك، أ. {{ $user->username }} ✨</h1>
+                    <p style="opacity: 0.9; font-size: 1.1rem; font-weight: 300;">طلابك بانتظار إبداعك وتوجيهك اليوم في المساقات التعليمية.</p>
+                </div>
+            </div>
+
+            <div style="position: relative; z-index: 2;">
+                <a href="{{ route('view.logout') }}" style="background: rgba(255,255,255,0.1); color: white; padding: 10px 20px; border-radius: 12px; text-decoration: none; font-size: 0.9rem; font-weight: 600; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);">
+                    تسجيل الخروج <i class="fas fa-sign-out-alt" style="margin-right: 8px;"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; margin-bottom: 40px;">
+        <div style="background: white; border-radius: 20px; padding: 25px; display: flex; align-items: center; gap: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #f1f5f9;">
+            <div style="width: 60px; height: 60px; border-radius: 16px; background: linear-gradient(135deg, #4361ee, #4895ef); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;"><i class="fas fa-book-open"></i></div>
+            <div>
+                <h4 style="margin: 0; color: #64748b; font-size: 0.95rem;">كورساتي</h4>
+                <div style="font-size: 1.7rem; font-weight: 800; color: #1e293b;">{{ $instructorCourses->count() }}</div>
+            </div>
+        </div>
+
+
+        <div style="background: white; border-radius: 20px; padding: 25px; display: flex; align-items: center; gap: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #f1f5f9;">
+            <div style="width: 60px; height: 60px; border-radius: 16px; background: linear-gradient(135deg, #4cc9f0, #4361ee); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;"><i class="fas fa-clock"></i></div>
+            <div>
+                <h4 style="margin: 0; color: #64748b; font-size: 0.95rem;">اجمالي عدد الساعات </h4>
+                <div style="font-size: 1.7rem; font-weight: 800; color: #1e293b;">{{ $totalHours }} ساعة</div>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-bottom: 25px; display: flex; align-items: center; gap: 10px;">
+        <div style="width: 5px; height: 25px; background: #4361ee; border-radius: 10px;"></div>
+        <h3 style="font-weight: 800; color: #1e293b; margin: 0;">📚 الكورسات التي أقدمها</h3>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px;">
+        @foreach($instructorCourses as $course)
+            <div style="background: white; border-radius: 24px; overflow: hidden; border: 1px solid #f1f5f9; box-shadow: 0 10px 20px rgba(0,0,0,0.02);">
+                <div style="height: 8px; background: linear-gradient(90deg, #4361ee, #7209b7);"></div>
+                <div style="padding: 25px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                        <h4 style="font-weight: 800; color: #1e293b; margin: 0; font-size: 1.2rem; line-height: 1.4;">{{ $course->course_name }}</h4>
+                        <span style="background: #eef2ff; color: #4361ee; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700;">
+                            <i class="fas fa-clock" style="margin-left: 4px;"></i> {{ $course->no_hours }} ساعة
+                        </span>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
+                        <div style="display: flex; align-items: center; gap: 10px; color: #64748b; font-size: 0.9rem;">
+                            <i class="fas fa-user-graduate" style="color: #4361ee; width: 20px;"></i>
+                            <span>الطلاب المسجلين: <strong>{{ $course->students_count }} طالب</strong></span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px; color: #64748b; font-size: 0.9rem;">
+                            <i class="fas fa-layer-group" style="color: #4361ee; width: 20px;"></i>
+                            <span>المستوى: <strong>{{ $course->level ?? 'متوسط' }}</strong></span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 25px; padding-top: 15px; border-top: 1px solid #f8fafc; display: flex; align-items: center; justify-content: space-between;">
+                         @if($course->status == 'active' || $course->status == 'نشط')
+                            <span style="font-size: 0.8rem; font-weight: 700; color: #10b981; display: flex; align-items: center; gap: 5px;">
+                                <span style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block; box-shadow: 0 0 8px #10b981;"></span>
+                                متاح الآن للطلاب
+                            </span>
+                         @else
+                            <span style="font-size: 0.8rem; font-weight: 700; color: #ef4444; display: flex; align-items: center; gap: 5px;">
+                                <span style="width: 8px; height: 8px; background: #ef4444; border-radius: 50%; display: inline-block;"></span>
+                                متوقف حالياً
+                            </span>
+                         @endif
+                         <i class="fas fa-chevron-left" style="color: #cbd5e1; font-size: 0.8rem;"></i>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</div>
+@endif
+
+
+
+
 @if(auth('student')->check())
 <div class="student-modern-dashboard" dir="rtl" style="padding: 10px; font-family: 'Cairo', sans-serif;">
 

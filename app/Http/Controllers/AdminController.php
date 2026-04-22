@@ -27,42 +27,65 @@ class AdminController extends Controller
     /**
      * الصفحة الرئيسية للداشبورد (الإحصائيات)
      */
-    public function main()
+   public function main()
     {
+        // المتغيرات المشتركة لجميع الأدوار
+        $totalUsers = User1::count();
+        $totalCourses = Course::count();
+        $newStudents = Student::with('user1')->latest()->limit(10)->get();
+        $weeklyRegistrations = $this->getWeeklyRegistrations();
+        $monthlyRegistrations = $this->getMonthlyRegistrations();
+
+        // متغير الكورسات (سيتم تعبئته حسب الدور)
+        $courses = [];
+
         // فحص الطالب
         if (auth('student')->check()) {
-            $user = auth('student')->user(); // هذا User1
-            $student = $user->actor; // هذا موديل Student
+            $user = auth('student')->user();
+            $student = $user->actor;
 
-            // جلب الكورسات المسجلة مع التقدم
             $enrolledCourses = $student->courses()->with(['instructor.user1'])->get();
             $certificatesCount = \App\Models\Certificate::where('student_id', $student->id)->count();
 
-            // حساب التقدم لكل كورس
             $coursesProgress = [];
             foreach ($enrolledCourses as $course) {
                 $coursesProgress[$course->id] = $student->getCourseProgress($course->id);
             }
 
-            return view('cms.admin.main', compact('user', 'student', 'enrolledCourses', 'certificatesCount', 'coursesProgress'));
+
+            $courses = $enrolledCourses;
+
+            return view('cms.admin.main', compact(
+                'user', 'student', 'enrolledCourses', 'certificatesCount', 'coursesProgress',
+                'totalUsers', 'totalCourses', 'newStudents', 'weeklyRegistrations', 'monthlyRegistrations',
+                'courses'
+            ));
         }
 
         // فحص المدرب
-        if (auth('instructor')->check()) {
-            $user = auth('instructor')->user();
-            $instructor = $user->actor;
-            return view('cms.admin.main', compact('user', 'instructor'));
-        }
+
+      if (auth('instructor')->check()) {
+    $user = auth('instructor')->user();
+    $instructor = $user->actor;
+
+    if ($instructor) {
+        $instructorCourses = \App\Models\Course::where('instructor_id', $instructor->id)
+            ->get();
+
+        // إجمالي الساعات
+        $totalHours = $instructorCourses->sum('no_hours');
+    }
+
+    return view('cms.admin.main', compact(
+        'user', 'instructor', 'instructorCourses', 'totalHours',
+        'totalUsers', 'totalCourses', 'newStudents', 'weeklyRegistrations', 'monthlyRegistrations'
+    ));
+}
 
         // فحص الأدمن
         if (auth('admin')->check()) {
             $user = auth('admin')->user();
-            $newStudents = Student::with('user1')->latest()->limit(10)->get();
-            $courses = Course::all();
-            $totalUsers = User1::count();
-            $totalCourses = Course::count();
-            $weeklyRegistrations = $this->getWeeklyRegistrations();
-            $monthlyRegistrations = $this->getMonthlyRegistrations();
+            $courses = Course::with(['instructor.user1', 'category'])->withCount('students')->get();
 
             return view('cms.admin.main', compact(
                 'newStudents', 'courses', 'totalUsers', 'totalCourses',
@@ -70,7 +93,6 @@ class AdminController extends Controller
             ));
         }
 
-        // إذا ولا واحد منهم يوجهه لتسجيل الدخول
         return redirect()->route('view.login');
     }
 
