@@ -17,9 +17,10 @@ public function index(Request $request)
 {
     $courseId = $request->query('course_id');
     if (!$courseId) {
-        abort(404, 'لم يتم تحديد الكورس');
+        $materials = Material::all(); // أو توجيه لصفحة الكورسات
+    } else {
+        $materials = Material::where('course_id', $courseId)->get();
     }
-    $materials = Material::where('course_id', $courseId)->get();
     return view('cms.material.index', compact('materials', 'courseId'));
 }
 
