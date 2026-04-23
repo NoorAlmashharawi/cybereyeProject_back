@@ -76,6 +76,12 @@ class Student extends Authenticatable
 }
 
 
+
+public function quizzes()
+{
+    return $this->hasManyThrough(Quizz::class, Course::class, 'course_student');
+}
+
     public function studentAnswers()
     {
         return $this->hasMany(StudentAnswer::class, 'student_id');

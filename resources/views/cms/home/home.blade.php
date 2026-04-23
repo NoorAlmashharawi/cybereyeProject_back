@@ -140,7 +140,7 @@
         </div>
 
         <div class="button">
-            <a href="#">START NOW</a>
+            <a href="{{ route('view.login', ['guard' => 'student']) }}">START NOW</a>
             <i class="fa-solid fa-chevron-right"></i>
         </div>
     </div>

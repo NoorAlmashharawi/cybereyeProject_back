@@ -252,12 +252,17 @@ Route::delete('/quizzs_force/{id}', [QuizzController::class, 'forceDelete'])->na
 
 });
 
-
-
 Route::prefix('cms/certificate')->group(function(){
+    Route::get('/my-certificates', [CertificateController::class, 'myCertificates'])->name('certificate.my-certificates');
     Route::get('/{id}', [CertificateController::class, 'show'])->name('certificate.show');
     Route::get('/{id}/download', [CertificateController::class, 'download'])->name('certificate.download');
 });
+
+// Route::prefix('cms/certificate')->group(function(){
+//     Route::get('/{id}', [CertificateController::class, 'show'])->name('certificate.show');
+//     Route::get('/{id}/download', [CertificateController::class, 'download'])->name('certificate.download');
+//     Route::get('/my-certificates', [CertificateController::class, 'myCertificates'])->name('certificate.my-certificates');
+// });
 
     Route::get('/quiz/{quiz}/review', [QuizzController::class, 'review'])->name('quiz.review');
     Route::get('/quiz/studentResult', [QuizzController::class, 'studentResults'])->name('quiz.studentResults');

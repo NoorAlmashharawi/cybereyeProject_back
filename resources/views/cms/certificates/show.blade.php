@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>شهادة حضور - Cyber Eye</title>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
         }
 
         body {
-            font-family: 'Tajawal', sans-serif;
+            font-family: 'Tajawal', 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             justify-content: center;
@@ -34,6 +34,7 @@
             padding: 50px;
             text-align: center;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
         }
 
         .certificate-title {
@@ -69,6 +70,7 @@
         .instructor-name {
             font-size: 22px;
             color: #e67e22;
+            margin-top: 15px;
         }
 
         .certificate-number {
@@ -81,20 +83,36 @@
             direction: ltr;
         }
 
+        .issue-date {
+            margin-top: 15px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
         .btn {
             margin-top: 25px;
             padding: 10px 20px;
-            background: #95a5a6;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
         }
 
         @media print {
             .btn { display: none; }
-            body { background: white; }
-            .certificate-box { box-shadow: none; }
+            body { background: white; padding: 0; }
+            .certificate-box { 
+                box-shadow: none; 
+                border: 10px double #d4af37;
+            }
         }
     </style>
 </head>
@@ -109,30 +127,33 @@
         <p>تشهد منصة</p>
         <div class="platform-name">Cyber Eye</div>
 
-        <p>بأن</p>
+        <p>بأن الطالب/الطالبة</p>
         <div class="student-name">
-            {{ $certificate->student->username ?? $certificate->student->username ?? Auth::user()->username ?? 'طالب' }}
+            {{ $student->user1->username }}
         </div>
 
         <p>قد أتم بنجاح كورس</p>
         <div class="course-name">
-            {{ $certificate->course->course_name ?? $certificate->course->course_name ?? 'كورس' }}
+            {{ $course->course_name }}
         </div>
-{{-- 
+
         <p>بتقديم المدرب</p>
         <div class="instructor-name">
-            {{ $certificate->instructor->username ?? $certificate->instructor->username ?? $certificate->course->instructor->username ?? 'مدرب' }}
-        </div> --}}
-
-        <div class="certificate-number">
-            <i class="fas fa-hashtag"></i> {{ $certificate->certificate_number ?? '---' }}
+            <i class="fas fa-chalkboard-user"></i>
+            {{ $course->instructor->user1->username ?? 'إدارة المنصة' }}
         </div>
 
-        {{-- <div style="margin-top: 15px; color: #7f8c8d;">
-            📅 تاريخ الإصدار: {{ optional($certificate->issued_date)->format('Y/m/d') ?? now()->format('Y/m/d') }}
-        </div> --}}
+        <div class="certificate-number">
+            <i class="fas fa-hashtag"></i> {{ $certificate->certificate_number }}
+        </div>
 
-        <button class="btn" onclick="window.print()">🖨️ طباعة الشهادة</button>
+        <div class="issue-date">
+            <i class="fas fa-calendar-alt"></i> تاريخ الإصدار: {{ \Carbon\Carbon::parse($certificate->issue_date)->format('Y/m/d') }}
+        </div>
+
+        <button class="btn" onclick="window.print()">
+            <i class="fas fa-print"></i> طباعة الشهادة
+        </button>
 
     </div>
 </div>

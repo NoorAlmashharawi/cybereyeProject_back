@@ -65,7 +65,105 @@
         .close-modal:hover { color: #1abc9c; }
         textarea { background: #071214; color: white; border: 1px solid #14262e; border-radius: 12px; padding: 12px; width: 100%; font-family: inherit; }
         @media (max-width: 800px) { .sidebar { width: 100%; } .lesson-header { flex-direction: column; align-items: flex-start; } }
-    </style>
+   
+   /* ========== زر الكويز الرئيسي ========== */
+.btn-gradient {
+    background: #1e293b;
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.85rem;
+    transition: all 0.25s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.btn-gradient:hover {
+    background: #334155;
+    transform: translateY(-1px);
+    color: white;
+}
+
+.btn-gradient:active {
+    transform: translateY(0);
+}
+
+.btn-gradient i {
+    margin-left: 6px;
+    font-size: 0.8rem;
+}
+
+/* ========== القائمة المنسدلة ========== */
+.dropdown-menu {
+    /* background: #ffffff; */
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 6px 0;
+    min-width: 200px;
+    margin-top: 6px;
+}
+
+.dropdown-item {
+    padding: 8px 16px;
+    font-size: 0.8rem;
+    color: #1e293b;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dropdown-item i {
+    font-size: 0.75rem;
+    width: 18px;
+    color: #64748b;
+}
+
+.dropdown-item:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+.dropdown-item:hover i {
+    color: #1e293b;
+}
+
+/* ========== البادج ========== */
+.badge.bg-secondary {
+    background: #e2e8f0 !important;
+    color: #475569 !important;
+    font-weight: 500;
+    padding: 2px 6px;
+    border-radius: 12px;
+    font-size: 0.65rem;
+    margin-right: 6px;
+}
+
+/* ========== زر القائمة المنسدلة نفسه ========== */
+.dropdown-toggle::after {
+    margin-right: 6px;
+    vertical-align: middle;
+    font-size: 0.7rem;
+}
+
+/* ========== زر "لا توجد كويزات" ========== */
+.btn-outline-secondary {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+    padding: 6px 16px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    cursor: not-allowed;
+}
+
+.btn-outline-secondary i {
+    margin-left: 6px;
+    font-size: 0.75rem;
+}
+   </style>
 </head>
 <body>
     <header>
@@ -78,6 +176,29 @@
                 <div class="user-menu">
                     <a href="{{ route('student.my-courses') }}"><i class="fas fa-user-graduate"></i> كورساتي</a>
                     <a href="{{ route('course.details', $course->id) }}"><i class="fas fa-info-circle"></i> تفاصيل الكورس</a>
+                    @if($course->quizzes->count() > 0)
+                    <div class="dropdown">
+                        <button class="btn btn-gradient dropdown-toggle" type="button" id="quizDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-tasks me-2"></i> اختر الكويز
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quizDropdown">
+                            @foreach($course->quizzes as $quiz)
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('quiz.start', $quiz->id) }}">
+                                        <i class="fas fa-play-circle text-primary me-2"></i> {{ $quiz->title }}
+                                        @if($quiz->duration)
+                                            <span class="badge bg-secondary ms-2">{{ $quiz->duration }} دقيقة</span>
+                                        @endif
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @else
+                    <button class="btn btn-outline-secondary" disabled>
+                        <i class="fas fa-times-circle me-2"></i> لا توجد كويزات متاحة
+                    </button>
+                @endif
                 </div>
             </div>
         </div>

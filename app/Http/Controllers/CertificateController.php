@@ -3,66 +3,70 @@
 namespace App\Http\Controllers;
 
 use App\Models\Certificate;
-use Illuminate\Http\Request;
 use App\Models\Course;
+use App\Models\Enrollment; // إذا كان عندك جدول enrollments
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class CertificateController extends Controller
 {
     /**
-     * عرض الشهادة في المتصفح
+     * عرض الشهادة بناءً على الكورس المسجل فيه الطالب
      */
-
-    public function show($id)
+    public function show($courseId)
     {
-        $certificate = Certificate::with(['student', 'course', 'instructor'])
-            ->findOrFail($id);
+        $user = auth('student')->user();
+        $student = $user->actor;
+        $course = Course::with('instructor.user1')->findOrFail($courseId);
         
-        return view('cms.certificates.show', compact('certificate'));
-    }
-
-    /**
-     * منح الشهادة فوراً (دون شروط)
-     */
-    public function requestNow(Request $request)
-    {
-        $student = Auth::user()->student;
+        // التحقق باستخدام العلاقة مباشرة
+        $isEnrolled = $student->courses()->where('course_id', $course->id)->exists();
         
-        if (!$student) {
-            return response()->json([
-                'success' => false,
-                'message' => 'يجب أن تكون مسجلاً كطالب أولاً'
-            ], 403);
+        if(!$isEnrolled) {
+            abort(403, 'أنت غير مسجل في هذا الكورس. الـ student_id: ' . $student->id . ', course_id: ' . $course->id);
         }
-
-        $courseId = $request->course_id;
-        $course = Course::find($courseId);
-
-        if (!$course) {
-            return response()->json([
-                'success' => false,
-                'message' => 'الكورس غير موجود'
-            ], 404);
-        }
-
-        // منح الشهادة (أو إرجاع الموجودة)
+        
         $certificate = Certificate::firstOrCreate(
             [
                 'student_id' => $student->id,
-                'course_id' => $courseId,
+                'course_id' => $course->id,
             ],
             [
-                'instructor_id' => $course->instructor_id ?? 1,
-                'certificate_number' => 'CERT-' . strtoupper(Str::random(10)) . '-' . $student->id,
-                'issued_date' => now(),
+                'student_name' => $student->user1->username,
+                'course_name' => $course->course_name,
+                'instructor_name' => $course->instructor->user1->username ?? 'إدارة المنصة',
+                'certificate_number' => 'CE-' . strtoupper(uniqid()) . '-' . $student->id,
+                'issue_date' => now(),
             ]
         );
-
-        return response()->json([
-            'success' => true,
-            'certificate_id' => $certificate->id,
-            'certificate_url' => route('certificate.show', $certificate->id),
-        ]);
+        
+        return view('cms.certificates.show', compact('certificate', 'student', 'course'));
     }
+    /**
+     * تحميل الشهادة PDF
+     */
+    public function download($courseId)
+    {
+        $student = auth('student')->user()->actor;
+        $course = Course::with('instructor.user1')->findOrFail($courseId);
+        
+        $certificate = Certificate::where('student_id', $student->id)
+                                  ->where('course_id', $course->id)
+                                  ->firstOrFail();
+     
+        return view('cms.certificate.show', compact('certificate', 'student', 'course'));
+    }
+
+    public function myCertificates()
+{
+    $student = auth('student')->user()->actor;
+    
+    $certificates = Certificate::where('student_id', $student->id)
+                               ->with('course')
+                               ->latest()
+                               ->paginate(10);
+    
+    return view('cms.certificates.my-certificates', compact('certificates'));
+}
 }

@@ -351,4 +351,11 @@ public function showCoursePlayer($id)
         $lessons = $course->lessons;
         return view('cms.video.index', compact('course', 'lessons'));
     }
+
+    public function player($id)
+    {
+        $course = Course::with(['quizzes', 'videos', 'materials'])->findOrFail($id);
+        
+        return view('cms.studentDash.player', compact('course'));
+    }
 }
