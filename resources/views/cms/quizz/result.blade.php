@@ -83,10 +83,11 @@
 
         <div class="btn-group">
             <a href="{{ route('quiz.review', $quiz->id) }}" class="btn">📖 مراجعة إجاباتي</a>
-            <a href="{{ route('quizzs.index') }}" class="btn btn-secondary">📋 قائمة الكويزات</a>
-            @if($quiz->course_id)
-                <a href="{{ route('courses.show', $quiz->course_id) }}" class="btn btn-secondary">📚 العودة إلى الكورس</a>
-            @endif
+       
+            <a href="{{ route('certificate.show', $course->id) }}" class="btn btn-success">
+                <i class="fas fa-certificate"></i> الحصول على الشهادة
+            </a>
+      
         </div>
     </div>
 </div>

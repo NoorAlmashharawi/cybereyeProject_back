@@ -506,7 +506,7 @@
                         <div class="certificate-item">
                             <div class="certificate-info">
                                 <h4>{{ $cert->course->name }}</h4>
-                                <p>تاريخ الإصدار: {{ $cert->issued_date->format('Y-m-d') }}</p>
+                                {{-- <p>تاريخ الإصدار: {{ $cert->issued_date->format('Y-m-d') }}</p> --}}
                             </div>
                             <a href="{{ route('certificate.show', $cert->id) }}" class="btn btn-warning" style="padding: 8px 15px;">
                                 <i class="fas fa-eye"></i>

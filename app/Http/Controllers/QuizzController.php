@@ -18,8 +18,26 @@ class QuizzController extends Controller
      */
     public function index()
     {
-        $quizzs = Quizz::with('course')->latest()->paginate(10);
-        return view('cms.quizz.index', compact('quizzs'));
+        // ========== للطالب ==========
+        if(auth('student')->check()) {
+            $student = auth('student')->user()->actor;
+            
+            // جلب الكويزات الخاصة بالكورسات التي سجل فيها الطالب فقط
+            $quizzes = Quizz::whereHas('course.students', function($query) use ($student) {
+                $query->where('students.id', $student->id);
+            })->get();
+            
+            return view('cms.quizz.start', compact('quizzes'));
+        }
+        
+        // ========== للمدرب أو الأدمن ==========
+        if(auth('instructor')->check() || auth('admin')->check()) {
+            $quizzs = Quizz::with('course')->latest()->paginate(10);
+            return view('cms.quizz.index', compact('quizzs'));
+        }
+        
+        // إذا لم يكن مسجلاً دخوله
+        return redirect()->route('login');
     }
 
     /**
@@ -265,43 +283,39 @@ public function forceDelete($id)
 
 
 
-
-      public function result($quizId)
-{
-
-           $studentId = 1; // نفس المعرف المستخدم في التقديم
-        $quiz = Quizz::findOrFail($quizId);
+    public function result($quizId)
+    {
+        // التحقق من وجود الكويز
+        $quiz = Quizz::with('course.instructor.user1')->find($quizId);
+        
+        if (!$quiz) {
+            return redirect()->route('quizzs.index')->with('error', 'الكويز المطلوب غير موجود');
+        }
+    
+        // جلب الكورس المرتبط بالكويز
+        $course = $quiz->course;
+    
+        // التحقق من وجود أسئلة للكويز
+        if ($quiz->questions->count() == 0) {
+            return redirect()->route('quizzs.index')->with('error', 'هذا الكويز لا يحتوي على أسئلة لعرض النتيجة');
+        }
+    
+        // استخدام الطالب المسجل حالياً (بدلاً من ID ثابت)
+        $student = auth('student')->user()->actor;
+        $studentId = $student->id;
+    
+        // جلب النتيجة
         $result = QuizResult::where('student_id', $studentId)
             ->where('quizz_id', $quizId)
             ->first();
-
+    
         if (!$result) {
-            return redirect()->route('quiz.start', $quizId)->with('error', 'لا توجد نتيجة لهذا الامتحان');
+            return redirect()->route('quiz.start', $quizId)->with('error', 'لا توجد نتيجة لهذا الامتحان. يرجى تقديم الامتحان أولاً.');
         }
-
-        return view('cms.quizz.result', compact('quiz', 'result'));
-
-    // التحقق من وجود الكويز
-    $quiz = Quizz::find($quizId);
-    if (!$quiz) {
-        return redirect()->route('quizzs.index')->with('error', 'الكويز المطلوب غير موجود');
+    
+        // عرض صفحة النتيجة مع المتغيرات
+        return view('cms.quizz.result', compact('quiz', 'result', 'course', 'student'));
     }
-
-    // التحقق من وجود أسئلة للكويز (اختياري، قد لا يكون ضرورياً في صفحة النتيجة)
-    if ($quiz->questions->count() == 0) {
-        return redirect()->route('quizzs.index')->with('error', 'هذا الكويز لا يحتوي على أسئلة لعرض النتيجة');
-    }
-
-    $studentId = 1; // نفس المعرف المستخدم في التقديم (يمكن تعديله لاحقاً)
-
-    $result = QuizResult::where('student_id', $studentId)
-        ->where('quizz_id', $quizId)
-        ->first();
-
-    if (!$result) {
-        return redirect()->route('quiz.start', $quizId)->with('error', 'لا توجد نتيجة لهذا الامتحان. يرجى تقديم الامتحان أولاً.');
-    }
-}
     public function review($quizId)
     {
         $studentId = 1;

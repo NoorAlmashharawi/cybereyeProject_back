@@ -32,12 +32,6 @@ class Instructor extends Model
 
 
 
-
-
-
-
-
-
   protected $casts = [
 
         'enrollment_date' => 'date',
@@ -48,4 +42,5 @@ class Instructor extends Model
     {
         return $this->morphOne(User1::class, 'actor');
     }
+
 }

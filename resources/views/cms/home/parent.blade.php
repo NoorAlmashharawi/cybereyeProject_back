@@ -26,30 +26,22 @@
             <li><a href="{{ route('home') }}" class="active">Home</a></li>
             <li><a href="{{ route('home') }}#dictionary">Dictionary</a></li>
              <li><a href="{{ route('home') }}#roadmap">Roadmap</a></li>
-            {{-- <li><a href="../html/courses.html">Courses</a></li> --}}
             <li><a href="{{ route('home') }}#resources">Resources</a></li>
             <li><a href="{{ route('home') }}#about">About</a></li>
             <li><a href="{{ route('home') }}#Review">Review</a></li>
             <li><a href="{{ route('contact') }}">Contact</a></li>
-            {{-- <li class="search">
-                <div class="search-container">
-                    <input type="text" id="searchInput" placeholder="Search...">
-                    <button onclick="performSearch()">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-            </li> --}}
+      
         </ul>
         
         <div class="icons">
-            <a href="#"><i class="fa-solid fa-heart"></i></a>
-            {{-- login --}}
-            <a href="../html/cyber.html"><i class="fa-solid fa-user"></i></a>
+         
+           
+            <a href="{{ route('view.login', ['guard' => 'student']) }}"><i class="fa-solid fa-user"></i></a>
         </div>
     </nav>
 
     @yield('content')
-<!-- Footer -->
+
 <div class="footer">
     <p>cybereye@gmail.com | ©  CyberEye. All rights reserved.</p>
     <div class="footer-links">

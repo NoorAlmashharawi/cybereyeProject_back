@@ -443,7 +443,7 @@
                     <i class="fas fa-book-open"></i>
                     <span>كورساتي المسجلة</span>
                 </a>
-                <a href="{{ route('student.my-certificates') }}" class="admin-menu-item">
+                <a href="{{ route('certificate.my-certificates') }}" class="admin-menu-item">
                     <i class="fas fa-certificate"></i>
                     <span>شهاداتي</span>
                 </a>
@@ -459,7 +459,7 @@
                 </a>
             </div>
             {{-- 1. قسم الكورسات --}}
-            @if(auth('instructor')->user()->can('index-course', 'instructor'))
+            {{-- @if(auth('instructor')->user()->can('index-course', 'instructor')) --}}
             <div class="dropdown-menu-item">
                 <button class="dropdown-btn" onclick="toggleDropdown(this)">
                     <span><i class="fas fa-graduation-cap"></i><span>إدارة الكورسات</span></span>
@@ -467,17 +467,17 @@
                 </button>
                 <div class="dropdown-content">
                     <a href="{{ route('courses.index') }}"><i class="fas fa-list"></i><span>عرض الكورسات</span></a>
-                    @if(auth('instructor')->user()->can('create-course', 'instructor'))
+                    {{-- @if(auth('instructor')->user()->can('create-course', 'instructor')) --}}
                         <a href="{{ route('courses.create') }}"><i class="fas fa-plus-circle"></i><span>إضافة كورس</span></a>
-                    @endif
-                    @if(auth('instructor')->user()->can('index-category', 'instructor'))
+                    {{-- @endif --}}
+                    {{-- @if(auth('instructor')->user()->can('index-category', 'instructor')) --}}
                         <a href="{{ route('categories.index') }}"><i class="fas fa-tags"></i><span>التصنيفات</span></a>
-                    @endif
+                    {{-- @endif --}}
                 </div>
             </div>
-            @endif
+            {{-- @endif --}}
         
-            {{-- 2. قسم الكويزات والأسئلة --}}
+            {{-- 2. قسم الكويزات والأسئلة
             @if(auth('instructor')->user()->can('index-quiz', 'instructor'))
             <div class="dropdown-menu-item">
                 <button class="dropdown-btn" onclick="toggleDropdown(this)">
@@ -498,42 +498,15 @@
                     @endif
                 </div>
             </div>
-            @endif
+            @endif --}}
         
-            {{-- 3. قسم المواد التعليمية (Materials) --}}
-            @if(auth('instructor')->user()->can('index-material', 'instructor'))
-            <div class="dropdown-menu-item">
-                <button class="dropdown-btn" onclick="toggleDropdown(this)">
-                    <span><i class="fas fa-file-alt"></i><span>المواد الدراسية</span></span>
-                    <i class="fas fa-chevron-down arrow"></i>
-                </button>
-                <div class="dropdown-content">
-                    <a href="{{ route('materials.index') }}"><i class="fas fa-copy"></i><span>عرض المواد</span></a>
-                    @if(auth('instructor')->user()->can('create-material', 'instructor'))
-                        <a href="{{ route('materials.create') }}"><i class="fas fa-file-upload"></i><span>إضافة مادة (Material)</span></a>
-                    @endif
-                </div>
-            </div>
-            @endif
-        
-            {{-- 4. قسم الفيديوهات (Videos) --}}
-            @if(auth('instructor')->user()->can('index-video', 'instructor'))
-            <div class="dropdown-menu-item">
-                <button class="dropdown-btn" onclick="toggleDropdown(this)">
-                    <span><i class="fas fa-video"></i><span>إدارة الفيديوهات</span></span>
-                    <i class="fas fa-chevron-down arrow"></i>
-                </button>
-                <div class="dropdown-content">
-                    <a href="{{ route('videos.index') }}"><i class="fas fa-play-circle"></i><span>عرض الفيديوهات</span></a>
-                    @if(auth('instructor')->user()->can('create-video', 'instructor'))
-                        <a href="{{ route('videos.create') }}"><i class="fas fa-video-slash"></i><span>إضافة فيديو جديد</span></a>
-                    @endif
-                </div>
-            </div>
-            @endif
         
         @endif
-        
+        <div style="position: relative; z-index: 2;">
+            <a href="{{ route('view.logout') }}" style="background: rgba(255,255,255,0.1); color: white; padding: 10px 20px; border-radius: 12px; text-decoration: none; font-size: 0.9rem; font-weight: 600; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);">
+                تسجيل الخروج <i class="fas fa-sign-out-alt" style="margin-right: 8px;"></i>
+            </a>
+        </div>
         </nav>
         <div class="admin-footer">
             @if(auth('admin')->check())
@@ -568,6 +541,7 @@
                 </div>
             @endif
         </div>
+
     </aside>
 
     <main class="admin-main">

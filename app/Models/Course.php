@@ -72,4 +72,9 @@ public function videos() {
     return $this->hasManyThrough(Comment::class, Lesson::class);
     }
 
+    public function quizzes()
+{
+    return $this->hasMany(Quizz::class);
+}
+
 }
