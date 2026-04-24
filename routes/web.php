@@ -130,31 +130,71 @@ Route::middleware(['auth:student'])->prefix('cms/student')->group(function () {
 
 
 
+
 // ==================== Routes admin ====================
 Route::prefix('cms/admin')->group(function(){
+    
+    // الرئيسية
     Route::get('main', [AdminController::class, 'main'])->name('main');
+    
+    // ادارة المشرفين
     Route::resource('admins', AdminController::class);
-// راوت لعرض رسالة واحدة محددة
-Route::get('/admin/contacts/{id}', [ContactMessageController::class, 'show'])->name('admin.contacts.show');
-    // Categories Routes
+    
+    // رسائل الاتصال
+    Route::get('/admin/contacts/{id}', [ContactMessageController::class, 'show'])->name('admin.contacts.show');
+    
+    // التصنيفات
     Route::get('categories_trashed', [CategoryController::class, 'trashed'])->name('categories.trashed');
     Route::get('categories_restore/{id}', [CategoryController::class, 'restore'])->name('categories.restore');
     Route::get('categories_force/{id}', [CategoryController::class, 'forceDelete'])->name('categories.force');
     Route::resource('categories', CategoryController::class);
-
-
-
-    Route::post('/cms/student/video-completed', [StudentVideoController::class, 'markVideoCompleted'])
-    ->name('student.video.completed');
-
-    Route::resource('roles' , RoleController::class);
-    Route::post('roles-update/{id}' , [RoleController::class , 'update'])->name('roles-update');
-
-    Route::resource('permissions' , PermissionController::class);
-    Route::post('permissions-update/{id}' , [PermissionController::class , 'update'])->name('permissions-update');
-
-    Route::resource('roles.permissions' , RolePermissionController::class);
+    
+    // اتمام الفيديو للطالب
+    Route::post('/cms/student/video-completed', [StudentVideoController::class, 'markVideoCompleted'])->name('student.video.completed');
+    
+    // ========== الأدوار والصلاحيات ==========
+    // روابط الأدوار
+    Route::resource('roles', RoleController::class);
+    Route::post('roles-update/{id}', [RoleController::class, 'update'])->name('roles-update');
+    
+    // روابط الصلاحيات
+    Route::resource('permissions', PermissionController::class);
+    Route::post('permissions-update/{id}', [PermissionController::class, 'update'])->name('permissions-update');
+    
+    // روابط إسناد الصلاحيات للأدوار (Role Permissions)
+    Route::get('roles/{roleId}/permissions', [RolePermissionController::class, 'index'])->name('roles.permissions.index');
+    Route::post('roles/{roleId}/permissions', [RolePermissionController::class, 'store'])->name('roles.permissions.store');
 });
+// Route::prefix('cms/admin')->group(function(){
+//     Route::get('main', [AdminController::class, 'main'])->name('main');
+//     Route::resource('admins', AdminController::class);
+// // راوت لعرض رسالة واحدة محددة
+// Route::get('/admin/contacts/{id}', [ContactMessageController::class, 'show'])->name('admin.contacts.show');
+//     // Categories Routes
+//     Route::get('categories_trashed', [CategoryController::class, 'trashed'])->name('categories.trashed');
+//     Route::get('categories_restore/{id}', [CategoryController::class, 'restore'])->name('categories.restore');
+//     Route::get('categories_force/{id}', [CategoryController::class, 'forceDelete'])->name('categories.force');
+//     Route::resource('categories', CategoryController::class);
+
+
+
+//     Route::post('/cms/student/video-completed', [StudentVideoController::class, 'markVideoCompleted'])
+//     ->name('student.video.completed');
+
+//     Route::resource('roles' , RoleController::class);
+//     Route::post('roles-update/{id}' , [RoleController::class , 'update'])->name('roles-update');
+
+//     Route::resource('permissions' , PermissionController::class);
+//     Route::post('permissions-update/{id}' , [PermissionController::class , 'update'])->name('permissions-update');
+//     Route::post('/cms/admin/roles/{role}/permissions', [RoleController::class, 'storePermission']);
+//    // Route::resource('roles.permissions' , RolePermissionController::class);
+//   Route::get('/cms/admin/roles/{id}/permissions', [RoleController::class, 'permissions'])
+//     ->name('roles.permissions');
+// });
+
+// Route::post('/cms/admin/roles/{roleId}/permissions', [RolePermissionController::class, 'store'])->name('roles.permissions.store');
+// Route::get('/cms/admin/roles/{roleId}/permissions', [RolePermissionController::class, 'index'])->name('roles.permissions.index');
+
 
 // ==================== Routes للمدرسين ====================
 Route::prefix('cms/instructor')->group(function(){

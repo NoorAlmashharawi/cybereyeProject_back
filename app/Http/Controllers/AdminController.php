@@ -141,7 +141,8 @@ class AdminController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', Admin::class);
+        
+        // $this->authorize('create', Admin::class);
         $roles = Role::where('guard_name', 'admin')->get();
         return response()->view('cms.admin.create', compact('roles'));
     }
@@ -151,7 +152,7 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('create', Admin::class);
+        // $this->authorize('create', Admin::class);
 
         $validator = Validator::make($request->all(), [
             'username' => 'required|string|min:3|max:20|unique:user1s,username',
@@ -229,7 +230,7 @@ class AdminController extends Controller
 
     public function destroy($id)
     {
-        $this->authorize('delete', Admin::class);
+        // $this->authorize('delete', Admin::class);
         Admin::destroy($id);
         return response()->json(['icon' => 'success', 'title' => 'تم الحذف بنجاح'], 200);
     }

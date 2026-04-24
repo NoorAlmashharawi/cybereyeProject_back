@@ -29,6 +29,11 @@ class UserAuthController extends Controller
         ]);
     
         $guard = $request->guard;
+        auth('admin')->logout();
+    auth('student')->logout();
+    auth('instructor')->logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
     
         $credentials = [
             'email' => $request->email,
@@ -36,21 +41,39 @@ class UserAuthController extends Controller
         ];
     
         if (Auth::guard($guard)->attempt($credentials)) {
+            $user = Auth::guard($guard)->user();
+            $user->guard_name = $guard;
+            $user->save();
     
-            $request->session()->regenerate();
+            // التوجيه حسب الـ guard
+            $redirect = match($guard) {
+                'admin' => '/cms/admin/main',
+                'instructor' => '/cms/admin/main',
+                'student' => '/cms/admin/main',
+                default => '/',
+            };
+            
+        return response()->json([
+            'icon' => 'success',
+            'title' => 'login success',
+            'redirect' => $redirect
+        ]);
+        // if (Auth::guard($guard)->attempt($credentials)) {
     
-            return response()->json([
-                'icon' => 'success',
-                'title' => 'login success',
-                'redirect' => '/cms/'.$guard.'/main'
-            ]);
-        }
+        //     $request->session()->regenerate();
+    
+        //     return response()->json([
+        //         'icon' => 'success',
+        //         'title' => 'login success',
+        //         'redirect' => '/cms/'.$guard.'/main'
+        //     ]);
+        // }
     
         return response()->json([
             'icon' => 'error',
             'title' => 'بيانات الدخول غير صحيحة'
         ], 401);
-    }
+    }}
     public function logout(Request  $request){
         $guard = auth('admin')->check() ? 'admin':'student';
         Auth::guard($guard)->logout();
@@ -136,6 +159,11 @@ public function register(Request $request)
             'actor_id' => $student->id,
             'actor_type' => 'App\Models\Student',
         ]);
+
+        $studentRole = \Spatie\Permission\Models\Role::where('name', 'student')->first();
+        if($studentRole) {
+            $user->assignRole($studentRole);
+        }
         
         DB::commit();
         

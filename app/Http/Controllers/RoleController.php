@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Response, Illuminate\Http\JsonResponse ;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Permission;
+
+
 class RoleController extends Controller
 {
     /**
@@ -32,6 +35,19 @@ class RoleController extends Controller
         return response()->view('cms.spaity.role.index' , compact('roles'));
 
     }
+  
+public function permissions($id)
+{
+    $role = Role::findOrFail($id);
+
+    $permissions = Permission::where('guard_name', $role->guard_name)->get();
+
+    return response()->view('cms.spaity.role.role-permission', [
+        'permissions' => $permissions,
+        'role' => $role,
+        'roleId' => $role->id,
+    ]);
+}
 
     /**
      * Show the form for creating a new resource.
@@ -148,4 +164,21 @@ class RoleController extends Controller
             'title' => 'Deleted Successfully'
         ], 200);
     }
+
+    public function storePermission(Request $request, $roleId)
+{
+    $role = Role::findOrFail($roleId);
+    $permission = Permission::findOrFail($request->permission_id);
+    
+    if ($role->hasPermissionTo($permission)) {
+        $role->revokePermissionTo($permission);
+    } else {
+        $role->givePermissionTo($permission);
+    }
+
+    return response()->json([
+        'icon' => 'success',
+        'title' => 'تم تحديث الصلاحية'
+    ]);
+}
 }

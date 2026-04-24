@@ -365,12 +365,30 @@
                         <i class="fas fa-chevron-down arrow"></i>
                     </button>
                     <div class="dropdown-content">
+                        {{-- @can('index-student') --}}
                         <a href="{{ route('students.index') }}"><i class="fas fa-user-graduate"></i><span>الطلاب</span></a>
+                        {{-- @endcan --}}
+
+
+                        {{-- @can('create-student') --}}
+                       
                         <a href="{{ route('students.create') }}"><i class="fas fa-user-graduate"></i><span>اضافة طالب </span></a>
+                        {{-- @endcan --}}
+
+                        {{-- @can('index-instructor') --}}
                         <a href="{{ route('instructors.index') }}"><i class="fas fa-chalkboard-teacher"></i><span>المدربين</span></a>
+                        {{-- @endcan --}}
+                        {{-- @can('create-instructor') --}}
                         <a href="{{ route('instructors.create') }}"><i class="fas fa-chalkboard-teacher"></i><span> ضافةالمدربين</span></a>
+                        {{-- @endcan --}}
+                        @if(auth('admin')->user()->hasRole('admin') || auth('admin')->user()->can('create-admin'))
+                        <a href="{{ route('admins.index') }}"><i class="fas fa-user-cog"></i><span>المشرفين</span></a>
+                        <a href="{{ route('admins.create') }}"><i class="fas fa-plus-circle"></i><span>إضافة مشرف</span></a>
+                    @endif
+                        {{-- @can('create-admin')
                         <a href="{{ route('admins.index') }}"><i class="fas fa-user-cog"></i><span>المشرفين</span></a>
                         <a href="{{ route('admins.create') }}"><i class="fas fa-user-cog"></i><span> اضافةالمشرفين</span></a>
+                        @endcan --}}
                     </div>
                 </div>
         

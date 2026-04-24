@@ -562,11 +562,10 @@ section.content {
                               <td>{{$permission->guard_name}}</td>
                               <td>
                                 <div class="icheck-primary d-inline">
-                                  <input type="checkbox" id="permission_{{$permission->id}}"
-                                    onchange="storeRolePermission({{$roleId}},{{$permission->id}})" @if($permission->active) checked
-                                  @endif>
-                                  <label for="permission_{{$permission->id}}">
-                                  </label>
+                                    <input type="checkbox" id="permission_{{$permission->id}}"
+                                        onchange="storeRolePermission({{$roleId}},{{$permission->id}})" 
+                                        @if($permission->active) checked @endif>
+                                    <label for="permission_{{$permission->id}}"></label>
                                 </div>
                               </td>
                             </tr>
@@ -586,14 +585,48 @@ section.content {
             @section('scripts')
 
             <script>
-              function storeRolePermission(roleId, permissionId){
-                let data = {
-                  permission_id: permissionId,
-                };
 
-                store('/cms/admin/roles/'+roleId+'/permissions',data);
+    let rolePermissionsStoreUrl = '{{ route("roles.permissions.store", ":roleId") }}';
+    
+    function storeRolePermission(roleId, permissionId) {
+        let url = rolePermissionsStoreUrl.replace(':roleId', roleId);
+        let data = { permission_id: permissionId };
+        
+        axios.post(url, data)
+            .then(function(response) {
+                if(response.data.icon === 'success') {
+                    console.log('تم التحديث');
+                }
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+    }
 
-              }
+// function storeRolePermission(roleId, permissionId) {
+//     axios.post('/cms/admin/roles/' + roleId + '/permissions', {
+//         permission_id: permissionId
+//     }).then(response => {
+//         if(response.data.icon === 'success') {
+//             // نجاح
+//         }
+//     }).catch(error => {
+//         console.log(error);
+//         // إذا فشل، أرجع الـ checkbox إلى حالته السابقة
+//         document.getElementById('permission_' + permissionId).checked = !document.getElementById('permission_' + permissionId).checked;
+//     });
+// }
+
+            //   function storeRolePermission(roleId, permissionId){
+            //     let data = {
+            //       permission_id: permissionId,
+            //     };
+
+            //     store('/cms/admin/roles/'+roleId+'/permissions',data);
+
+            //   }
+
+ 
             </script>
             @endsection
 

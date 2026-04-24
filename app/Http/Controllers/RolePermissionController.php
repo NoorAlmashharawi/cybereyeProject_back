@@ -54,32 +54,28 @@ class RolePermissionController extends Controller
      */
     public function store(Request $request, $roleId)
     {
-        //
         $validator = Validator($request->all(), [
             'permission_id' => 'required|exists:permissions,id',
         ]);
-
+    
         if (!$validator->fails()) {
             $role = Role::findOrFail($roleId);
-            $permission = Permission::findOrFail($request->get('permission_id'));
-
-            if ($role->hasPermissionTo($permission->id)) {
-                $role->revokePermissionTo($permission->id);
+            $permission = Permission::findOrFail($request->permission_id);
+    
+            if ($role->hasPermissionTo($permission)) {
+                $role->revokePermissionTo($permission);
             } else {
-                $role->givePermissionTo($permission->id);
+                $role->givePermissionTo($permission);
             }
-
-                return response()->json(['icon' => 'success' , 'title' => 'Is Successfully'] , 200);
-
-            }
-
-            else{
-                // return response()->json(['icon' => 'error' , 'title' => $validator->getMessageBag()->first()] , 400);
-                return response()->json(['message' => $validator->getMessageBag()->first()], 400);
-
-            }
+    
+            // امسح الكاش عشان التغيير يظهر فوراً
+            app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+    
+            return response()->json(['icon' => 'success', 'title' => 'تم التحديث'], 200);
         }
-
+    
+        return response()->json(['message' => $validator->errors()->first()], 400);
+    }
 
     /**
      * Display the specified resource.
