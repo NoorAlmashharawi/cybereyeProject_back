@@ -33,13 +33,11 @@ class CourseController extends Controller
 
     $query = Course::with(['instructor.user1', 'category'])->withCount('students');
 
-    // ✅ إذا كان مدرباً: نعرض فقط الكورسات الخاصة به
     if ($isInstructor && $user) {
         $instructorId = $user->actor_id;
         $query->where('instructor_id', $instructorId);
     }
 
-    // ✅ إذا كان طالباً: نعرض فقط الكورسات المسجل فيها (عبر جدول course_student)
     if ($isStudent && $user) {
         $studentId = $user->actor_id;
         $query->whereHas('students', function($q) use ($studentId) {
@@ -47,14 +45,12 @@ class CourseController extends Controller
         });
     }
 
-    // ✅ إذا كان أدمن: لا نضيف أي فلتر (يرى كل الكورسات)
-
-    // ✅ الفلترة حسب التصنيف
+   
     if ($request->has('category_id') && $request->category_id != '') {
         $query->where('category_id', $request->category_id);
     }
 
-    // ✅ البحث حسب الاسم أو اسم المدرب
+   
     if ($request->has('search') && $request->search != '') {
         $search = $request->search;
         $query->where(function($q) use ($search) {
@@ -65,9 +61,9 @@ class CourseController extends Controller
         });
     }
 
-    // ✅ إحصائيات مناسبة لكل مستخدم
+    
     if ($isInstructor) {
-        // للمدرب: إحصائيات كورساته فقط
+       
         $totalCourses = (clone $query)->count();
         $activeCourses = (clone $query)->where('status', 'active')->count();
         $totalInstructors = Instructor::count(); // إجمالي المدربين في النظام
@@ -83,7 +79,7 @@ class CourseController extends Controller
         $totalInstructors = Instructor::count();
     }
 
-    // ✅ عرض النتائج مع pagination
+  
     $courses = $query->latest()->paginate(10)->appends($request->query());
 
     return view('cms.course.index', compact(

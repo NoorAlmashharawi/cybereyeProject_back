@@ -286,7 +286,7 @@
 
     <div style="margin-bottom: 25px; display: flex; align-items: center; gap: 10px;">
         <div style="width: 5px; height: 25px; background: #4361ee; border-radius: 10px;"></div>
-        <h3 style="font-weight: 800; color: #1e293b; margin: 0;">📚 الكورسات التي أقدمها</h3>
+        <h3 style="font-weight: 800; color: #1e293b; margin: 0;"> الكورسات التي أقدمها</h3>
     </div>
 
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px;">
