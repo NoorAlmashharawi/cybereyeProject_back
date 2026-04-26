@@ -12,48 +12,129 @@ use Illuminate\Support\Facades\Validator;
 
 class CourseController extends Controller
 {
+
     public function index(Request $request)
-    {
-        $user = auth()->user();
-        $query = Course::with(['instructor.user1', 'category'])->withCount('students');
+{
+    $user = null;
+    $isInstructor = false;
+    $isAdmin = false;
+    $isStudent = false;
 
-        if ($user && $user->role == 'instructor') {
-            $instructorId = $user->actor_id;
-            $query->where('instructor_id', $instructorId);
-        }
-
-        if ($request->has('category_id') && $request->category_id != '') {
-            $query->where('category_id', $request->category_id);
-        }
-
-        if ($request->has('search') && $request->search != '') {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('course_name', 'like', '%' . $search . '%')
-                  ->orWhereHas('instructor.user1', function($q2) use ($search) {
-                      $q2->where('username', 'like', '%' . $search . '%');
-                  });
-            });
-        }
-
-        if ($user && $user->role == 'instructor') {
-            $totalCourses = $query->count();
-            $activeCourses = $query->where('status', 'active')->count();
-        } else {
-            $totalCourses = Course::count();
-            $activeCourses = Course::where('status', 'active')->count();
-        }
-        $totalInstructors = Instructor::count();
-
-        $courses = $query->latest()->paginate(10)->appends(['search' => $request->search]);
-
-        return view('cms.course.index', compact(
-            'courses',
-            'totalCourses',
-            'activeCourses',
-            'totalInstructors'
-        ));
+    if (auth('admin')->check()) {
+        $user = auth('admin')->user();
+        $isAdmin = true;
+    } elseif (auth('instructor')->check()) {
+        $user = auth('instructor')->user();
+        $isInstructor = true;
+    } elseif (auth('student')->check()) {
+        $user = auth('student')->user();
+        $isStudent = true;
     }
+
+    $query = Course::with(['instructor.user1', 'category'])->withCount('students');
+
+    // ✅ إذا كان مدرباً: نعرض فقط الكورسات الخاصة به
+    if ($isInstructor && $user) {
+        $instructorId = $user->actor_id;
+        $query->where('instructor_id', $instructorId);
+    }
+
+    // ✅ إذا كان طالباً: نعرض فقط الكورسات المسجل فيها (عبر جدول course_student)
+    if ($isStudent && $user) {
+        $studentId = $user->actor_id;
+        $query->whereHas('students', function($q) use ($studentId) {
+            $q->where('student_id', $studentId);
+        });
+    }
+
+    // ✅ إذا كان أدمن: لا نضيف أي فلتر (يرى كل الكورسات)
+
+    // ✅ الفلترة حسب التصنيف
+    if ($request->has('category_id') && $request->category_id != '') {
+        $query->where('category_id', $request->category_id);
+    }
+
+    // ✅ البحث حسب الاسم أو اسم المدرب
+    if ($request->has('search') && $request->search != '') {
+        $search = $request->search;
+        $query->where(function($q) use ($search) {
+            $q->where('course_name', 'like', '%' . $search . '%')
+              ->orWhereHas('instructor.user1', function($q2) use ($search) {
+                  $q2->where('username', 'like', '%' . $search . '%');
+              });
+        });
+    }
+
+    // ✅ إحصائيات مناسبة لكل مستخدم
+    if ($isInstructor) {
+        // للمدرب: إحصائيات كورساته فقط
+        $totalCourses = (clone $query)->count();
+        $activeCourses = (clone $query)->where('status', 'active')->count();
+        $totalInstructors = Instructor::count(); // إجمالي المدربين في النظام
+    } elseif ($isStudent) {
+        // للطالب: إحصائيات الكورسات المسجل فيها فقط
+        $totalCourses = (clone $query)->count();
+        $activeCourses = (clone $query)->where('status', 'active')->count();
+        $totalInstructors = Instructor::count();
+    } else {
+        // للأدمن: إحصائيات عامة
+        $totalCourses = Course::count();
+        $activeCourses = Course::where('status', 'active')->count();
+        $totalInstructors = Instructor::count();
+    }
+
+    // ✅ عرض النتائج مع pagination
+    $courses = $query->latest()->paginate(10)->appends($request->query());
+
+    return view('cms.course.index', compact(
+        'courses',
+        'totalCourses',
+        'activeCourses',
+        'totalInstructors'
+    ));
+}
+    // public function index(Request $request)
+    // {
+    //     $user = auth()->user();
+    //     $query = Course::with(['instructor.user1', 'category'])->withCount('students');
+
+    //     if ($user && $user->role == 'instructor') {
+    //         $instructorId = $user->actor_id;
+    //         $query->where('instructor_id', $instructorId);
+    //     }
+
+    //     if ($request->has('category_id') && $request->category_id != '') {
+    //         $query->where('category_id', $request->category_id);
+    //     }
+
+    //     if ($request->has('search') && $request->search != '') {
+    //         $search = $request->search;
+    //         $query->where(function($q) use ($search) {
+    //             $q->where('course_name', 'like', '%' . $search . '%')
+    //               ->orWhereHas('instructor.user1', function($q2) use ($search) {
+    //                   $q2->where('username', 'like', '%' . $search . '%');
+    //               });
+    //         });
+    //     }
+
+    //     if ($user && $user->role == 'instructor') {
+    //         $totalCourses = $query->count();
+    //         $activeCourses = $query->where('status', 'active')->count();
+    //     } else {
+    //         $totalCourses = Course::count();
+    //         $activeCourses = Course::where('status', 'active')->count();
+    //     }
+    //     $totalInstructors = Instructor::count();
+
+    //     $courses = $query->latest()->paginate(10)->appends(['search' => $request->search]);
+
+    //     return view('cms.course.index', compact(
+    //         'courses',
+    //         'totalCourses',
+    //         'activeCourses',
+    //         'totalInstructors'
+    //     ));
+    // }
 
     public function create()
     {

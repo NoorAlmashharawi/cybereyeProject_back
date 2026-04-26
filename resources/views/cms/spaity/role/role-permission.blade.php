@@ -587,21 +587,49 @@ section.content {
             <script>
 
     let rolePermissionsStoreUrl = '{{ route("roles.permissions.store", ":roleId") }}';
-    
+
     function storeRolePermission(roleId, permissionId) {
-        let url = rolePermissionsStoreUrl.replace(':roleId', roleId);
-        let data = { permission_id: permissionId };
+    let checkbox = document.getElementById('permission_' + permissionId);
+    let originalState = checkbox.checked;
+    
+    axios.post('/cms/admin/roles/' + roleId + '/permissions', {
+        permission_id: permissionId
+    })
+    .then(function(response) {
+        if(response.data.icon === 'success') {
+            console.log(' تم تحديث الصلاحية بنجاح');
+            // إعادة تحميل الصفحة بعد 0.5 ثانية لضمان ظهور التغيير
+            setTimeout(() => location.reload(), 500);
+        }
+    })
+    .catch(function(error) {
+        console.log(error);
+        // إعادة الـ checkbox إلى حالته السابقة إذا فشل
+        checkbox.checked = originalState;
+        Swal.fire({
+            icon: 'error',
+            title: 'خطأ',
+            text: error.response?.data?.message || 'حدث خطأ أثناء تحديث الصلاحية'
+        });
+    });
+
+    
+}
+    
+    // function storeRolePermission(roleId, permissionId) {
+    //     let url = rolePermissionsStoreUrl.replace(':roleId', roleId);
+    //     let data = { permission_id: permissionId };
         
-        axios.post(url, data)
-            .then(function(response) {
-                if(response.data.icon === 'success') {
-                    console.log('تم التحديث');
-                }
-            })
-            .catch(function(error) {
-                console.log(error);
-            });
-    }
+    //     axios.post(url, data)
+    //         .then(function(response) {
+    //             if(response.data.icon === 'success') {
+    //                 console.log('تم التحديث');
+    //             }
+    //         })
+    //         .catch(function(error) {
+    //             console.log(error);
+    //         });
+    // }
 
 // function storeRolePermission(roleId, permissionId) {
 //     axios.post('/cms/admin/roles/' + roleId + '/permissions', {

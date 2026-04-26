@@ -52,30 +52,66 @@ class RolePermissionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $roleId)
-    {
-        $validator = Validator($request->all(), [
-            'permission_id' => 'required|exists:permissions,id',
-        ]);
-    
-        if (!$validator->fails()) {
-            $role = Role::findOrFail($roleId);
-            $permission = Permission::findOrFail($request->permission_id);
-    
-            if ($role->hasPermissionTo($permission)) {
-                $role->revokePermissionTo($permission);
-            } else {
-                $role->givePermissionTo($permission);
-            }
-    
-            // امسح الكاش عشان التغيير يظهر فوراً
-            app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
-    
-            return response()->json(['icon' => 'success', 'title' => 'تم التحديث'], 200);
+
+     public function store(Request $request, $roleId)
+{
+    $validator = Validator($request->all(), [
+        'permission_id' => 'required|exists:permissions,id',
+    ]);
+
+    if (!$validator->fails()) {
+        $role = Role::findOrFail($roleId);
+        $permission = Permission::findOrFail($request->permission_id);
+
+        if ($role->hasPermissionTo($permission)) {
+            $role->revokePermissionTo($permission);
+        } else {
+            $role->givePermissionTo($permission);
         }
-    
-        return response()->json(['message' => $validator->errors()->first()], 400);
+
+        // 🔥 مسح الكاش بشكل قوي
+        app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        
+        // 🔥 إعادة تحميل صلاحيات جميع المستخدمين لهذا الدور
+        $users = \App\Models\User1::role($role->name)->get();
+        foreach($users as $user) {
+            $user->syncPermissions($role->permissions);
+        }
+
+        return response()->json([
+            'icon' => 'success', 
+            'title' => 'تم تحديث الصلاحية بنجاح'
+        ], 200);
     }
+
+    return response()->json([
+        'message' => $validator->errors()->first()
+    ], 400);
+}
+    // public function store(Request $request, $roleId)
+    // {
+    //     $validator = Validator($request->all(), [
+    //         'permission_id' => 'required|exists:permissions,id',
+    //     ]);
+    
+    //     if (!$validator->fails()) {
+    //         $role = Role::findOrFail($roleId);
+    //         $permission = Permission::findOrFail($request->permission_id);
+    
+    //         if ($role->hasPermissionTo($permission)) {
+    //             $role->revokePermissionTo($permission);
+    //         } else {
+    //             $role->givePermissionTo($permission);
+    //         }
+    
+    //         // امسح الكاش عشان التغيير يظهر فوراً
+    //         app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+    
+    //         return response()->json(['icon' => 'success', 'title' => 'تم التحديث'], 200);
+    //     }
+    
+    //     return response()->json(['message' => $validator->errors()->first()], 400);
+    // }
 
     /**
      * Display the specified resource.

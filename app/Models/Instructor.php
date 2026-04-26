@@ -43,4 +43,11 @@ class Instructor extends Model
         return $this->morphOne(User1::class, 'actor');
     }
 
+
+
+public function courses()
+{
+    return $this->hasMany(Course::class, 'instructor_id');
+}
+
 }

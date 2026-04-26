@@ -130,7 +130,8 @@
                         <span class="badge bg-secondary">{{ $course->category->title ?? 'غير مصنف' }}</span>
                     </td>
                     <td>
-                        <span class="badge badge-info">{{ $course->students_count }} طالب</span>
+                      
+                        <span class="">  {{ $course->students_count }} طالب</span>
                     </td>
                     <td>
                         @if($course->level == 'beginner')
