@@ -62,9 +62,10 @@ public function videos() {
 
     public function students()
     {
-        return $this->belongsToMany(Student::class, 'enrollments','course_id', 'student_id') ->withPivot('enrolled_at')
+        return $this->belongsToMany(Student::class, 'course_student','course_id', 'student_id') ->withPivot('enrolled_at')
         ->withTimestamps();
     }
+
 
 
     public function comments()

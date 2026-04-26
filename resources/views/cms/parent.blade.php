@@ -488,9 +488,7 @@
                     {{-- @if(auth('instructor')->user()->can('create-course', 'instructor')) --}}
                         <a href="{{ route('courses.create') }}"><i class="fas fa-plus-circle"></i><span>إضافة كورس</span></a>
                     {{-- @endif --}}
-                    {{-- @if(auth('instructor')->user()->can('index-category', 'instructor')) --}}
-                        <a href="{{ route('categories.index') }}"><i class="fas fa-tags"></i><span>التصنيفات</span></a>
-                    {{-- @endif --}}
+                
                 </div>
             </div>
             {{-- @endif --}}

@@ -135,7 +135,7 @@ function performStore() {
                 showConfirmButton: false,
                 timer: 1500
             }).then(() => {
-                // ✅ التعديل هنا
+               
                 window.location.href = "/cms/instructor/materials?course_id=" + course_id;
             });
         })

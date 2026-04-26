@@ -12,48 +12,125 @@ use Illuminate\Support\Facades\Validator;
 
 class CourseController extends Controller
 {
+
     public function index(Request $request)
-    {
-        $user = auth()->user();
-        $query = Course::with(['instructor.user1', 'category'])->withCount('students');
+{
+    $user = null;
+    $isInstructor = false;
+    $isAdmin = false;
+    $isStudent = false;
 
-        if ($user && $user->role == 'instructor') {
-            $instructorId = $user->actor_id;
-            $query->where('instructor_id', $instructorId);
-        }
-
-        if ($request->has('category_id') && $request->category_id != '') {
-            $query->where('category_id', $request->category_id);
-        }
-
-        if ($request->has('search') && $request->search != '') {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('course_name', 'like', '%' . $search . '%')
-                  ->orWhereHas('instructor.user1', function($q2) use ($search) {
-                      $q2->where('username', 'like', '%' . $search . '%');
-                  });
-            });
-        }
-
-        if ($user && $user->role == 'instructor') {
-            $totalCourses = $query->count();
-            $activeCourses = $query->where('status', 'active')->count();
-        } else {
-            $totalCourses = Course::count();
-            $activeCourses = Course::where('status', 'active')->count();
-        }
-        $totalInstructors = Instructor::count();
-
-        $courses = $query->latest()->paginate(10)->appends(['search' => $request->search]);
-
-        return view('cms.course.index', compact(
-            'courses',
-            'totalCourses',
-            'activeCourses',
-            'totalInstructors'
-        ));
+    if (auth('admin')->check()) {
+        $user = auth('admin')->user();
+        $isAdmin = true;
+    } elseif (auth('instructor')->check()) {
+        $user = auth('instructor')->user();
+        $isInstructor = true;
+    } elseif (auth('student')->check()) {
+        $user = auth('student')->user();
+        $isStudent = true;
     }
+
+    $query = Course::with(['instructor.user1', 'category'])->withCount('students');
+
+    if ($isInstructor && $user) {
+        $instructorId = $user->actor_id;
+        $query->where('instructor_id', $instructorId);
+    }
+
+    if ($isStudent && $user) {
+        $studentId = $user->actor_id;
+        $query->whereHas('students', function($q) use ($studentId) {
+            $q->where('student_id', $studentId);
+        });
+    }
+
+   
+    if ($request->has('category_id') && $request->category_id != '') {
+        $query->where('category_id', $request->category_id);
+    }
+
+   
+    if ($request->has('search') && $request->search != '') {
+        $search = $request->search;
+        $query->where(function($q) use ($search) {
+            $q->where('course_name', 'like', '%' . $search . '%')
+              ->orWhereHas('instructor.user1', function($q2) use ($search) {
+                  $q2->where('username', 'like', '%' . $search . '%');
+              });
+        });
+    }
+
+    
+    if ($isInstructor) {
+       
+        $totalCourses = (clone $query)->count();
+        $activeCourses = (clone $query)->where('status', 'active')->count();
+        $totalInstructors = Instructor::count(); // إجمالي المدربين في النظام
+    } elseif ($isStudent) {
+        // للطالب: إحصائيات الكورسات المسجل فيها فقط
+        $totalCourses = (clone $query)->count();
+        $activeCourses = (clone $query)->where('status', 'active')->count();
+        $totalInstructors = Instructor::count();
+    } else {
+        // للأدمن: إحصائيات عامة
+        $totalCourses = Course::count();
+        $activeCourses = Course::where('status', 'active')->count();
+        $totalInstructors = Instructor::count();
+    }
+
+  
+    $courses = $query->latest()->paginate(10)->appends($request->query());
+
+    return view('cms.course.index', compact(
+        'courses',
+        'totalCourses',
+        'activeCourses',
+        'totalInstructors'
+    ));
+}
+    // public function index(Request $request)
+    // {
+    //     $user = auth()->user();
+    //     $query = Course::with(['instructor.user1', 'category'])->withCount('students');
+
+    //     if ($user && $user->role == 'instructor') {
+    //         $instructorId = $user->actor_id;
+    //         $query->where('instructor_id', $instructorId);
+    //     }
+
+    //     if ($request->has('category_id') && $request->category_id != '') {
+    //         $query->where('category_id', $request->category_id);
+    //     }
+
+    //     if ($request->has('search') && $request->search != '') {
+    //         $search = $request->search;
+    //         $query->where(function($q) use ($search) {
+    //             $q->where('course_name', 'like', '%' . $search . '%')
+    //               ->orWhereHas('instructor.user1', function($q2) use ($search) {
+    //                   $q2->where('username', 'like', '%' . $search . '%');
+    //               });
+    //         });
+    //     }
+
+    //     if ($user && $user->role == 'instructor') {
+    //         $totalCourses = $query->count();
+    //         $activeCourses = $query->where('status', 'active')->count();
+    //     } else {
+    //         $totalCourses = Course::count();
+    //         $activeCourses = Course::where('status', 'active')->count();
+    //     }
+    //     $totalInstructors = Instructor::count();
+
+    //     $courses = $query->latest()->paginate(10)->appends(['search' => $request->search]);
+
+    //     return view('cms.course.index', compact(
+    //         'courses',
+    //         'totalCourses',
+    //         'activeCourses',
+    //         'totalInstructors'
+    //     ));
+    // }
 
     public function create()
     {
@@ -61,7 +138,7 @@ class CourseController extends Controller
         $user = auth()->user();
 
         if ($user && $user->role == 'instructor') {
-            // المدرب: لا نمرر قائمة المدربين، بل نمرر instructor_id المخفي
+           
             $instructorId = $user->actor_id;
             return view('cms.course.create', compact('categories', 'instructorId'));
         } else {
@@ -355,7 +432,7 @@ public function showCoursePlayer($id)
     public function player($id)
     {
         $course = Course::with(['quizzes', 'videos', 'materials'])->findOrFail($id);
-        
+
         return view('cms.studentDash.player', compact('course'));
     }
 }
