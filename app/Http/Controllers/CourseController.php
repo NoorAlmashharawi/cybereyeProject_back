@@ -138,7 +138,7 @@ class CourseController extends Controller
         $user = auth()->user();
 
         if ($user && $user->role == 'instructor') {
-            // المدرب: لا نمرر قائمة المدربين، بل نمرر instructor_id المخفي
+           
             $instructorId = $user->actor_id;
             return view('cms.course.create', compact('categories', 'instructorId'));
         } else {
@@ -432,7 +432,7 @@ public function showCoursePlayer($id)
     public function player($id)
     {
         $course = Course::with(['quizzes', 'videos', 'materials'])->findOrFail($id);
-        
+
         return view('cms.studentDash.player', compact('course'));
     }
 }

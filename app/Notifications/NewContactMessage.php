@@ -38,7 +38,7 @@ class NewContactMessage extends Notification
             'contact_id' => $this->contact->id,
 
    'url' => route('contact'),
-            'icon' => 'fas fa-envelope text-success', // أيقونة مغلف أخضر
+            'icon' => 'fas fa-envelope text-success',
         ];
     }
 }

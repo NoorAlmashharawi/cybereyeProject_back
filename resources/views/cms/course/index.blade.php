@@ -50,7 +50,7 @@
         </form>
 
         {{-- زر إضافة كورس جديد: يمكنك أيضاً منعه للأدمن إذا أردت --}}
-        @if(auth()->check() && auth()->user()->role != 'Admin')
+        @if(auth()->check() && auth()->user()->role != 'admin')
         <a href="{{ route('courses.create') }}" class="btn btn-primary" style="border-radius: 10px; padding: 10px 20px; display: flex; align-items: center; gap: 8px;">
             <i class="fas fa-plus"></i>
             <span>إضافة كورس جديد</span>
@@ -76,35 +76,25 @@
         </div>
     </div>
 
-    <div class="stat-card revenue">
-        <div class="stat-content">
-            <div class="stat-icon revenue">
-                <i class="fas fa-chalkboard-teacher"></i>
-            </div>
-            <div class="stat-info">
-                <h2>{{ $totalInstructors }}</h2>
-                <p>إجمالي المدربين</p>
-                <div class="stat-trend trend-up">
-                    <i class="fas fa-arrow-up"></i>
-                    <span>{{ $totalInstructors }} نخبة الخبراء</span>
-                </div>
+   @if(auth()->check() && auth()->user()->role != 'instructor')
+<div class="stat-card revenue">
+    <div class="stat-content">
+        <div class="stat-icon revenue">
+            <i class="fas fa-chalkboard-teacher"></i>
+        </div>
+        <div class="stat-info">
+            <h2>{{ $totalInstructors }}</h2>
+            <p>إجمالي المدربين</p>
+            <div class="stat-trend trend-up">
+                <i class="fas fa-arrow-up"></i>
+                <span>{{ $totalInstructors }} نخبة الخبراء</span>
             </div>
         </div>
     </div>
+</div>
+@endif
 
-    <div class="stat-card active">
-        <div class="stat-content">
-            <div class="stat-icon active">
-                <i class="fas fa-chart-line"></i>
-            </div>
-            <div class="stat-info">
-                <p>نسبة الرضا</p>
-                <div class="stat-trend trend-up">
-                    <i class="fas fa-arrow-up"></i>
-                </div>
-            </div>
-        </div>
-    </div>
+
 </div>
 
 <div class="table-card mt-4">
