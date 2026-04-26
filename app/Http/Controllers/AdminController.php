@@ -43,6 +43,7 @@ class AdminController extends Controller
         $newStudents = Student::with('user1')->latest()->limit(10)->get();
         $weeklyRegistrations = $this->getWeeklyRegistrations();
         $monthlyRegistrations = $this->getMonthlyRegistrations();
+         $activeCourses = Course::where('status', 'active')->count();
 
         // متغير الكورسات (سيتم تعبئته حسب الدور)
         $courses = [];
@@ -66,7 +67,7 @@ class AdminController extends Controller
             return view('cms.admin.main', compact(
                 'user', 'student', 'enrolledCourses', 'certificatesCount', 'coursesProgress',
                 'totalUsers', 'totalCourses', 'newStudents', 'weeklyRegistrations', 'monthlyRegistrations',
-                'courses'
+                'courses','activeCourses'
             ));
         }
 
@@ -91,15 +92,17 @@ class AdminController extends Controller
 }
 
         // فحص الأدمن
-        if (auth('admin')->check()) {
-            $user = auth('admin')->user();
-            $courses = Course::with(['instructor.user1', 'category'])->withCount('students')->get();
+      // فحص الأدمن
+if (auth('admin')->check()) {
+    $user = auth('admin')->user();
+    $courses = Course::with(['instructor.user1', 'category'])->withCount('students')->get();
 
-            return view('cms.admin.main', compact(
-                'newStudents', 'courses', 'totalUsers', 'totalCourses',
-                'weeklyRegistrations', 'monthlyRegistrations', 'user'
-            ));
-        }
+    return view('cms.admin.main', compact(
+        'newStudents', 'courses', 'totalUsers', 'totalCourses',
+        'weeklyRegistrations', 'monthlyRegistrations', 'user',
+        'activeCourses'    // أضيفي هذا
+    ));
+}
 
         return redirect()->route('view.login');
     }
@@ -141,7 +144,7 @@ class AdminController extends Controller
      */
     public function create()
     {
-        
+
         // $this->authorize('create', Admin::class);
         $roles = Role::where('guard_name', 'admin')->get();
         return response()->view('cms.admin.create', compact('roles'));

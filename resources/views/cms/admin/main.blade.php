@@ -73,7 +73,7 @@
                 <i class="fas fa-users"></i>
             </div>
             <div class="stat-info">
-                <h3 id="tot">{{ $totalUsers ?? 0 }}</h3>
+                <h2 id="tot">{{ $totalUsers ?? 0 }}</h2>
                 <p>إجمالي المستخدمين</p>
                 <div class="stat-trend trend-up">
                     <i class="fas fa-arrow-up"></i>
@@ -92,7 +92,7 @@
                 <p>الكورسات النشطة</p>
                 <div class="stat-trend trend-up">
                     <i class="fas fa-arrow-up"></i>
-                    <span>{{ $newCoursesCount ?? 0 }} كورسات جديدة</span>
+                    <span>{{ $activeCourses ?? 0 }} كورسات جديدة</span>
                 </div>
             </div>
         </div>
@@ -171,10 +171,10 @@
         </table>
     </div>
 
-    <!-- جدول الكورسات الأكثر شعبية -->
+{{-- الكورسات المضافة حديثا --}}
     <div class="table-card">
         <div class="table-header">
-            <h3>الكورسات الأكثر شعبية</h3>
+            <h3>الكورسات المضافة حديثا </h3>
             <div class="table-actions">
                 <button class="table-action-btn" title="تحديث">
                     <i class="fas fa-sync-alt"></i>
@@ -191,7 +191,7 @@
                         <th>عدد الطلاب</th>
                         <th>المستوى</th>
                         <th>الحالة</th>
-                        <th>الإجراءات</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -221,19 +221,7 @@
                                 {{ $course->status == 'active' ? 'نشط' : 'معطل' }}
                             </span>
                         </td>
-                        <td>
-                            <div class="action-buttons" style="display: flex; gap: 10px;">
-                                <a href="{{ route('courses.show', $course->id) }}" style="color: #17a2b8;">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                <a href="{{ route('courses.edit', $course->id) }}" style="color: #ffc107;">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <button type="button" onclick="confirmDelete('{{ $course->id }}', this)" style="color: #dc3545; background: none; border: none; cursor: pointer;">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
+
                     </tr>
                     @endforeach
                 </tbody>
