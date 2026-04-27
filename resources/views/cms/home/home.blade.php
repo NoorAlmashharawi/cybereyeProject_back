@@ -4,8 +4,128 @@
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('cms/css/style.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-    /* تنسيق خاص للقاموس */
+    /* تنسيق القاموس الذكي */
+    .dictionary-section {
+        padding: 80px 20px;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+        direction: rtl;
+    }
+
+    .dictionary-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    .dictionary-title {
+        font-size: 2rem;
+        color: #1a237e;
+        margin-bottom: 10px;
+    }
+
+    .dictionary-subtitle {
+        color: #666;
+        margin-bottom: 30px;
+    }
+
+    .search-box {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 15px 20px;
+        font-size: 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 50px;
+        outline: none;
+        transition: all 0.3s;
+        font-family: 'Cairo', sans-serif;
+    }
+
+    .search-input:focus {
+        border-color: #1a237e;
+        box-shadow: 0 0 10px rgba(26, 35, 126, 0.2);
+    }
+
+    .search-input::placeholder {
+        color: #aaa;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #1a237e;
+        font-size: 1.2rem;
+    }
+
+    .result-card {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 25px;
+        margin-top: 20px;
+        text-align: right;
+        display: none;
+        border-right: 4px solid #4caf50;
+    }
+
+    .result-term {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a237e;
+        margin-bottom: 10px;
+    }
+
+    .result-definition {
+        color: #444;
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+
+    .result-category {
+        display: inline-block;
+        background: #e8eaf6;
+        color: #1a237e;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        margin-top: 10px;
+    }
+
+    .result-example {
+        background: #fff3e0;
+        padding: 12px;
+        border-radius: 10px;
+        margin-top: 15px;
+        color: #e65100;
+        font-size: 0.9rem;
+    }
+
+    .not-found {
+        background: #ffebee;
+        color: #c62828;
+        padding: 20px;
+        border-radius: 15px;
+        margin-top: 20px;
+        display: none;
+    }
+
+    .loading-spinner {
+        display: none;
+        margin-top: 20px;
+        color: #1a237e;
+    }
+
+    /* سلايد شو القاموس القديم */
     .con {
         padding: 50px 20px;
         background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
@@ -102,16 +222,12 @@
     }
 
     @media (max-width: 768px) {
-        .con h1 {
-            font-size: 2rem;
+        .dictionary-container {
+            margin: 0 20px;
+            padding: 25px;
         }
-
         .mySlides img {
             height: 250px;
-        }
-
-        .term-caption h3 {
-            font-size: 1rem;
         }
     }
 </style>
@@ -146,213 +262,290 @@
     </div>
 </section>
 
- <!-- Cybersecurity Dictionary -->
- <div class="con" id="dictionary">
+<!-- ========== القاموس الذكي (البحث) ========== -->
+<div class="dictionary-section" id="dictionary">
+    <div class="dictionary-container">
+        <h2 class="dictionary-title">📖 القاموس الذكي 🔍</h2>
+        <p class="dictionary-subtitle">ابحث عن أي مصطلح أمني أو تقني</p>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="مثال: Phishing, Malware, Firewall, Laravel..." autocomplete="off">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+
+        <div class="loading-spinner" id="loadingSpinner">
+            <i class="fas fa-spinner fa-spin"></i> جاري البحث...
+        </div>
+
+        <div class="result-card" id="resultCard">
+            <div class="result-term" id="resultTerm"></div>
+            <div class="result-definition" id="resultDefinition"></div>
+            <div class="result-category" id="resultCategory"></div>
+            <div class="result-example" id="resultExample"></div>
+        </div>
+
+        <div class="not-found" id="notFound">
+            <i class="fas fa-times-circle"></i> <span id="notFoundMessage"></span>
+        </div>
+    </div>
+</div>
+
+<!-- ========== السلايد شو (قاموس الصور) ========== -->
+<div class="con">
     <h1>Cybersecurity Dictionary</h1>
-    <div class="containar">
+    <div class="slideshow-container">
         <div class="mySlides">
-            <img src="../cyber/backdoor.jpg" alt="Backdoor">
+            <img src="{{ asset('cms/cyber/backdoor.jpg') }}" alt="Backdoor">
+            <div class="term-caption">
+                <h3>Backdoor</h3>
+                <p>طريقة سرية للوصول إلى النظام</p>
+            </div>
         </div>
         <div class="mySlides">
-            <img src="../cyber/botnet.png" alt="Botnet">
+            <img src="{{ asset('cms/cyber/botnet.png') }}" alt="Botnet">
+            <div class="term-caption">
+                <h3>Botnet</h3>
+                <p>شبكة من الأجهزة المخترقة</p>
+            </div>
         </div>
         <div class="mySlides">
-            <img src="../cyber/fa.jpg" alt="Firewall">
+            <img src="{{ asset('cms/cyber/fa.jpg') }}" alt="Firewall">
+            <div class="term-caption">
+                <h3>Firewall</h3>
+                <p>جدار حماية يمنع الدخول غير المصرح به</p>
+            </div>
         </div>
         <div class="mySlides">
-            <img src="../cyber/firewall.png" alt="Firewall">
+            <img src="{{ asset('cms/cyber/firewall.png') }}" alt="Firewall">
+            <div class="term-caption">
+                <h3>Firewall</h3>
+                <p>نظام أمان يراقب حركة البيانات</p>
+            </div>
         </div>
         <div class="mySlides">
-            <img src="../cyber/hardening.png" alt="Hardening">
+            <img src="{{ asset('cms/cyber/hardening.png') }}" alt="Hardening">
+            <div class="term-caption">
+                <h3>Hardening</h3>
+                <p>عملية تأمين النظام</p>
+            </div>
         </div>
         <div class="mySlides">
-            <img src="../cyber/malware.jpg" alt="Malware">
+            <img src="{{ asset('cms/cyber/malware.jpg') }}" alt="Malware">
+            <div class="term-caption">
+                <h3>Malware</h3>
+                <p>برمجيات ضارة</p>
+            </div>
         </div>
         <div class="mySlides">
             <img src="{{ asset('cms/cyber/pishing.jpg') }}" alt="Phishing">
+            <div class="term-caption">
+                <h3>Phishing</h3>
+                <p>هندسة اجتماعية لسرقة البيانات</p>
+            </div>
         </div>
         <div class="mySlides">
             <img src="{{ asset('cms/cyber/ransomware.jpg') }}" alt="Ransomware">
+            <div class="term-caption">
+                <h3>Ransomware</h3>
+                <p>برمجيات فدية تطلب دفع فدية</p>
+            </div>
         </div>
         <div class="mySlides">
             <img src="{{ asset('cms/cyber/social.jpg') }}" alt="Social Engineering">
+            <div class="term-caption">
+                <h3>Social Engineering</h3>
+                <p>هندسة اجتماعية لخداع المستخدمين</p>
+            </div>
         </div>
         <div class="mySlides">
             <img src="{{ asset('cms/cyber/spyware.png') }}" alt="Spyware">
+            <div class="term-caption">
+                <h3>Spyware</h3>
+                <p>برامج تجسس</p>
+            </div>
         </div>
         <div class="mySlides">
             <img src="{{ asset('cms/cyber/vpn.jpg') }}" alt="VPN">
+            <div class="term-caption">
+                <h3>VPN</h3>
+                <p>شبكة خاصة افتراضية</p>
+            </div>
         </div>
         <div class="mySlides">
             <img src="{{ asset('cms/cyber/trojan.jpg') }}" alt="Trojan">
+            <div class="term-caption">
+                <h3>Trojan</h3>
+                <p>حصان طروادة</p>
+            </div>
         </div>
         <div class="mySlides">
             <img src="{{ asset('cms/cyber/brute.png') }}" alt="Brute Force">
+            <div class="term-caption">
+                <h3>Brute Force</h3>
+                <p>هجوم القوة العشوائية</p>
+            </div>
         </div>
     </div>
 
     <div style="text-align: center; margin-top: 10px;">
-        <span class="dot" onclick="enter(0)"></span>
-        <span class="dot" onclick="enter(1)"></span>
-        <span class="dot" onclick="enter(2)"></span>
-        <span class="dot" onclick="enter(3)"></span>
-        <span class="dot" onclick="enter(4)"></span>
-        <span class="dot" onclick="enter(5)"></span>
-        <span class="dot" onclick="enter(6)"></span>
-        <span class="dot" onclick="enter(7)"></span>
-        <span class="dot" onclick="enter(8)"></span>
-        <span class="dot" onclick="enter(9)"></span>
-        <span class="dot" onclick="enter(10)"></span>
-        <span class="dot" onclick="enter(11)"></span>
-        <span class="dot" onclick="enter(12)"></span>
+        <span class="dot" onclick="currentSlide(0)"></span>
+        <span class="dot" onclick="currentSlide(1)"></span>
+        <span class="dot" onclick="currentSlide(2)"></span>
+        <span class="dot" onclick="currentSlide(3)"></span>
+        <span class="dot" onclick="currentSlide(4)"></span>
+        <span class="dot" onclick="currentSlide(5)"></span>
+        <span class="dot" onclick="currentSlide(6)"></span>
+        <span class="dot" onclick="currentSlide(7)"></span>
+        <span class="dot" onclick="currentSlide(8)"></span>
+        <span class="dot" onclick="currentSlide(9)"></span>
+        <span class="dot" onclick="currentSlide(10)"></span>
+        <span class="dot" onclick="currentSlide(11)"></span>
+        <span class="dot" onclick="currentSlide(12)"></span>
     </div>
 </div>
 
-    <!-- Cybersecurity Roadmap -->
-    <div class="roadmap" id="roadmap">
-        <h1>Cybersecurity Roadmap</h1>
-        <div class="step">
-            <div class="step-content">
-                <h2>Operating Systems</h2>
-                <p>Windows, Linux</p>
-            </div>
-            <div class="step-actions">
-                <a href="../html/courses.html#windows" class="btn">Windows</a>
-                <a href="../html/courses.html#linux" class="btn">Linux</a>
-            </div>
+<!-- Cybersecurity Roadmap -->
+<div class="roadmap" id="roadmap">
+    <h1>Cybersecurity Roadmap</h1>
+    <div class="step">
+        <div class="step-content">
+            <h2>Operating Systems</h2>
+            <p>Windows, Linux</p>
         </div>
-
-        <div class="step">
-            <div class="step-content">
-                <h2>Networking</h2>
-                <p>IP Address, DNS, HTTP/HTTPS, TCP/UDP, Ports, Firewalls, VPN, OSI Model, Subnetting</p>
-            </div>
-            <div class="step-actions">
-                <a href="../html/courses.html#network" class="btn">Networking</a>
-            </div>
-        </div>
-
-        <div class="step">
-            <div class="step-content">
-                <h2>Programming</h2>
-                <p>Java, Bash/Shell, JavaScript</p>
-            </div>
-            <div class="step-actions">
-                <a href="../html/courses.html#java" class="btn">Java</a>
-            </div>
-        </div>
-
-        <div class="step">
-            <div class="step-content">
-                <h2>Security Fundamentals</h2>
-                <p>CIA, Malware, Phishing, Social Engineering, Encryption, Authentication, Authorization</p>
-            </div>
-            <div class="step-actions">
-                <a href="../html/courses.html#security" class="btn">Security</a>
-            </div>
-        </div>
-
-        <div class="step">
-            <div class="step-content">
-                <h2>Ethical Hacking</h2>
-                <p>Install (Kali Linux), Tools (Nmap, Metasploit, Burp Suite, Wireshark)</p>
-            </div>
-            <div class="step-actions">
-                <a href="../html/courses.html#ethical" class="btn">Ethical Hacking</a>
-            </div>
-        </div>
-
-        <div class="step">
-            <div class="step-content">
-                <h2>Penetration Testing</h2>
-                <p>Learn (SQL Injection, XSS, CSRF, File Upload Attacks, Brute Force) Practice on (TryHackMe, Hack The Box)</p>
-            </div>
-            <div class="step-actions">
-                <a href="../html/courses.html#penetration" class="btn">Penetration Testing</a>
-            </div>
-        </div>
-
-        <div class="step">
-            <div class="step-content">
-                <h2>Web Security</h2>
-                <p>How websites work, Cookies & Sessions, APIs, Authentication Bugs</p>
-            </div>
-            <div class="step-actions">
-                <a href="../html/courses.html#websec" class="btn">Web Security</a>
-            </div>
-        </div>
-
-        <div class="step">
-            <div class="step-content">
-                <h2>Choose a Path</h2>
-                <p>Red Team, Blue Team, Purple Team, SOC Analyst, Cloud Security, Digital Forensics, Malware Analysis</p>
-            </div>
-            <div class="step-actions">
-                <a href="../html/courses.html" class="btn">Explore Paths</a>
-            </div>
+        <div class="step-actions">
+            <a href="../html/courses.html#windows" class="btn">Windows</a>
+            <a href="../html/courses.html#linux" class="btn">Linux</a>
         </div>
     </div>
 
-     <!-- Resources -->
-     <div class="ex" id="resources">
-        <h1>Resources</h1>
-        <div class="external">
-            <div class="card">
-                <img src="{{ asset('cms/img/zero') }}" alt="Al Zero">
-                <h3>Al Zero Academy</h3>
-                <p>منصة عربية لتعلم البرمجة والتصميم والمجالات التقنية مجاناً.</p>
-                <a href="https://academy.zer0s.com/" target="_blank">Visit</a>
-            </div>
-
-            <div class="card">
-                <img src="{{ asset('cms/img/cisco.jpg') }}" alt="Cisco">
-                <h3>Cisco Networking Academy</h3>
-                <p>منصة عالمية لتعلم الشبكات والأمن السيبراني والشهادات المعتمدة.</p>
-                <a href="https://www.netacad.com/" target="_blank">Visit</a>
-            </div>
-
-            <div class="card">
-                <img src="{{ asset('cms/img/udemy.png') }}" alt="Udemy">
-                <h3>Udemy</h3>
-                <p>أكبر منصة تعليمية عالميًا بها آلاف الدورات في كل المجالات.</p>
-                <a href="https://www.udemy.com/" target="_blank">Visit</a>
-            </div>
-
-            <div class="card">
-                <img src="{{ asset('cms/img/coursera.png') }}" alt="Coursera">
-                <h3>Coursera</h3>
-                <p>منصة تعليمية عالمية بشهادات جامعية ودورات من أفضل الجامعات.</p>
-                <a href="https://www.coursera.org/" target="_blank">Visit</a>
-            </div>
-
-            <div class="card">
-                <img src="{{ asset('cms/img/khan.png') }}" alt="Khan Academy">
-                <h3>Khan Academy</h3>
-                <p>منصة تعليمية مجانية لتعلم العلوم والرياضيات والبرمجة لجميع الأعمار.</p>
-                <a href="https://www.khanacademy.org/" target="_blank">Visit</a>
-            </div>
+    <div class="step">
+        <div class="step-content">
+            <h2>Networking</h2>
+            <p>IP Address, DNS, HTTP/HTTPS, TCP/UDP, Ports, Firewalls, VPN, OSI Model, Subnetting</p>
+        </div>
+        <div class="step-actions">
+            <a href="../html/courses.html#network" class="btn">Networking</a>
         </div>
     </div>
 
+    <div class="step">
+        <div class="step-content">
+            <h2>Programming</h2>
+            <p>Java, Bash/Shell, JavaScript</p>
+        </div>
+        <div class="step-actions">
+            <a href="../html/courses.html#java" class="btn">Java</a>
+        </div>
+    </div>
 
-   <!-- About Section -->
-   <div class="about" id="about">
+    <div class="step">
+        <div class="step-content">
+            <h2>Security Fundamentals</h2>
+            <p>CIA, Malware, Phishing, Social Engineering, Encryption, Authentication, Authorization</p>
+        </div>
+        <div class="step-actions">
+            <a href="../html/courses.html#security" class="btn">Security</a>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-content">
+            <h2>Ethical Hacking</h2>
+            <p>Install (Kali Linux), Tools (Nmap, Metasploit, Burp Suite, Wireshark)</p>
+        </div>
+        <div class="step-actions">
+            <a href="../html/courses.html#ethical" class="btn">Ethical Hacking</a>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-content">
+            <h2>Penetration Testing</h2>
+            <p>Learn (SQL Injection, XSS, CSRF, File Upload Attacks, Brute Force) Practice on (TryHackMe, Hack The Box)</p>
+        </div>
+        <div class="step-actions">
+            <a href="../html/courses.html#penetration" class="btn">Penetration Testing</a>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-content">
+            <h2>Web Security</h2>
+            <p>How websites work, Cookies & Sessions, APIs, Authentication Bugs</p>
+        </div>
+        <div class="step-actions">
+            <a href="../html/courses.html#websec" class="btn">Web Security</a>
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-content">
+            <h2>Choose a Path</h2>
+            <p>Red Team, Blue Team, Purple Team, SOC Analyst, Cloud Security, Digital Forensics, Malware Analysis</p>
+        </div>
+        <div class="step-actions">
+            <a href="../html/courses.html" class="btn">Explore Paths</a>
+        </div>
+    </div>
+</div>
+
+<!-- Resources -->
+<div class="ex" id="resources">
+    <h1>Resources</h1>
+    <div class="external">
+        <div class="card">
+            <img src="{{ asset('cms/img/zero') }}" alt="Al Zero">
+            <h3>Al Zero Academy</h3>
+            <p>منصة عربية لتعلم البرمجة والتصميم والمجالات التقنية مجاناً.</p>
+            <a href="https://academy.zer0s.com/" target="_blank">Visit</a>
+        </div>
+
+        <div class="card">
+            <img src="{{ asset('cms/img/cisco.jpg') }}" alt="Cisco">
+            <h3>Cisco Networking Academy</h3>
+            <p>منصة عالمية لتعلم الشبكات والأمن السيبراني والشهادات المعتمدة.</p>
+            <a href="https://www.netacad.com/" target="_blank">Visit</a>
+        </div>
+
+        <div class="card">
+            <img src="{{ asset('cms/img/udemy.png') }}" alt="Udemy">
+            <h3>Udemy</h3>
+            <p>أكبر منصة تعليمية عالميًا بها آلاف الدورات في كل المجالات.</p>
+            <a href="https://www.udemy.com/" target="_blank">Visit</a>
+        </div>
+
+        <div class="card">
+            <img src="{{ asset('cms/img/coursera.png') }}" alt="Coursera">
+            <h3>Coursera</h3>
+            <p>منصة تعليمية عالمية بشهادات جامعية ودورات من أفضل الجامعات.</p>
+            <a href="https://www.coursera.org/" target="_blank">Visit</a>
+        </div>
+
+        <div class="card">
+            <img src="{{ asset('cms/img/khan.png') }}" alt="Khan Academy">
+            <h3>Khan Academy</h3>
+            <p>منصة تعليمية مجانية لتعلم العلوم والرياضيات والبرمجة لجميع الأعمار.</p>
+            <a href="https://www.khanacademy.org/" target="_blank">Visit</a>
+        </div>
+    </div>
+</div>
+
+<!-- About Section -->
+<div class="about" id="about">
     <h1>Web <span>About</span></h1>
     <div class="about-main">
         <div class="about-image">
             <div class="about-small-image">
-                <img src="{{ asset('cms/admins/baraa.jpg') }}" onclick="functio(this)" alt="Thumbnail 1">
-                <img src="{{ asset('cms/admins/noor.jpg') }}" onclick="functio(this)" alt="Thumbnail 2">
-                <img src="{{ asset('cms/admins/saja.jpg') }}" onclick="functio(this)" alt="Thumbnail 3">
-                <img src="{{ asset('cms/admins/bassmah.jpg') }}" onclick="functio(this)" alt="Thumbnail 4">
-                <img src="{{ asset('cms/admins/safa.jpg') }}" onclick="functio(this)" alt="Thumbnail 5">
+                <img src="{{ asset('cms/admins/baraa.jpg') }}" onclick="changeImage(this)" alt="Thumbnail 1">
+                <img src="{{ asset('cms/admins/noor.jpg') }}" onclick="changeImage(this)" alt="Thumbnail 2">
+                <img src="{{ asset('cms/admins/saja.jpg') }}" onclick="changeImage(this)" alt="Thumbnail 3">
+                <img src="{{ asset('cms/admins/bassmah.jpg') }}" onclick="changeImage(this)" alt="Thumbnail 4">
+                <img src="{{ asset('cms/admins/safa.jpg') }}" onclick="changeImage(this)" alt="Thumbnail 5">
             </div>
-
             <div class="image-contaner">
                 <img src="{{ asset('cms/img/NetSec.jpg') }}" id="imagbox" alt="Main Image">
             </div>
         </div>
-
         <div class="about-text">
             <p>CyberEye is a comprehensive cybersecurity learning platform designed to help individuals and professionals enhance their security skills. Our mission is to make cybersecurity education accessible to everyone through structured courses, practical exercises, and real-world scenarios.</p>
             <p>We offer a wide range of courses covering fundamental to advanced topics in cybersecurity. Our experienced instructors and up-to-date curriculum ensure that you gain the skills needed in today's digital world.</p>
@@ -370,14 +563,12 @@
                 <div class="card-top">
                     <div class="profile">
                         <div class="profile-image">
-                            {{-- عرض صورة الطالب أو افتراضية --}}
                             <img src="{{ $review->user->profile_image ? asset('storage/' . $review->user->profile_image) : asset('cms/img/student1.jpg') }}" alt="Student">
                         </div>
                         <div class="name">
                             <strong>{{ $review->user->username }}</strong>
                             <p style="font-size: 0.7rem; color: #666; margin: 0;">Course: {{ $review->course->course_name }}</p>
                             <div class="like">
-                                {{-- توليد النجوم بناءً على التقييم --}}
                                 @for($i = 1; $i <= 5; $i++)
                                     <i class="{{ $i <= $review->rating ? 'fa-solid' : 'fa-regular' }} fa-star"></i>
                                 @endfor
@@ -385,7 +576,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="comment">
                     <p>"{{ Str::limit($review->comment, 150) }}"</p>
                 </div>
@@ -395,22 +585,21 @@
         @endforelse
     </div>
 </div>
-
-
 @endsection
 
 @section('scripts')
 <script src="{{ asset('cms/js/index.js') }}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
+    // السلايد شو
     let slideIndex = 0;
     let slides;
     let dots;
-    let slideInterval;
 
     function initSlideshow() {
         slides = document.getElementsByClassName("mySlides");
         dots = document.getElementsByClassName("dot");
-
         if (slides.length > 0) {
             showSlides(slideIndex);
             startAutoSlide();
@@ -419,15 +608,12 @@
 
     function showSlides(n) {
         if (!slides || slides.length === 0) return;
-
-        if (n >= slides.length) { slideIndex = 0 }
-        if (n < 0) { slideIndex = slides.length - 1 }
-
+        if (n >= slides.length) slideIndex = 0;
+        if (n < 0) slideIndex = slides.length - 1;
         for (let i = 0; i < slides.length; i++) {
             slides[i].style.display = "none";
             if (dots[i]) dots[i].classList.remove('active');
         }
-
         slides[slideIndex].style.display = "block";
         if (dots[slideIndex]) dots[slideIndex].classList.add('active');
     }
@@ -438,6 +624,7 @@
         resetAutoSlide();
     }
 
+    let slideInterval;
     function startAutoSlide() {
         if (slideInterval) clearInterval(slideInterval);
         slideInterval = setInterval(function() {
@@ -452,17 +639,62 @@
         startAutoSlide();
     }
 
-
-    document.addEventListener('DOMContentLoaded', function() {
-        initSlideshow();
-    });
-
-
+    // تغيير الصورة الرئيسية في قسم About
     function changeImage(element) {
         document.getElementById('imagbox').src = element.src;
     }
 
+    // ========== القاموس الذكي (AJAX Search) ==========
+    let searchTimeout;
 
+    $('#searchInput').on('keyup', function() {
+        clearTimeout(searchTimeout);
+        let term = $(this).val();
+        if (term.length < 2) {
+            $('#resultCard').hide();
+            $('#notFound').hide();
+            $('#loadingSpinner').hide();
+            return;
+        }
+        searchTimeout = setTimeout(() => performSearch(term), 500);
+    });
 
+    function performSearch(term) {
+        $('#loadingSpinner').show();
+        $('#resultCard').hide();
+        $('#notFound').hide();
+
+        $.ajax({
+            url: '{{ route("dictionary.search") }}',
+            type: 'POST',
+            data: { term: term, _token: '{{ csrf_token() }}' },
+            success: function(response) {
+                $('#loadingSpinner').hide();
+                if (response.found) {
+                    $('#resultTerm').text(response.term);
+                    $('#resultDefinition').text(response.definition);
+                    $('#resultCategory').text(response.category || 'عام');
+                    if (response.example) {
+                        $('#resultExample').html('<i class="fas fa-lightbulb"></i> مثال: ' + response.example).show();
+                    } else {
+                        $('#resultExample').hide();
+                    }
+                    $('#resultCard').show();
+                } else {
+                    $('#notFoundMessage').text(response.message);
+                    $('#notFound').show();
+                }
+            },
+            error: function() {
+                $('#loadingSpinner').hide();
+                $('#notFoundMessage').text('حدث خطأ أثناء البحث، حاول مرة أخرى');
+                $('#notFound').show();
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initSlideshow();
+    });
 </script>
 @endsection

@@ -442,6 +442,12 @@
                         <a href="{{ route('quizzs.index') }}"><i class="fas fa-list"></i><span>جميع الكويزات</span></a>
                     </div>
                 </div>
+
+
+                <a href="{{ route('dictionary.index') }}" class="admin-menu-item">
+                    <i class="fas fa-book"></i>
+                    <span>القاموس الذكي </span>
+                </a>
             @endif
         
             <!-- ========== الطالب فقط ========== -->

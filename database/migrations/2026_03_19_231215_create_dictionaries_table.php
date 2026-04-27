@@ -6,25 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
-        Schema::create('dictionaries', function (Blueprint $table) {
+        Schema::create('dictionary_entries', function (Blueprint $table) {
             $table->id();
-        $table->string('term')->nullable(); 
-        $table->text('definition')->nullable(); 
-        $table->string('img')->nullable(); 
-        $table->timestamps();
+            $table->string('term');          
+            $table->text('definition');     
+            $table->string('category')->nullable(); 
+            $table->string('example')->nullable(); 
+            $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('dictionaries');
+        Schema::dropIfExists('dictionary_entries');
     }
 };

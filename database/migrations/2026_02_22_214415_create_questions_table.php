@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
 
-            $table->string('title');                   // نص السؤال
-            $table->enum('type', ['mc', 'tf']);        // mc = اختيار من متعدد، tf = صح/خطأ
-            $table->json('options')->nullable();       // الخيارات (مصفوفة) فقط لـ mc
-            $table->string('correct_answer');          // الإجابة الصحيحة (نص)
-            $table->integer('points')->default(1);     // درجة السؤال
+            $table->string('title');                 
+            $table->enum('type', ['mc', 'tf']);        
+            $table->json('options')->nullable();      
+            $table->string('correct_answer');         
+            $table->integer('points')->default(1);    
             $table->timestamps();
             $table->softDeletes();
             $table->foreignId('quizz_id')->constrained()->onDelete('cascade');

@@ -95,7 +95,13 @@ Route::prefix('cms/home')->group(function(){
     Route::view('contact', 'cms.home.contact')->name('contact');
     Route::post('/contact/send', [ContactMessageController::class, 'store'])->name('contact.store');
     Route::get('/', [DictionaryController::class, 'home'])->name('home');
+Route::get('/dictionary', [DictionaryController::class, 'index'])->name('dictionary.index');
+Route::resource('dictionary', DictionaryController::class);
+Route::post('/dictionary/search', [DictionaryController::class, 'search'])->name('dictionary.search');
+
+
 });
+
 
 
 // ==================== AI Chat ====================

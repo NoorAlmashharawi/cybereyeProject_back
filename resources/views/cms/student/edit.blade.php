@@ -109,14 +109,14 @@ function performUpdate(id) {
     
     axios.post('/cms/student/students_update/' + id, formData)
     .then(function (response) {
-        // إذا كان toastr غير معرف، سيستخدم alert عادي حتى لا ينهار الكود
+  
         if (typeof toastr !== 'undefined') {
             toastr.success(response.data.title);
         } else {
             alert(response.data.title);
         }
         
-        // العودة لصفحة الجدول بعد النجاح
+     
         setTimeout(() => {
             window.location.href = '/cms/student/students';
         }, 1000);
