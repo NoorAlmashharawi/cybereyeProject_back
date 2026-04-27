@@ -65,7 +65,7 @@
         .close-modal:hover { color: #1abc9c; }
         textarea { background: #071214; color: white; border: 1px solid #14262e; border-radius: 12px; padding: 12px; width: 100%; font-family: inherit; }
         @media (max-width: 800px) { .sidebar { width: 100%; } .lesson-header { flex-direction: column; align-items: flex-start; } }
-   
+
    /* ========== زر الكويز الرئيسي ========== */
 .btn-gradient {
     background: #1e293b;
