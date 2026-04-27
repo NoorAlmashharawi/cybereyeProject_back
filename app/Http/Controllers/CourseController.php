@@ -138,7 +138,7 @@ class CourseController extends Controller
         $user = auth()->user();
 
         if ($user && $user->role == 'instructor') {
-           
+
             $instructorId = $user->actor_id;
             return view('cms.course.create', compact('categories', 'instructorId'));
         } else {
