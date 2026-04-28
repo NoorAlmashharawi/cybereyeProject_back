@@ -481,7 +481,7 @@
                             <p class="course-description">{{ Str::limit($course->short_description ?? 'لا يوجد وصف', 100) }}</p>
                             <div class="course-actions">
                                 @if($isEnrolled)
-                                    <a href="{{ route('videos.index') }}" class="btn btn-primary">
+                                    <a href="{{ route('course.player', $course->id) }}" class="btn btn-primary">
                                         <i class="fas fa-play"></i> متابعة
                                     </a>
                                 @else

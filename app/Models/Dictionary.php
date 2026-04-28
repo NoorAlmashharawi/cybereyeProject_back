@@ -6,5 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Dictionary extends Model
 {
-    protected $fillable = ['img'];
+    protected $table = 'dictionary_entries';
+    
+    protected $fillable = [
+        'term', 'definition', 'category', 'example'
+    ];
 }

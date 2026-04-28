@@ -2,35 +2,28 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Dictionary;
+use App\Models\DictionaryEntry;
+use Illuminate\Database\Seeder;
 
 class DictionarySeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
         $terms = [
-            ['term' => 'Backdoor', 'definition' => 'ثغرة خلفية تسمح للمخترق بالدخول', 'img' => 'cms/cyber/backdoor.jpg'],
-            ['term' => 'Botnet', 'definition' => 'شبكة من الأجهزة المخترقة', 'img' => 'cms/cyber/botnet.png'],
-            ['term' => 'Firewall', 'definition' => 'جدار ناري لحماية الشبكة', 'img' => 'cms/cyber/firewall.png'],
-            ['term' => 'Malware', 'definition' => 'برمجية خبيثة', 'img' => 'cms/cyber/malware.jpg'],
-            ['term' => 'Phishing', 'definition' => 'احتيال إلكتروني', 'img' => 'cms/cyber/phishing.jpg'],
-            ['term' => 'Ransomware', 'definition' => 'برمجية فدية', 'img' => 'cms/cyber/ransomware.jpg'],
-            ['term' => 'Social Engineering', 'definition' => 'هندسة اجتماعية', 'img' => 'cms/cyber/social.jpg'],
-            ['term' => 'Spyware', 'definition' => 'برمجية تجسس', 'img' => 'cms/cyber/spyware.png'],
-            ['term' => 'Trojan', 'definition' => 'حصان طروادة', 'img' => 'cms/cyber/trojan.jpg'],
-            ['term' => 'VPN', 'definition' => 'شبكة خاصة افتراضية', 'img' => 'cms/cyber/vpn.jpg'],
-            ['term' => 'Brute Force', 'definition' => 'هجوم القوة الغاشمة', 'img' => 'cms/cyber/brute.png'],
+            ['term' => 'Phishing', 'definition' => 'هي عملية احتيال إلكتروني للحصول على معلومات حساسة مثل كلمات المرور من خلال انتحال شخصية جهة موثوقة.', 'category' => 'أمن سيبراني', 'example' => 'تلقى بريداً إلكترونياً يطلب منه تحديث كلمة المرور من رابط وهمي.'],
+            ['term' => 'Malware', 'definition' => 'برامج ضارة تهدف إلى اختراق أو إتلاف الأجهزة والبيانات.', 'category' => 'أمن سيبراني', 'example' => 'فيروس، دودة، حصان طروادة، برامج فدية.'],
+            ['term' => 'Firewall', 'definition' => 'نظام أمان يراقب ويمنع حركة البيانات غير المصرح بها.', 'category' => 'أمن سيبراني', 'example' => 'جدار حماية يمنع الدخول غير المصرح به للشبكة.'],
+            ['term' => 'Encryption', 'definition' => 'تحويل البيانات إلى صيغة غير قابلة للقراءة لحمايتها.', 'category' => 'أمن سيبراني', 'example' => 'تشفير البيانات في تطبيقات المراسلة مثل واتساب.'],
+            ['term' => 'Laravel', 'definition' => 'إطار عمل (Framework) مفتوح المصدر لتطوير تطبيقات الويب بلغة PHP.', 'category' => 'برمجيات', 'example' => 'تم بناء هذا المشروع باستخدام Laravel 12.'],
+            ['term' => 'Middleware', 'definition' => 'طبقة وسيطة بين الطلب والاستجابة تستخدم لفحص الطلبات.', 'category' => 'Laravel', 'example' => 'Middleware auth:admin لحماية لوحة التحكم.'],
+            ['term' => 'Eloquent', 'definition' => 'ORM المدمج في Laravel للتعامل مع قاعدة البيانات بسهولة.', 'category' => 'Laravel', 'example' => 'User::where("role", "admin")->get();'],
         ];
-
-        foreach ($terms as $item) {
-            Dictionary::create([
-                'term' => $item['term'],
-                'definition' => $item['definition'],
-                'img' => $item['img'],  
-            ]);
+        
+        foreach ($terms as $term) {
+            Dictionary::create($term);
         }
         
-        $this->command->info('تم إضافة ' . Dictionary::count() . ' صور');
+        echo " تم إدخال " . count($terms) . " مصطلح في القاموس\n";
     }
 }

@@ -14,47 +14,48 @@ class StudentDashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
-        
+
         $student = null;
         if ($user->actor_type === 'App\Models\Student') {
             $student = Student::find($user->actor_id);
         }
-        
+
         // إذا ما في طالب
         if (!$student) {
             return redirect('/cms/student/login')->with('error', 'لم يتم العثور على بيانات الطالب');
         }
-        
-        // الكورسات المسجل فيها الطالب
+
+        // الكورسات المسجل فيها الطالب (نشطة فقط)
         $enrolledCourses = $student->courses()
-        ->with(['instructor.user1'])
-        ->get();
-        
-        // جميع الكورسات المتاحة
-        $allCourses = Course::with('instructor')->get();
-        
+            ->where('status', 'active')
+            ->with(['instructor.user1'])
+            ->get();
+
+        // جميع الكورسات المتاحة (نشطة فقط)
+        $allCourses = Course::where('status', 'active')->with('instructor')->get();
+
         // عدد الشهادات
         $certificatesCount = Certificate::where('student_id', $student->id)->count();
-        
+
         // الشهادات
         $certificates = Certificate::where('student_id', $student->id)
             ->with('course', 'instructor')
             ->latest()
             ->get();
-        
+
         // تقدم الطالب في كل كورس
         $coursesProgress = [];
         foreach ($enrolledCourses as $course) {
             $progress = $this->getCourseProgress($student->id, $course->id);
             $coursesProgress[$course->id] = $progress;
         }
-        
+
         return view('cms.studentDash.dashboard', compact(
-         
-            'student', 
-            'user', 
-            'enrolledCourses', 
-            'allCourses', 
+
+            'student',
+            'user',
+            'enrolledCourses',
+            'allCourses',
             'certificatesCount',
             'certificates',
             'coursesProgress'
@@ -62,7 +63,7 @@ class StudentDashboardController extends Controller
     }
 
 
-    
+
     private function getCourseProgress($studentId, $courseId)
     {
         $totalVideos = \App\Models\Video::where('course_id', $courseId)->count();
@@ -70,7 +71,7 @@ class StudentDashboardController extends Controller
             ->where('course_id', $courseId)
             ->where('completed', true)
             ->count();
-        
+
         return [
             'total' => $totalVideos,
             'completed' => $completedVideos,
@@ -78,48 +79,57 @@ class StudentDashboardController extends Controller
             'is_completed' => $totalVideos > 0 && $completedVideos >= $totalVideos
         ];
     }
-    
+
     public function enroll(Request $request)
     {
         $user = Auth::user();
-        
+
         // الحصول على الطالب
         if ($user->actor_type === 'App\Models\Student') {
             $student = Student::find($user->actor_id);
             $courseId = $request->course_id;
-            $student->courses()->attach($courseId);
+            // يمنع التسجيل في كورس غير نشط
+            $course = Course::find($courseId);
+            if ($course && $course->status == 'active') {
+                $student->courses()->attach($courseId);
+            } else {
+                return redirect()->back()->with('error', 'لا يمكن التسجيل في كورس غير نشط');
+            }
         }
-        
+
         return redirect()->back()->with('success', 'تم التسجيل في الكورس بنجاح');
     }
-    
+
     public function myCourses()
     {
         $user = Auth::user();//////1111111111111
-        
+
         if ($user->actor_type === 'App\Models\Student') {
             $student = Student::find($user->actor_id);
-            $courses = $student->courses()->with('instructor')->get();
+            $courses = $student->courses()
+                ->where('status', 'active')
+                ->with('instructor')
+                ->get();
             return view('cms.studentDash.my-courses', compact('courses'));
         }
-        
+
         return redirect('/cms/studentDash/dashboard');
     }
-    
+
     public function myCertificates()
     {
         $user = Auth::user(); ///11111111111
-        
+
         if ($user->actor_type === 'App\Models\Student') {
             $student = Student::find($user->actor_id);
             $certificates = Certificate::where('student_id', $student->id)
                 ->with('course', 'instructor')
                 ->latest()
                 ->get();
-            
+
             return view('cms.certificates.show', compact('certificates'));
         }
-        
+
         return redirect('/cms/studentDash/dashboard');
     }
 }

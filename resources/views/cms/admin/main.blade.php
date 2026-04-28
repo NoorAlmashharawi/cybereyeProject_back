@@ -324,6 +324,8 @@
 
 
 @if(auth('student')->check())
+
+
 <div class="student-modern-dashboard" dir="rtl" style="padding: 10px; font-family: 'Cairo', sans-serif;">
 
     <div style="background: linear-gradient(105deg, #1e293b 0%, #334155 100%); border-radius: 24px; padding: 35px; color: white; margin-bottom: 30px; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
@@ -333,7 +335,7 @@
             </div>
             <div>
                 <span style="background: rgba(67, 97, 238, 0.3); padding: 4px 12px; border-radius: 50px; font-size: 0.75rem; color: #4cc9f0; font-weight: 700;">لوحة الطالب</span>
-                <h1 style="margin: 5px 0; font-weight: 800; font-size: 1.8rem;">مرحباً، {{ $user->username }} ✨</h1>
+                <h1 style="margin: 5px 0; font-weight: 800; font-size: 1.8rem;">مرحباً، {{ $user->username }} </h1>
                 <p style="opacity: 0.7; font-size: 0.95rem; margin: 0;"><i class="far fa-envelope" style="margin-left: 5px;"></i> {{ $user->email }}</p>
             </div>
         </div>
@@ -370,9 +372,11 @@
         </div>
     </div>
 
+
+
     <div style="margin-bottom: 40px;">
         <div style="margin-bottom: 25px;">
-            <h3 style="margin: 0; font-weight: 800; color: #1e293b; font-size: 1.5rem;">📚 رحلتي التعليمية</h3>
+            <h3 style="margin: 0; font-weight: 800; color: #1e293b; font-size: 1.5rem;"> رحلتي التعليمية</h3>
             <p style="color: #64748b; margin-top: 5px; font-size: 0.9rem;">استكشف كافة الكورسات التي انضممت إليها</p>
         </div>
 
@@ -404,8 +408,10 @@
                         </div>
                     </div>
                 </div>
+
+                
             @empty
-                {{-- كود الـ empty --}}
+             
             @endforelse
         </div>
     </div>
