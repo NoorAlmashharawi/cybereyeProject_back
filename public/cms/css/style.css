@@ -396,8 +396,8 @@ section {
 }
 
 .about-small-image img {
-    width: 70px;
-    height:70px;
+    width: 90px;
+    height:90px;
     object-fit: cover;
     border-radius: 10px;
     cursor: pointer;

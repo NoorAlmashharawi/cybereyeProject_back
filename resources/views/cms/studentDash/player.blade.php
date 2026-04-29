@@ -174,7 +174,7 @@
                     <div class="course-title-header">{{ $course->course_name }}</div>
                 </div>
                 <div class="user-menu">
-                    <a href="{{ route('student.my-courses') }}"><i class="fas fa-user-graduate"></i> كورساتي</a>
+                    <a href="{{ route('student.dashboard') }}"><i class="fas fa-user-graduate"></i> كورساتي</a>
                     <a href="{{ route('course.details', $course->id) }}"><i class="fas fa-info-circle"></i> تفاصيل الكورس</a>
                     @if($course->quizzes->count() > 0)
                     <div class="dropdown">

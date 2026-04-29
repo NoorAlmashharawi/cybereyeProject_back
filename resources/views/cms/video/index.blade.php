@@ -670,9 +670,6 @@
                                 <i class="fas fa-plus"></i> إضافة فيديو
                             </button>
 
-                            <a class="admin-btn admin-btn-add" href="{{ route('student.my-certificates') }}">
-                                <i class="fas fa-certificate"></i> الحصول على شهادة
-                            </a>
                         </div>
                     </div>
                 </div>

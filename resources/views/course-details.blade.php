@@ -1,4 +1,4 @@
-@extends('cms.home.parent')
+@extends('cms.parent')
 
 @section('title', $course->course_name . ' | CYBEReye')
 
