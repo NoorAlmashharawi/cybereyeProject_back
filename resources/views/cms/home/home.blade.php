@@ -536,11 +536,11 @@
     <div class="about-main">
         <div class="about-image">
             <div class="about-small-image">
-                <img src="{{ asset('cms/admins/baraa.jpg') }}" onclick="changeImage(this)" alt="Thumbnail 1">
+               
                 <img src="{{ asset('cms/admins/noor.jpg') }}" onclick="changeImage(this)" alt="Thumbnail 2">
                 <img src="{{ asset('cms/admins/saja.jpg') }}" onclick="changeImage(this)" alt="Thumbnail 3">
                 <img src="{{ asset('cms/admins/bassmah.jpg') }}" onclick="changeImage(this)" alt="Thumbnail 4">
-                <img src="{{ asset('cms/admins/safa.jpg') }}" onclick="changeImage(this)" alt="Thumbnail 5">
+                <img src="{{ asset('cms/admins/baraa.jpg') }}" onclick="changeImage(this)" alt="Thumbnail 1">
             </div>
             <div class="image-contaner">
                 <img src="{{ asset('cms/img/NetSec.jpg') }}" id="imagbox" alt="Main Image">
